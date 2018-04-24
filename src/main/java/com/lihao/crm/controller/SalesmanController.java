@@ -151,4 +151,9 @@ public class SalesmanController {
 	private String main() {
 		return "/salesman/main";
 	}
+	
+	@GetMapping("/event")
+	private String event() {
+		return "/salesman/event";
+	}
 }

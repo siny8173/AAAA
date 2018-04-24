@@ -7,11 +7,11 @@
 
 <body>
 	<div class="easyui-tabs" style="width: 100%; height: 100%">
-		<div title="系统用户" style="padding: 10px">
+		<div title="客户信息" style="padding: 0px">
 			<div class="easyui-layout" style="width: 100%; height: 100%;">
 				<div data-options="region:'west',split:true" style="width: 25%;">
 
-					<table id="sysUsers" class="easyui-datagrid" title="系统用户" style="width: 100%; height: 100%"
+					<table id="sysUsers" class="easyui-datagrid" title="客户" style="width: 100%; height: 100%"
 						data-options="
 					singleSelect:true,
 					url:'/salesman/loadAllCustomer',
@@ -324,12 +324,8 @@
 
 			</div>
 		</div>
-		<div title="系统工具" style="padding: 10px">
-			<div>
-				<h2>系统工具</h2>
-				<div style="margin: 20px 0;"></div>
-
-			</div>
+		<div title="活动管理" data-options="closable:true, href:'/salesman/event'" style="padding: 0px" >
+			
 		</div>
 	</div>
 </body>
