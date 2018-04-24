@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base :: common_header(~{::title},_)">
+<meta charset="UTF-8">
+<title>customer</title>
+</head>
+
+<body>
+	<div class="easyui-layout" style="width: 100%; height: 100%; padding: 10px">
+		<div data-options="region:'west',split:true" style="width: 25%;">
+
+			<table id="sysUsers" class="easyui-datagrid" title="活动" style="width: 100%; height: 100%"
+				data-options="
+					singleSelect:true,
+					url:'/salesman/loadAllCustomer',
+					method:'get',
+					onClickRow:onClickRow
+				">
+				<thead>
+					<tr>
+						<th data-options="field:'customerId',width:40">ID</th>
+						<th data-options="field:'name',width:100">用户名</th>
+					</tr>
+				</thead>
+			</table>
+
+			<script>
+				function onClickRow(rowIndex, rowData) {
+					$('#province').combobox('setValue',
+							rowData['city']['provinceId']);
+					$('#ff').form('load', rowData);
+
+					if (rowData['isPrimary'] == true) {
+						document.getElementById('primary').checked = true
+					} else {
+						document.getElementById('primary').checked = false
+					}
+				}
+			</script>
+		</div>
+	</div>
+</body>
+</html>
