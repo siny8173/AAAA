@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="common_header(title,links)">
+<title th:replace="${title}">The awesome application</title>
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/themes/default/easyui.css" th:href="@{/jquery-easyui-1.5.4/themes/default/easyui.css}">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/themes/icon.css" th:href="@{/jquery-easyui-1.5.4/themes/icon.css}">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/demo/demo.css" th:href="@{/jquery-easyui-1.5.4/demo.css}">
+<link rel="stylesheet" type="text/css" href="/css/main.css" th:href="@{/css/main2.css}">
+<script type="text/javascript" src="/jquery-easyui-1.5.4/jquery.min.js" th:src="@{/jquery-easyui-1.5.4/jquery.min.js}"></script>
+<script type="text/javascript" src="/jquery-easyui-1.5.4/jquery.easyui.min.js" th:src="@{/jquery-easyui-1.5.4/jquery.easyui.min.js}"></script>
+<script type="text/javascript" src="/js/main.js" th:src="@{/js/main.js}"></script>
+<!--/* Per-page placeholder for additional links */-->
+<th:block th:replace="${links}" />
+</head>
+<body>
+	<div th:fragment="header" style="background: #E0ECFF; height: 55px">
+		<div class="threed" style="float: left" th:text="#{company.name} + #{app.version}">移动证书服务系统软件V3.0</div>
+		<div class="right_div">
+			<form id="logout" action="/logout" method="get"></form>
+			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-man'" onclick="logout()">
+				<span th:text="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username}">13 february 2011</span>
+				登出
+			</a>
+			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'" onclick="passwordmodify()">修改密码</a>
+		</div>
+	</div>
+</body>
+</html>

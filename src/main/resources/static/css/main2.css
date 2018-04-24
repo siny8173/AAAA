@@ -1,0 +1,61 @@
+.threed {
+	font-size: 30px;
+	color: #fafafa;
+	letter-spacing: 0;
+	text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px
+		4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333,
+		0px 8px 7px #001135
+}
+
+.press {
+	color: transparent;
+	background-color: black;
+	text-shadow: rgba(255, 255, 255, 0.5) 0 5px 6px,
+		rgba(255, 255, 255, 0.2) 1px 3px 3px;
+	-webkit-background-clip: text;
+}
+
+.stroke {
+	color: transparent;
+	-webkit-text-stroke: 1px black;
+	letter-spacing: 0.04em;
+	background-color:
+}
+
+.vintage {
+	background: #EEE
+		url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAHklEQVQImWNkYGBgYGD4//8/A5wF5SBYyAr+//8PAPOCFO0Q2zq7AAAAAElFTkSuQmCC)
+		repeat;
+	text-shadow: 5px -5px black, 4px -4px white;
+	font-weight: bold;
+	-webkit-text-fill-color: transparent;
+	-webkit-background-clip: text
+}
+
+p.error {
+    font-weight: bold;
+    color: red;
+}
+
+.right_div {
+	height: 23px;
+	width: 300px;
+	float: right;
+	padding-top: 20px;
+	padding-left: 0px;
+}
+
+h1 {
+	font-size: 45px;
+	text-align:center;
+}
+
+h6 {
+	font-size: 30px;
+}
+
+html,
+body {width: 1024px; height: 100%; padding: 0; margin: 0; margin-left: auto; margin-right: auto;}
+.outer { height: 100%; padding: 65px 0 0; box-sizing: border-box ; position: relative; }
+.A { height: 55px; position: absolute; top: 0 ; left: 0 ; width: 100%; }
+.B { height: 100%; }

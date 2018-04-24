@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base :: common_header(~{::title},_)">
+<meta charset="UTF-8">
+<title>customer</title>
+</head>
+
+<body>
+	<div class="easyui-tabs" style="width: 100%; height: 100%">
+		<div title="系统用户" style="padding: 10px">
+			<div class="easyui-layout" style="width: 100%; height: 100%;">
+				<div data-options="region:'west',split:true" style="width: 25%;">
+
+					<table id="sysUsers" class="easyui-datagrid" title="系统用户" style="width: 100%; height: 100%"
+						data-options="
+					singleSelect:true,
+					url:'/salesman/loadAllCustomer',
+					method:'get',
+					onClickRow:onClickRow
+				">
+						<thead>
+							<tr>
+								<th data-options="field:'customerId',width:40">ID</th>
+								<th data-options="field:'name',width:100">用户名</th>
+							</tr>
+						</thead>
+					</table>
+
+					<script>
+						function onClickRow(rowIndex, rowData) {
+							$('#province').combobox('setValue',
+									rowData['city']['provinceId']);
+							$('#ff').form('load', rowData);
+
+							if(rowData['isPrimary'] == true) {
+								document.getElementById('primary').checked = true
+							} else {
+								document.getElementById('primary').checked = false
+							}
+						}
+					</script>
+				</div>
+
+				<div data-options="region:'center',split:true" style="width: 75%;">
+					<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
+
+						<form id="ff" method="post">
+							<div style="width: 600px; padding: 10px 60px 0px 60px">
+								<table th:replace="contact :: add-contact">
+								</table>
+							</div>
+							
+							<div style="width: 600px; padding: 0px 10px 10px 60px">
+
+								<input type="hidden" name="customerId"></input>
+
+								<table>
+
+									<tr>
+										<td>邮编:</td>
+										<td>
+											<input class="easyui-textbox" type="text" name="postcode" data-options="required:true" />
+										</td>
+										<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+										<td>城市:</td>
+										<td>
+											<input id="province" class="easyui-combobox" style="width: 85px;"
+												data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/salesman/loadAllProvince',
+											onSelect: function(rec){
+											    var url = '/salesman/loadCitis?id='+rec.id;
+											    $('#city').combobox('reload', url);
+										    },
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+										" />
+
+											<input id="city" name="city" class="easyui-combobox" style="width: 85px;"
+												data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+										    
+										    onLoadSuccess: function () { 
+										    	/*var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  */
+										    }
+										" />
+
+
+										</td>
+									</tr>
+									<tr>
+										<td>来源:</td>
+										<td>
+											<input class="easyui-combobox" name="source"
+												data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/salesman/loadCustomerSource',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+											
+									" />
+										</td>
+										<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+										<td>登记时间:</td>
+										<td>
+											<input class="easyui-datebox" name="registrationTime" value="aaa"
+												data-options="
+										required:true,
+										formatter: function (date) { 
+											var y = date.getFullYear();
+											var m = date.getMonth()+1;
+											var d = date.getDate();
+											return y+'-'+m+'-'+d;
+										},
+										
+										parser: function (s) { 
+											var t = Date.parse(s);
+											if (!isNaN(t)){
+												return new Date(t);
+											} else {
+												return new Date();
+											}
+										}
+									" />
+										</td>
+									</tr>
+
+									<tr>
+										<td>等级:</td>
+										<td>
+											<input class="easyui-combobox" name="level"
+												data-options="
+											equired:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/salesman/loadCustomerLevel',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+									" />
+										</td>
+										<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+										<td>类型:</td>
+										<td>
+											<input class="easyui-combobox" name="customertype"
+												data-options="
+											equired:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/salesman/loadCustomerType',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+									" />
+										</td>
+									</tr>
+
+									<tr>
+										<td>行业:</td>
+										<td colspan="4">
+											<input class="easyui-textbox" style="width: 100%;" name="business" data-options="required:true"></input>
+										</td>
+									</tr>
+
+									<tr>
+										<td>需求:</td>
+										<td colspan="4">
+											<input class="easyui-textbox" name="demand" style="width: 100%; height: 80px;" data-options="
+												required:true,
+												multiline:true
+												" />
+										</td>
+									</tr>
+
+								</table>
+							</div>
+						</form>
+
+						<div style="margin-left: 60px; margin-right: auto; margin-top: 10px">
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit()">删除</a>
+						</div>
+
+
+					</div>
+
+
+
+					<script>
+						function modify() {
+
+							$('#ff').form('submit', {
+								type : 'POST',
+								url : '/salesman/modCustomer',
+								onSubmit : function() {
+									return $(this).form('validate');
+								},
+								success : function(result) {
+									if (result == 'success') {
+										$('#sysUsers').datagrid('reload');
+
+										$.messager.show({
+											title : '成功',
+											msg : '修改成功',
+											showType : 'show'
+										});
+									} else {
+										$.messager.show({
+											title : '失败',
+											msg : '修改失败',
+											showType : 'show'
+										});
+									}
+
+								}
+							});
+						}
+
+						function add() {
+							$('#ff').form('submit', {
+								type : 'POST',
+								url : '/salesman/addCustomer',
+								onSubmit : function() {
+									return $(this).form('validate');
+								},
+								success : function(result) {
+									if (result == 'success') {
+										$('#sysUsers').datagrid('reload');
+
+										$.messager.show({
+											title : '成功',
+											msg : '添加成功',
+											showType : 'show'
+										});
+									} else {
+										$.messager.show({
+											title : '失败',
+											msg : '添加失败',
+											showType : 'show'
+										});
+									}
+
+								}
+							});
+						}
+						function clearff() {
+							$('#ff').form('clear');
+						}
+						function removeit() {
+
+							$('#ff').form('submit', {
+								type : 'POST',
+								url : '/salesman/delCustomer',
+								onSubmit : function() {
+									return $(this).form('validate');
+								},
+								success : function(result) {
+									if (result == 'success') {
+										$('#sysUsers').datagrid('reload');
+										$('#ff').form('clear');
+										$.messager.show({
+											title : '成功',
+											msg : '删除成功',
+											showType : 'show'
+										});
+									} else {
+										$.messager.show({
+											title : '失败',
+											msg : '删除失败',
+											showType : 'show'
+										});
+									}
+
+								}
+							});
+						}
+					</script>
+				</div>
+
+
+			</div>
+		</div>
+		<div title="系统工具" style="padding: 10px">
+			<div>
+				<h2>系统工具</h2>
+				<div style="margin: 20px 0;"></div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

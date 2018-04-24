@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="copy">&copy; 2011 The Good Thymes Virtual Grocery</div>
+
+	<div th:fragment="copy2">&copy; 2011 The Good Thymes Virtual Grocery 3333</div>
+
+	<div id="copy-section">&copy; 2011 The Good Thymes Virtual Grocery copy-section</div>
+
+	<footer th:fragment="copy-footer"> &copy; 2011 The Good Thymes Virtual Grocery </footer>
+
+	<div th:fragment="frag (onevar,twovar)">
+		<p th:text="${onevar} + ' - ' + ${twovar}">...</p>
+	</div>
+	
+	<div th:fragment="frag2">
+		<p th:text="${onevar} + ' - ' + ${twovar}">...</p>
+	</div>
+	
+	<div th:fragment="frag3">
+	
+		<div th:assert="${onevar},(${twovar} != 43)">...</div>
+		<p th:text="${onevar} + ' - ' + ${twovar}">...</p>
+	</div>
+</body>
+</html>
