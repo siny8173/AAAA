@@ -17,6 +17,8 @@ public class Event {
 	@Id
 	@GeneratedValue
 	private Long id;
+	
+	private String title;
 
 	@OneToOne
 	private Customer customer;

@@ -29,6 +29,8 @@ import com.lihao.crm.service.SysProvinceService;
 import com.lihao.crm.web.object.CustomerDto;
 import com.lihao.crm.web.transform.CustomerTransform;
 
+import com.lihao.crm.entity.Event;
+
 @Controller
 @RequestMapping("/salesman")
 public class SalesmanController {
@@ -102,7 +104,7 @@ public class SalesmanController {
 	@PostMapping("addCustomer")
 	@ResponseBody
 	public String addCustomer(CustomerDto customerDto) {
-		logger.info("AdminController addCustomer " + customerDto.name);
+		logger.info("SalesmanController addCustomer " + customerDto.name);
 		
 		customerDto.customerId = null;
 		customerDto.contactId = null;
@@ -120,7 +122,7 @@ public class SalesmanController {
 	@PostMapping("modCustomer")
 	@ResponseBody
 	public String modCustomer(CustomerDto customerDto) {
-		logger.info("AdminController modCustomer " + customerDto.name);
+		logger.info("SalesmanController modCustomer " + customerDto.name);
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		customerDto.setUser((SysUser) user);
 		
@@ -135,7 +137,7 @@ public class SalesmanController {
 	@PostMapping("delCustomer")
 	@ResponseBody
 	public String delCustomer(CustomerDto customerDto) {
-		logger.info("AdminController delCustomer " + customerDto.name);
+		logger.info("SalesmanController delCustomer " + customerDto.name);
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		customerDto.setUser((SysUser) user);
 		
@@ -144,6 +146,13 @@ public class SalesmanController {
 		customer.setIsDelete(true);
 		
 		customerService.save(customer);
+		return "success";
+	}
+	
+	@PostMapping("addEvent")
+	@ResponseBody
+	public String addEvent(Event event) {
+		logger.info("SalesmanController addEvent " + event.getTitle());
 		return "success";
 	}
 
