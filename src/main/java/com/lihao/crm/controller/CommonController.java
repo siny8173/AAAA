@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.lihao.crm.entity.SysDepartment;
 import com.lihao.crm.entity.SysDuty;
 import com.lihao.crm.entity.SysEventType;
+import com.lihao.crm.entity.SysProjectState;
 import com.lihao.crm.entity.SysSex;
 import com.lihao.crm.repository.SysDepartmentRepository;
 import com.lihao.crm.repository.SysDutyRepository;
 import com.lihao.crm.repository.SysEventTypeRepository;
+import com.lihao.crm.repository.SysProjectStateRepository;
 import com.lihao.crm.repository.SysSexRepository;
 
 @Controller
@@ -32,6 +34,9 @@ public class CommonController {
 	
 	@Autowired
 	private SysEventTypeRepository sysEventTypeRepository;
+	
+	@Autowired
+	private SysProjectStateRepository sysProjectStateRepository;
 
 	@GetMapping("loadAllSysSex")
 	@ResponseBody
@@ -55,5 +60,11 @@ public class CommonController {
 	@ResponseBody
 	public List<SysEventType> loadAllSysEventType() {
 		return (List<SysEventType>) sysEventTypeRepository.findAll();
+	}
+	
+	@GetMapping("loadAllSysProjectState")
+	@ResponseBody
+	public List<SysProjectState> loadAllSysProjectState() {
+		return (List<SysProjectState>) sysProjectStateRepository.findAll();
 	}
 }

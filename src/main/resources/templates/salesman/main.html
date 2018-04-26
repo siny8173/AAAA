@@ -32,7 +32,7 @@
 									rowData['city']['provinceId']);
 							$('#ff').form('load', rowData);
 
-							if(rowData['isPrimary'] == true) {
+							if (rowData['isPrimary'] == true) {
 								document.getElementById('primary').checked = true
 							} else {
 								document.getElementById('primary').checked = false
@@ -49,7 +49,7 @@
 								<table th:replace="contact :: add-contact">
 								</table>
 							</div>
-							
+
 							<div style="width: 600px; padding: 0px 10px 10px 60px">
 
 								<input type="hidden" name="customerId"></input>
@@ -324,9 +324,8 @@
 
 			</div>
 		</div>
-		<div title="活动管理" data-options="closable:true, href:'/salesman/event'" style="padding: 0px" >
-			
-		</div>
+		<div title="项目管理" data-options="closable:true, href:'/salesman/project'" style="padding: 0px"></div>
+		<div title="活动管理" data-options="closable:true, href:'/salesman/event'" style="padding: 0px"></div>
 	</div>
 </body>
 </html>

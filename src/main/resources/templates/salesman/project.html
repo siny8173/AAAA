@@ -2,39 +2,40 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="base :: common_header(~{::title},_)">
 <meta charset="UTF-8">
-<title>event</title>
+<title>project</title>
 </head>
 
 <body>
 	<div class="easyui-layout" style="width: 100%; height: 100%;">
 		<div data-options="region:'west',split:true" style="width: 25%;">
 
-			<table id="event-table" class="easyui-datagrid" title="活动" style="width: 100%; height: 100%"
+			<table id="event-table" class="easyui-datagrid" title="项目" style="width: 100%; height: 100%"
 				data-options="
 					singleSelect:true,
-					url:'/salesman/loadAllEvent',
+					url:'/salesman/loadAllProject',
 					method:'get',
 					onClickRow:onClickRow
 				">
 				<thead>
 					<tr>
 						<th data-options="field:'id',width:40">ID</th>
-						<th data-options="field:'title',width:200">标题</th>
+						<th data-options="field:'name',width:200">标题</th>
 					</tr>
 				</thead>
 			</table>
 
 			<script>
 				function onClickRow(rowIndex, rowData) {
-					$('#event-form').form('load', rowData);
-					$('#customer-combobox').combobox('setValue', rowData['customer']['id'])
+					$('#project-form').form('load', rowData);
+					$('#customer-combobox').combobox('setValue',
+							rowData['customer']['id'])
 				}
 			</script>
 		</div>
 		<div data-options="region:'center',split:true" style="width: 75%;">
 			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
 
-				<form id="event-form" method="post">
+				<form id="project-form" method="post">
 					<div style="width: 600px; padding: 10px 10px 10px 60px">
 
 						<input type="hidden" name="id"></input>
@@ -42,9 +43,16 @@
 						<table>
 
 							<tr>
+								<td>名称:</td>
+								<td colspan="4">
+									<input class="easyui-textbox" style="width: 100%;" name="name" data-options="required:true"></input>
+								</td>
+							</tr>
+
+							<tr>
 								<td>主题:</td>
 								<td colspan="4">
-									<input class="easyui-textbox" style="width: 100%;" name="title" data-options="required:true"></input>
+									<input class="easyui-textbox" style="width: 100%;" name="subject" data-options="required:true"></input>
 								</td>
 							</tr>
 
@@ -72,15 +80,15 @@
 									" />
 								</td>
 								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>类型:</td>
+								<td>状态:</td>
 								<td>
-									<input class="easyui-combobox" name="type"
+									<input class="easyui-combobox" name="state"
 										data-options="
 											required:true,
 											valueField: 'id',
 											textField: 'name',
 											method: 'get',
-											url: '/common/loadAllSysEventType',
+											url: '/common/loadAllSysProjectState',
 										    
 										    onLoadSuccess: function () { 
 										    	var val = $(this).combobox('getData'); 
@@ -96,18 +104,21 @@
 							</tr>
 
 							<tr>
-								<td>开始:</td>
+								<td>金额(单位:元):</td>
 								<td>
-									<input id='start-datetimebox' class="easyui-datetimebox" name="startTime" value="aaa"
+									<input name="money" class="easyui-numberbox" required="required" value="0" data-options="min:0.00,precision:2">
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>赢单时间:</td>
+								<td>
+									<input id='stop-datetimebox' class="easyui-datebox" name="timeToSuccess" value="aaa"
 										data-options="
 											required:true,
 											formatter: function (date) { 
 												var y = date.getFullYear();
 												var m = date.getMonth()+1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
 												var d = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
-												var h = date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours();
-												var M = date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes();
-												return y+'-'+m+'-'+d + ' ' + h + ':' + M;
+												return y+'-'+m+'-'+d;
 											},
 											
 											parser: function (s) { 
@@ -120,30 +131,17 @@
 											}
 										" />
 								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>结束:</td>
+							</tr>
+
+							<tr>
+								<td>可能性:</td>
 								<td>
-									<input id='stop-datetimebox' class="easyui-datetimebox" name="stopTime" value="aaa"
-										data-options="
-											required:true,
-											formatter: function (date) { 
-												var y = date.getFullYear();
-												var m = date.getMonth()+1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
-												var d = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
-												var h = date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours();
-												var M = date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes();
-												return y+'-'+m+'-'+d + ' ' + h + ':' + M;
-											},
-											
-											parser: function (s) { 
-												var t = Date.parse(s);
-												if (!isNaN(t)){
-													return new Date(t);
-												} else {
-													return new Date();
-												}
-											}
-										" />
+									<input name="probability" class="easyui-numberspinner" required="required" value="0" data-options="min:0,max:100,suffix:'%'">
+								</td>
+								<td></td>
+								<td></td>
+								<td>
+									
 								</td>
 							</tr>
 
@@ -170,37 +168,18 @@
 			</div>
 
 			<script>
-				
 				function verify() {
-					var start = new Date(Date.parse($('#start-datetimebox').datetimebox('getValue')));
-					var stop = new Date(Date.parse($('#stop-datetimebox').datetimebox('getValue')));
-					var now = new Date();
-					
-					if(now.getTime() > start.getTime()) {
-						$.messager.alert('校验失败','开始时间早于当前时间');
-						return false;
-					}
-					
-					if(now.getTime() > stop.getTime()) {
-						$.messager.alert('校验失败','结束时间早于当前时间');
-						return false;
-					}
-					
-					if(start.getTime() > stop.getTime()) {
-						$.messager.alert('校验失败','结束时间早于开始时间');
-						return false;
-					}
-					
+					return true;
 				}
-			
+
 				function modify() {
-					if(verify() == false) {
+					if (verify() == false) {
 						return;
 					}
-					
-					$('#event-form').form('submit', {
+
+					$('#project-form').form('submit', {
 						type : 'POST',
-						url : '/salesman/modEvent',
+						url : '/salesman/modProject',
 						onSubmit : function() {
 							return $(this).form('validate');
 						},
@@ -226,13 +205,13 @@
 				}
 
 				function add() {
-					if(verify() == false) {
+					if (verify() == false) {
 						return;
 					}
-					
-					$('#event-form').form('submit', {
+
+					$('#project-form').form('submit', {
 						type : 'POST',
-						url : '/salesman/addEvent',
+						url : '/salesman/addProject',
 						onSubmit : function() {
 							return $(this).form('validate');
 						},
@@ -256,16 +235,16 @@
 						}
 					});
 				}
-				
+
 				function clearff() {
-					$('#event-form').form('clear');
+					$('#project-form').form('clear');
 				}
-				
+
 				function removeit() {
 
-					$('#event-form').form('submit', {
+					$('#project-form').form('submit', {
 						type : 'POST',
-						url : '/salesman/delEvent',
+						url : '/salesman/delProject',
 						onSubmit : function() {
 							return $(this).form('validate');
 						},

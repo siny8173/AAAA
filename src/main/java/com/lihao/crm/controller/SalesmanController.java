@@ -22,6 +22,7 @@ import com.lihao.crm.entity.SysProvince;
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.service.CustomerService;
 import com.lihao.crm.service.EventService;
+import com.lihao.crm.service.ProjectService;
 import com.lihao.crm.service.SysCityService;
 import com.lihao.crm.service.SysCustomerLevelService;
 import com.lihao.crm.service.SysCustomerSourceService;
@@ -31,6 +32,7 @@ import com.lihao.crm.web.object.CustomerDto;
 import com.lihao.crm.web.transform.CustomerTransform;
 
 import com.lihao.crm.entity.Event;
+import com.lihao.crm.entity.Project;
 
 @Controller
 @RequestMapping("/salesman")
@@ -57,6 +59,9 @@ public class SalesmanController {
 
 	@Autowired
 	private EventService eventService;
+	
+	@Autowired
+	private ProjectService projectService;
 
 	@GetMapping("loadAllCustomer")
 	@ResponseBody
@@ -193,6 +198,46 @@ public class SalesmanController {
 		eventService.save(event);
 		return "success";
 	}
+	
+	@GetMapping("loadAllProject")
+	@ResponseBody
+	public List<Project> loadAllProject() {
+		logger.info("message SalesmanController loadAllProject");
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return projectService.loadMine((SysUser) user);
+	}
+	
+	@PostMapping("addProject")
+	@ResponseBody
+	public String addProject(Project project) {
+		logger.info("SalesmanController addProject " + project.getName());
+		project.setId(null);
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		project.setUser((SysUser) user);
+		projectService.save(project);
+		return "success";
+	}
+	
+	@PostMapping("modProject")
+	@ResponseBody
+	public String modProject(Project project) {
+		logger.info("SalesmanController modProject " + project.getName());
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		project.setUser((SysUser) user);
+		project.setIsDelete(false);
+		projectService.save(project);
+		return "success";
+	}
+	
+	@PostMapping("delProject")
+	@ResponseBody
+	public String delProject(Project project) {
+		logger.info("SalesmanController delProject " + project.getName());
+		project = projectService.findById(project.getId());
+		project.setIsDelete(true);
+		projectService.save(project);
+		return "success";
+	}
 
 	@GetMapping("/main")
 	private String main() {
@@ -202,5 +247,10 @@ public class SalesmanController {
 	@GetMapping("/event")
 	private String event() {
 		return "/salesman/event";
+	}
+	
+	@GetMapping("/project")
+	private String project() {
+		return "/salesman/project";
 	}
 }
