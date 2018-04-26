@@ -33,4 +33,6 @@ public class Event {
 	
 	@ManyToOne
 	private SysUser user;
+	
+	private Boolean isDelete; 
 }

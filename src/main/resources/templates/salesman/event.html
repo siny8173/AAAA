@@ -9,39 +9,32 @@
 	<div class="easyui-layout" style="width: 100%; height: 100%;">
 		<div data-options="region:'west',split:true" style="width: 25%;">
 
-			<table id="sysUsers" class="easyui-datagrid" title="活动" style="width: 100%; height: 100%"
+			<table id="event-table" class="easyui-datagrid" title="活动" style="width: 100%; height: 100%"
 				data-options="
 					singleSelect:true,
-					url:'/salesman/loadAllCustomer',
+					url:'/salesman/loadAllEvent',
 					method:'get',
 					onClickRow:onClickRow
 				">
 				<thead>
 					<tr>
-						<th data-options="field:'customerId',width:40">ID</th>
-						<th data-options="field:'name',width:100">用户名</th>
+						<th data-options="field:'id',width:40">ID</th>
+						<th data-options="field:'title',width:200">标题</th>
 					</tr>
 				</thead>
 			</table>
 
 			<script>
 				function onClickRow(rowIndex, rowData) {
-					$('#province').combobox('setValue',
-							rowData['city']['provinceId']);
-					$('#ff').form('load', rowData);
-
-					if (rowData['isPrimary'] == true) {
-						document.getElementById('primary').checked = true
-					} else {
-						document.getElementById('primary').checked = false
-					}
+					$('#event-form').form('load', rowData);
+					$('#customer-combobox').combobox('setValue', rowData['customer']['id'])
 				}
 			</script>
 		</div>
 		<div data-options="region:'center',split:true" style="width: 75%;">
 			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
 
-				<form id="ff" method="post">
+				<form id="event-form" method="post">
 					<div style="width: 600px; padding: 10px 10px 10px 60px">
 
 						<input type="hidden" name="id"></input>
@@ -59,7 +52,7 @@
 							<tr>
 								<td>客户:</td>
 								<td>
-									<input class="easyui-combobox" name="customer"
+									<input id='customer-combobox' class="easyui-combobox" name="customer"
 										data-options="
 											required:true,
 											valueField: 'customerId',
@@ -105,52 +98,52 @@
 							<tr>
 								<td>开始:</td>
 								<td>
-									<input class="easyui-datetimebox" name="startTime" value="aaa"
+									<input id='start-datetimebox' class="easyui-datetimebox" name="startTime" value="aaa"
 										data-options="
-										required:true,
-										formatter: function (date) { 
-											var y = date.getFullYear();
-											var m = date.getMonth()+1;
-											var d = date.getDate();
-											var h = date.getHours();
-											var M = date.getMinutes();
-											return y+'-'+m+'-'+d + ' ' + h + ':' + M;
-										},
-										
-										parser: function (s) { 
-											var t = Date.parse(s);
-											if (!isNaN(t)){
-												return new Date(t);
-											} else {
-												return new Date();
+											required:true,
+											formatter: function (date) { 
+												var y = date.getFullYear();
+												var m = date.getMonth()+1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+												var d = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
+												var h = date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours();
+												var M = date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes();
+												return y+'-'+m+'-'+d + ' ' + h + ':' + M;
+											},
+											
+											parser: function (s) { 
+												var t = Date.parse(s);
+												if (!isNaN(t)){
+													return new Date(t);
+												} else {
+													return new Date();
+												}
 											}
-										}
-									" />
+										" />
 								</td>
 								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 								<td>结束:</td>
 								<td>
-									<input class="easyui-datebox" name="stopTime" value="aaa"
+									<input id='stop-datetimebox' class="easyui-datetimebox" name="stopTime" value="aaa"
 										data-options="
-										required:true,
-										formatter: function (date) { 
-											var y = date.getFullYear();
-											var m = date.getMonth()+1;
-											var d = date.getDate();
-											var h = date.getHours();
-											var M = date.getMinutes();
-											return y+'-'+m+'-'+d + ' ' + h + ':' + M;
-										},
-										
-										parser: function (s) { 
-											var t = Date.parse(s);
-											if (!isNaN(t)){
-												return new Date(t);
-											} else {
-												return new Date();
+											required:true,
+											formatter: function (date) { 
+												var y = date.getFullYear();
+												var m = date.getMonth()+1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+												var d = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
+												var h = date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours();
+												var M = date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes();
+												return y+'-'+m+'-'+d + ' ' + h + ':' + M;
+											},
+											
+											parser: function (s) { 
+												var t = Date.parse(s);
+												if (!isNaN(t)){
+													return new Date(t);
+												} else {
+													return new Date();
+												}
 											}
-										}
-									" />
+										" />
 								</td>
 							</tr>
 
@@ -170,24 +163,50 @@
 
 				<div style="margin-left: 120px; margin-right: auto; margin-top: 10px">
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add1()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit()">删除</a>
 				</div>
 			</div>
 
 			<script>
+				
+				function verify() {
+					var start = new Date(Date.parse($('#start-datetimebox').datetimebox('getValue')));
+					var stop = new Date(Date.parse($('#stop-datetimebox').datetimebox('getValue')));
+					var now = new Date();
+					
+					if(now.getTime() > start.getTime()) {
+						$.messager.alert('校验失败','开始时间早于当前时间');
+						return false;
+					}
+					
+					if(now.getTime() > stop.getTime()) {
+						$.messager.alert('校验失败','结束时间早于当前时间');
+						return false;
+					}
+					
+					if(start.getTime() > stop.getTime()) {
+						$.messager.alert('校验失败','结束时间早于开始时间');
+						return false;
+					}
+					
+				}
+			
 				function modify() {
-
-					$('#ff').form('submit', {
+					if(verify() == false) {
+						return;
+					}
+					
+					$('#event-form').form('submit', {
 						type : 'POST',
-						url : '/salesman/modCustomer',
+						url : '/salesman/modEvent',
 						onSubmit : function() {
 							return $(this).form('validate');
 						},
 						success : function(result) {
 							if (result == 'success') {
-								$('#sysUsers').datagrid('reload');
+								$('#event-table').datagrid('reload');
 
 								$.messager.show({
 									title : '成功',
@@ -206,9 +225,12 @@
 					});
 				}
 
-				function add1() {
-					alert();
-					$('#ff').form('submit', {
+				function add() {
+					if(verify() == false) {
+						return;
+					}
+					
+					$('#event-form').form('submit', {
 						type : 'POST',
 						url : '/salesman/addEvent',
 						onSubmit : function() {
@@ -216,7 +238,7 @@
 						},
 						success : function(result) {
 							if (result == 'success') {
-								$('#sysUsers').datagrid('reload');
+								$('#event-table').datagrid('reload');
 
 								$.messager.show({
 									title : '成功',
@@ -234,20 +256,22 @@
 						}
 					});
 				}
+				
 				function clearff() {
-					$('#ff').form('clear');
+					$('#event-form').form('clear');
 				}
+				
 				function removeit() {
 
-					$('#ff').form('submit', {
+					$('#event-form').form('submit', {
 						type : 'POST',
-						url : '/salesman/delCustomer',
+						url : '/salesman/delEvent',
 						onSubmit : function() {
 							return $(this).form('validate');
 						},
 						success : function(result) {
 							if (result == 'success') {
-								$('#sysUsers').datagrid('reload');
+								$('#event-table').datagrid('reload');
 								$('#ff').form('clear');
 								$.messager.show({
 									title : '成功',

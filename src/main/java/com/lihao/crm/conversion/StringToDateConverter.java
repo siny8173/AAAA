@@ -10,6 +10,7 @@ import java.util.Date;
 @Configuration
 public class StringToDateConverter implements Converter<String, Date> {
 	private static final String dateFormat = "yyyy-MM-dd HH:mm:ss";
+	private static final String dateFormatwithoutsec = "yyyy-MM-dd HH:mm";
 	private static final String shortDateFormat = "yyyy-MM-dd";
 	private static final String dateFormat2 = "yyyy/MM/dd HH:mm:ss";
 	private static final String shortDateFormat2 = "yyyy/MM/dd";
@@ -24,7 +25,12 @@ public class StringToDateConverter implements Converter<String, Date> {
 			SimpleDateFormat formatter;
 			if (source.contains("-")) {
 				if (source.contains(":")) {
-					formatter = new SimpleDateFormat(dateFormat);
+					if (source.length() == dateFormatwithoutsec.length()) {
+						formatter = new SimpleDateFormat(dateFormatwithoutsec);
+
+					} else {
+						formatter = new SimpleDateFormat(dateFormat);
+					}
 				} else {
 					formatter = new SimpleDateFormat(shortDateFormat);
 				}

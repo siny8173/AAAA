@@ -21,6 +21,7 @@ import com.lihao.crm.entity.SysCustomerType;
 import com.lihao.crm.entity.SysProvince;
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.service.CustomerService;
+import com.lihao.crm.service.EventService;
 import com.lihao.crm.service.SysCityService;
 import com.lihao.crm.service.SysCustomerLevelService;
 import com.lihao.crm.service.SysCustomerSourceService;
@@ -54,18 +55,21 @@ public class SalesmanController {
 	@Autowired
 	private CustomerService customerService;
 
+	@Autowired
+	private EventService eventService;
+
 	@GetMapping("loadAllCustomer")
 	@ResponseBody
 	public List<CustomerDto> loadAllCustomer() {
 		logger.info("message SalesmanController loadAllCustomer");
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		List<Customer> customers = customerService.loadMine((SysUser) user);
-		
-		List<CustomerDto> dtos = new ArrayList<>();	
+
+		List<CustomerDto> dtos = new ArrayList<>();
 		customers.forEach(customer -> dtos.add(CustomerTransform.Customer2Dto(customer)));
 		return dtos;
 	}
-
+	
 	@GetMapping("loadAllProvince")
 	@ResponseBody
 	public List<SysProvince> loadAllProvince() {
@@ -105,15 +109,15 @@ public class SalesmanController {
 	@ResponseBody
 	public String addCustomer(CustomerDto customerDto) {
 		logger.info("SalesmanController addCustomer " + customerDto.name);
-		
+
 		customerDto.customerId = null;
 		customerDto.contactId = null;
-		
+
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		customerDto.setUser((SysUser) user);
-		
+
 		Customer customer = CustomerTransform.Dto2SysUser(customerDto);
-		
+
 		customer.setIsDelete(false);
 		customerService.save(customer);
 		return "success";
@@ -125,11 +129,11 @@ public class SalesmanController {
 		logger.info("SalesmanController modCustomer " + customerDto.name);
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		customerDto.setUser((SysUser) user);
-		
+
 		Customer customer = CustomerTransform.Dto2SysUser(customerDto);
-		
+
 		customer.setIsDelete(false);
-		
+
 		customerService.save(customer);
 		return "success";
 	}
@@ -140,19 +144,53 @@ public class SalesmanController {
 		logger.info("SalesmanController delCustomer " + customerDto.name);
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		customerDto.setUser((SysUser) user);
-		
+
 		Customer customer = CustomerTransform.Dto2SysUser(customerDto);
-		
+
 		customer.setIsDelete(true);
-		
+
 		customerService.save(customer);
 		return "success";
 	}
-	
+
+	@GetMapping("loadAllEvent")
+	@ResponseBody
+	public List<Event> loadAllEvent() {
+		logger.info("message SalesmanController loadAllEvent");
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return eventService.loadMine((SysUser) user);
+	}
+
 	@PostMapping("addEvent")
 	@ResponseBody
 	public String addEvent(Event event) {
 		logger.info("SalesmanController addEvent " + event.getTitle());
+		event.setId(null);
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		event.setUser((SysUser) user);
+		event.setIsDelete(false);
+		eventService.save(event);
+		return "success";
+	}
+	
+	@PostMapping("modEvent")
+	@ResponseBody
+	public String modEvent(Event event) {
+		logger.info("SalesmanController modEvent " + event.getTitle());
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		event.setUser((SysUser) user);
+		event.setIsDelete(false);
+		eventService.save(event);
+		return "success";
+	}
+	
+	@PostMapping("delEvent")
+	@ResponseBody
+	public String delEvent(Event event) {
+		logger.info("SalesmanController delEvent " + event.getTitle());
+		event = eventService.findById(event.getId());
+		event.setIsDelete(true);
+		eventService.save(event);
 		return "success";
 	}
 
@@ -160,7 +198,7 @@ public class SalesmanController {
 	private String main() {
 		return "/salesman/main";
 	}
-	
+
 	@GetMapping("/event")
 	private String event() {
 		return "/salesman/event";
