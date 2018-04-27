@@ -253,4 +253,9 @@ public class SalesmanController {
 	private String project() {
 		return "/salesman/project";
 	}
+	
+	@GetMapping("/technical-application")
+	private String technicalApplication() {
+		return "/salesman/technical-application";
+	}
 }

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="base :: common_header(~{::title},_)">
 <meta charset="UTF-8">
-<title>project</title>
+<title>technical application</title>
 </head>
 
 <body>
@@ -35,7 +35,7 @@
 		<div data-options="region:'center',split:true" style="width: 75%;">
 			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
 
-				<form id="project-form" method="post">
+				<form id="technical-application-form" method="post">
 					<div style="width: 600px; padding: 10px 10px 10px 60px">
 
 						<input type="hidden" name="id"></input>
@@ -45,17 +45,26 @@
 							<tr>
 								<td>名称:</td>
 								<td colspan="4">
-									<input class="easyui-textbox" style="width: 100%;" name="name" data-options="required:true"></input>
+									<input id='customer-combobox' style="width: 100%;" class="easyui-combobox" name="project"
+										data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/salesman/loadAllProject',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+											
+									" />
 								</td>
 							</tr>
-
-							<tr>
-								<td>主题:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" style="width: 100%;" name="subject" data-options="required:true"></input>
-								</td>
-							</tr>
-
 
 							<tr>
 								<td>客户:</td>
@@ -75,43 +84,76 @@
 				                                        $(this).combobox('select', val[0][item]);  
 				                                    }  
 				                                }  
+										    },
+										    
+										    onSelect: function(record) {										    	
+										    	$('#phone').textbox('setValue', record['phone']);
+										    	$('#officePhone').textbox('setValue', record['officePhone']);
+										    	$('#fax').textbox('setValue', record['fax']);
+										    	$('#email').textbox('setValue', record['email']);
+										    	$('#address').textbox('setValue', record['address']);
 										    }
 											
 									" />
 								</td>
 								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>状态:</td>
+								<td>传真:</td>
 								<td>
-									<input class="easyui-combobox" name="state"
-										data-options="
-											required:true,
-											valueField: 'id',
-											textField: 'name',
-											method: 'get',
-											url: '/common/loadAllSysProjectState',
-										    
-										    onLoadSuccess: function () { 
-										    	var val = $(this).combobox('getData'); 
-										    	for (var item in val[0]) {  
-				                                    if (item == 'id') {  
-				                                        $(this).combobox('select', val[0][item]);  
-				                                    }  
-				                                }  
-										    }
-											
-									" />
+									<input id='phone' class="easyui-textbox" data-options="readonly:true" />
 								</td>
 							</tr>
-
+							
 							<tr>
-								<td>金额(单位:元):</td>
+								<td>固话:</td>
 								<td>
-									<input name="money" class="easyui-numberbox" required="required" value="0" data-options="min:0.00,precision:2">
+									<input id='officePhone' class="easyui-textbox" data-options="readonly:true" />
 								</td>
 								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>赢单时间:</td>
+								<td>手机:</td>
 								<td>
-									<input id='stop-datetimebox' class="easyui-datebox" name="timeToSuccess" value="aaa"
+									<input id='fax' class="easyui-textbox" data-options="readonly:true" />
+								</td>
+							</tr>
+							
+							<tr>
+								<td>邮件:</td>
+								<td>
+									<input id='email' class="easyui-textbox" data-options="readonly:true" />
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>地址:</td>
+								<td>
+									<input id='address' class="easyui-textbox" data-options="readonly:true" />
+								</td>
+							</tr>
+							
+							<tr>
+								<td>开始:</td>
+								<td>
+									<input id='stop-datetimebox' class="easyui-datebox" name="startTime" value="aaa"
+										data-options="
+											required:true,
+											formatter: function (date) { 
+												var y = date.getFullYear();
+												var m = date.getMonth()+1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+												var d = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
+												return y+'-'+m+'-'+d;
+											},
+											
+											parser: function (s) { 
+												var t = Date.parse(s);
+												if (!isNaN(t)){
+													return new Date(t);
+												} else {
+													return new Date();
+												}
+											}
+										" />
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>结束:</td>
+								<td>
+									<input id='stop-datetimebox' class="easyui-datebox" name="stopTime" value="aaa"
 										data-options="
 											required:true,
 											formatter: function (date) { 
@@ -133,23 +175,59 @@
 								</td>
 							</tr>
 
+							
 							<tr>
-								<td>可能性:</td>
+								<td>报告类型:</td>
 								<td>
-									<input name="probability" class="easyui-numberspinner" required="required" value="0" data-options="min:0,max:100,suffix:'%'">
+									<input id='customer-combobox' class="easyui-combobox" name="customer"
+										data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/common/loadAllSysReportType',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    },
+										    
+										    onSelect: function(record) {										    	
+										    	$('#phone').textbox('setValue', record['phone']);
+										    	$('#officePhone').textbox('setValue', record['officePhone']);
+										    	$('#fax').textbox('setValue', record['fax']);
+										    	$('#email').textbox('setValue', record['email']);
+										    	$('#address').textbox('setValue', record['address']);
+										    }
+											
+									" />
 								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-
-							<tr>
-								<td>内容:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" name="content" style="width: 100%; height: 80px;" data-options="
-												required:true,
-												multiline:true
-												" />
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>结束:</td>
+								<td>
+									<input id='stop-datetimebox' class="easyui-datebox" name="stopTime" value="aaa"
+										data-options="
+											required:true,
+											formatter: function (date) { 
+												var y = date.getFullYear();
+												var m = date.getMonth()+1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+												var d = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
+												return y+'-'+m+'-'+d;
+											},
+											
+											parser: function (s) { 
+												var t = Date.parse(s);
+												if (!isNaN(t)){
+													return new Date(t);
+												} else {
+													return new Date();
+												}
+											}
+										" />
 								</td>
 							</tr>
 

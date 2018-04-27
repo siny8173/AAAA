@@ -12,11 +12,13 @@ import com.lihao.crm.entity.SysDepartment;
 import com.lihao.crm.entity.SysDuty;
 import com.lihao.crm.entity.SysEventType;
 import com.lihao.crm.entity.SysProjectState;
+import com.lihao.crm.entity.SysReportType;
 import com.lihao.crm.entity.SysSex;
 import com.lihao.crm.repository.SysDepartmentRepository;
 import com.lihao.crm.repository.SysDutyRepository;
 import com.lihao.crm.repository.SysEventTypeRepository;
 import com.lihao.crm.repository.SysProjectStateRepository;
+import com.lihao.crm.repository.SysReportTypeRepository;
 import com.lihao.crm.repository.SysSexRepository;
 
 @Controller
@@ -37,6 +39,9 @@ public class CommonController {
 	
 	@Autowired
 	private SysProjectStateRepository sysProjectStateRepository;
+	
+	@Autowired
+	private SysReportTypeRepository sysReportTypeRepository;
 
 	@GetMapping("loadAllSysSex")
 	@ResponseBody
@@ -66,5 +71,11 @@ public class CommonController {
 	@ResponseBody
 	public List<SysProjectState> loadAllSysProjectState() {
 		return (List<SysProjectState>) sysProjectStateRepository.findAll();
+	}
+	
+	@GetMapping("loadAllSysReportType")
+	@ResponseBody
+	public List<SysReportType> loadAllSysReportType() {
+		return (List<SysReportType>) sysReportTypeRepository.findAll();
 	}
 }
