@@ -28,9 +28,11 @@ import com.lihao.crm.service.SysCustomerLevelService;
 import com.lihao.crm.service.SysCustomerSourceService;
 import com.lihao.crm.service.SysCustomerTypeService;
 import com.lihao.crm.service.SysProvinceService;
+import com.lihao.crm.service.SysUserService;
 import com.lihao.crm.web.object.CustomerDto;
+import com.lihao.crm.web.object.SysUserDto;
 import com.lihao.crm.web.transform.CustomerTransform;
-
+import com.lihao.crm.web.transform.SysUserTransform;
 import com.lihao.crm.entity.Event;
 import com.lihao.crm.entity.Project;
 
@@ -59,9 +61,12 @@ public class SalesmanController {
 
 	@Autowired
 	private EventService eventService;
-	
+
 	@Autowired
 	private ProjectService projectService;
+
+	@Autowired
+	private SysUserService sysUserService;
 
 	@GetMapping("loadAllCustomer")
 	@ResponseBody
@@ -74,7 +79,20 @@ public class SalesmanController {
 		customers.forEach(customer -> dtos.add(CustomerTransform.Customer2Dto(customer)));
 		return dtos;
 	}
-	
+
+	@GetMapping("loadAllTechnicist")
+	@ResponseBody
+	public List<SysUserDto> loadAllTechnicist() {
+		logger.info("message SalesmanController loadAllTechnicist");
+		List<SysUserDto> dtos = new ArrayList<SysUserDto>();
+		SysUserDto dto = new SysUserDto();
+		dto.userId = 0l;
+		dto.name = "无";
+		dtos.add(dto);
+		sysUserService.findAllTechnicist().forEach(u -> dtos.add(SysUserTransform.SysUser2Dto(u)));;
+		return dtos;
+	}
+
 	@GetMapping("loadAllProvince")
 	@ResponseBody
 	public List<SysProvince> loadAllProvince() {
@@ -177,7 +195,7 @@ public class SalesmanController {
 		eventService.save(event);
 		return "success";
 	}
-	
+
 	@PostMapping("modEvent")
 	@ResponseBody
 	public String modEvent(Event event) {
@@ -188,7 +206,7 @@ public class SalesmanController {
 		eventService.save(event);
 		return "success";
 	}
-	
+
 	@PostMapping("delEvent")
 	@ResponseBody
 	public String delEvent(Event event) {
@@ -198,7 +216,7 @@ public class SalesmanController {
 		eventService.save(event);
 		return "success";
 	}
-	
+
 	@GetMapping("loadAllProject")
 	@ResponseBody
 	public List<Project> loadAllProject() {
@@ -206,7 +224,7 @@ public class SalesmanController {
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return projectService.loadMine((SysUser) user);
 	}
-	
+
 	@PostMapping("addProject")
 	@ResponseBody
 	public String addProject(Project project) {
@@ -217,7 +235,7 @@ public class SalesmanController {
 		projectService.save(project);
 		return "success";
 	}
-	
+
 	@PostMapping("modProject")
 	@ResponseBody
 	public String modProject(Project project) {
@@ -228,7 +246,7 @@ public class SalesmanController {
 		projectService.save(project);
 		return "success";
 	}
-	
+
 	@PostMapping("delProject")
 	@ResponseBody
 	public String delProject(Project project) {
@@ -248,12 +266,12 @@ public class SalesmanController {
 	private String event() {
 		return "/salesman/event";
 	}
-	
+
 	@GetMapping("/project")
 	private String project() {
 		return "/salesman/project";
 	}
-	
+
 	@GetMapping("/technical-application")
 	private String technicalApplication() {
 		return "/salesman/technical-application";

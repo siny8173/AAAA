@@ -1,5 +1,6 @@
 package com.lihao.crm.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class SysUserService implements UserDetailsService {
 
 	@Autowired
 	SysUserRepository userRepository;
-	
+
 	@Autowired
 	ContactRepository contactRepository;
 
@@ -33,17 +34,35 @@ public class SysUserService implements UserDetailsService {
 	}
 
 	public List<SysUser> findAll() {
-		Sort sort = new Sort(Direction.ASC, "id");  
+		Sort sort = new Sort(Direction.ASC, "id");
 		return (List<SysUser>) userRepository.findAll(sort);
 	}
 
+	public List<SysUser> findAllTechnicist() {
+		Sort sort = new Sort(Direction.ASC, "id");
+
+		List<SysUser> users = (List<SysUser>) userRepository.findAll(sort);
+
+		List<SysUser> technicists = new ArrayList<>();
+
+		users.forEach(u -> {
+
+			u.getRoles().forEach(r -> {
+				if (r.getName().equals("ROLE_TECHNICIST"))
+					technicists.add(u);
+			});
+		});
+
+		return technicists;
+	}
+
 	public void save(SysUser sysUser) {
-		
+
 		contactRepository.save(sysUser.getContact());
-		
+
 		userRepository.save(sysUser);
 	}
-	
+
 	public void delete(SysUser sysUser) {
 		userRepository.delete(sysUser);
 	}

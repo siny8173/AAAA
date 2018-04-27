@@ -14,12 +14,14 @@ import com.lihao.crm.entity.SysEventType;
 import com.lihao.crm.entity.SysProjectState;
 import com.lihao.crm.entity.SysReportType;
 import com.lihao.crm.entity.SysSex;
+import com.lihao.crm.entity.SysTechnicalApplicationType;
 import com.lihao.crm.repository.SysDepartmentRepository;
 import com.lihao.crm.repository.SysDutyRepository;
 import com.lihao.crm.repository.SysEventTypeRepository;
 import com.lihao.crm.repository.SysProjectStateRepository;
 import com.lihao.crm.repository.SysReportTypeRepository;
 import com.lihao.crm.repository.SysSexRepository;
+import com.lihao.crm.repository.SysTechnicalApplicationTypeRepository;
 
 @Controller
 @RequestMapping("/common")
@@ -42,6 +44,9 @@ public class CommonController {
 	
 	@Autowired
 	private SysReportTypeRepository sysReportTypeRepository;
+	
+	@Autowired
+	private SysTechnicalApplicationTypeRepository sysTechnicalApplicationTypeRepository;
 
 	@GetMapping("loadAllSysSex")
 	@ResponseBody
@@ -77,5 +82,11 @@ public class CommonController {
 	@ResponseBody
 	public List<SysReportType> loadAllSysReportType() {
 		return (List<SysReportType>) sysReportTypeRepository.findAll();
+	}
+	
+	@GetMapping("loadAllSysTechnicalApplicationType")
+	@ResponseBody
+	public List<SysTechnicalApplicationType> loadAllSysTechnicalApplicationType() {
+		return (List<SysTechnicalApplicationType>) sysTechnicalApplicationTypeRepository.findAll();
 	}
 }

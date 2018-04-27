@@ -35,6 +35,9 @@ public class TechnicalApplication {
 	
 	@OneToOne
 	private SysTechnicalApplicationType type;
+	
+	@ManyToOne
+	private SysUser technicist;
 
 	@Column(updatable = false)
 	private Date cretateTime = new Date();
