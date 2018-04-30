@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import com.lihao.crm.entity.SysCustomerSource;
 import com.lihao.crm.entity.SysCustomerType;
 import com.lihao.crm.entity.SysProvince;
 import com.lihao.crm.entity.SysUser;
+import com.lihao.crm.entity.TechnicalApplication;
 import com.lihao.crm.service.CustomerService;
 import com.lihao.crm.service.EventService;
 import com.lihao.crm.service.ProjectService;
@@ -29,6 +31,7 @@ import com.lihao.crm.service.SysCustomerSourceService;
 import com.lihao.crm.service.SysCustomerTypeService;
 import com.lihao.crm.service.SysProvinceService;
 import com.lihao.crm.service.SysUserService;
+import com.lihao.crm.service.TechnicalApplicationService;
 import com.lihao.crm.web.object.CustomerDto;
 import com.lihao.crm.web.object.SysUserDto;
 import com.lihao.crm.web.transform.CustomerTransform;
@@ -67,6 +70,9 @@ public class SalesmanController {
 
 	@Autowired
 	private SysUserService sysUserService;
+	
+	@Autowired
+	private TechnicalApplicationService technicalApplicationService;
 
 	@GetMapping("loadAllCustomer")
 	@ResponseBody
@@ -256,6 +262,17 @@ public class SalesmanController {
 		projectService.save(project);
 		return "success";
 	}
+	
+	@PostMapping("add-technical-application")
+	@ResponseBody
+	public String addTechnicalApplication(TechnicalApplication technicalApplication) {
+		logger.info("SalesmanController addTechnicalApplication " + technicalApplication.getName());
+		technicalApplication.setId(null);
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		technicalApplication.setUser((SysUser) user);
+		technicalApplicationService.save(technicalApplication);
+		return "success";
+	}
 
 	@GetMapping("/main")
 	private String main() {
@@ -275,5 +292,18 @@ public class SalesmanController {
 	@GetMapping("/technical-application")
 	private String technicalApplication() {
 		return "/salesman/technical-application";
+	}
+	
+	@GetMapping("/technical-application-grid")
+	private String technicalApplicationGird(long id, Model model) {
+		logger.info("SalesmanController technicalApplicationGird id=" + id);
+
+		Project project = projectService.findById(id);		
+		model.addAttribute(project);
+		
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		List<TechnicalApplication> technicalApplications = technicalApplicationService.loadMine((SysUser) user);
+		model.addAttribute("technicalApplications", technicalApplications);
+		return "/salesman/technical-application-grid";
 	}
 }

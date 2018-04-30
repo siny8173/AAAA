@@ -17,6 +17,8 @@ public class TechnicalApplication {
 	@Id
 	@GeneratedValue
 	private Long id;
+	
+	private String name;
 
 	@ManyToOne
 	private Project project;

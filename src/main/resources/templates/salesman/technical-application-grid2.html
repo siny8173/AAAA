@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>technical application grid</title>
+
+<link rel="stylesheet" type="text/css"
+	href="/jquery-easyui-1.5.4/themes/default/easyui.css"
+	th:href="@{/jquery-easyui-1.5.4/themes/default/easyui.css}">
+<link rel="stylesheet" type="text/css"
+	href="/jquery-easyui-1.5.4/themes/icon.css"
+	th:href="@{/jquery-easyui-1.5.4/themes/icon.css}">
+<link rel="stylesheet" type="text/css"
+	href="/jquery-easyui-1.5.4/demo/demo.css"
+	th:href="@{/jquery-easyui-1.5.4/demo.css}">
+<script type="text/javascript" src="/jquery-easyui-1.5.4/jquery.min.js"
+	th:src="@{/jquery-easyui-1.5.4/jquery.min.js}"></script>
+<script type="text/javascript"
+	src="/jquery-easyui-1.5.4/jquery.easyui.min.js"
+	th:src="@{/jquery-easyui-1.5.4/jquery.easyui.min.js}"></script>
+<script type="text/javascript" src="/js/main.js" th:src="@{/js/main.js}"></script>
+
+</head>
+
+<body>
+	<table id="technical-application-table" class="easyui-datagrid"
+		style="width: 700px;" data-options="toolbar:'#tb'">
+		<thead>
+			<tr>
+				<th
+					data-options="field:'id',width:40, halign:'center', align:'center'">ID</th>
+				<th
+					data-options="field:'name',width:100, halign:'center', align:'center'">名称</th>
+				<th
+					data-options="field:'context',width:500, halign:'center', align:'center'">详细信息</th>
+			</tr>
+		</thead>
+
+		<tr>
+			<td>001</td>
+			<td>name1</td>
+			<td>2323</td>
+		</tr>
+	</table>
+
+	<div id="tb" style="padding: 5px; height: auto">
+		<div style="margin-bottom: 5px">
+			<a class="easyui-linkbutton"
+				data-options="iconCls:'icon-add',plain:true"
+				onclick="add_technical_application()"></a>
+		</div>
+
+		<script type="text/javascript">
+			function add_technical_application() {
+				$('#technical-application-win').window('open');
+			}
+		</script>
+	</div>
+
+	<div id="technical-application-win" class="easyui-dialog" title="详细信息"
+		style="width: 600px; height: 350px; margin-left: auto; margin-right: auto;"
+		align="center" data-options="closed:true">
+
+		<form id="technical-application-form" method="post">
+			<div
+				style="width: 500px; height: 200px; padding: 10px 10px 10px 60px">
+
+				<input type="hidden" name="id"></input>
+
+				<table>
+					<tr>
+						<td>名称:</td>
+						<td colspan="4"><input style="width: 100%;"
+							class="easyui-textbox" name="name" /></td>
+					</tr>
+
+					<tr>
+						<td>项目:</td>
+						<td colspan="4"><input style="width: 100%;"
+							class="easyui-combobox" name="project"
+							data-options="
+											editable:false,
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/salesman/loadAllProject',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+											
+									" />
+						</td>
+					</tr>
+
+					<tr>
+						<td>客户:</td>
+						<td><input id='customer-combobox' class="easyui-combobox"
+							name="customer"
+							data-options="
+											editable:false,
+											required:true,
+											valueField: 'customerId',
+											textField: 'name',
+											method: 'get',
+											url: '/salesman/loadAllCustomer',
+										    
+										    onSelect: function(record) {										    	
+										    	$('#phone').textbox('setValue', record['phone']);
+										    	$('#officePhone').textbox('setValue', record['officePhone']);
+										    	$('#fax').textbox('setValue', record['fax']);
+										    	$('#email').textbox('setValue', record['email']);
+										    	$('#address').textbox('setValue', record['address']);
+										    }
+											
+									" />
+						</td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>传真:</td>
+						<td><input id='phone' class="easyui-textbox"
+							data-options="readonly:true" /></td>
+					</tr>
+
+					<tr>
+						<td>固话:</td>
+						<td><input id='officePhone' class="easyui-textbox"
+							data-options="readonly:true" /></td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>手机:</td>
+						<td><input id='fax' class="easyui-textbox"
+							data-options="readonly:true" /></td>
+					</tr>
+
+					<tr>
+						<td>邮件:</td>
+						<td><input id='email' class="easyui-textbox"
+							data-options="readonly:true" /></td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>地址:</td>
+						<td><input id='address' class="easyui-textbox"
+							data-options="readonly:true" /></td>
+					</tr>
+
+					<tr>
+						<td>开始:</td>
+						<td><input id='stop-datetimebox' class="easyui-datebox"
+							name="startTime" value="aaa"
+							data-options="
+											required:true,
+											formatter: function (date) { 
+												var y = date.getFullYear();
+												var m = date.getMonth()+1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+												var d = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
+												return y+'-'+m+'-'+d;
+											},
+											
+											parser: function (s) { 
+												var t = Date.parse(s);
+												if (!isNaN(t)){
+													return new Date(t);
+												} else {
+													return new Date();
+												}
+											}
+										" />
+						</td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>结束:</td>
+						<td><input id='stop-datetimebox' class="easyui-datebox"
+							name="stopTime" value="aaa"
+							data-options="
+											required:true,
+											formatter: function (date) { 
+												var y = date.getFullYear();
+												var m = date.getMonth()+1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+												var d = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
+												return y+'-'+m+'-'+d;
+											},
+											
+											parser: function (s) { 
+												var t = Date.parse(s);
+												if (!isNaN(t)){
+													return new Date(t);
+												} else {
+													return new Date();
+												}
+											}
+										" />
+						</td>
+					</tr>
+
+
+					<tr>
+						<td>报告:</td>
+						<td><input class="easyui-combobox" name="sysReportType"
+							data-options="
+											editable:false,
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/common/loadAllSysReportType',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+									" />
+						</td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>技术:</td>
+						<td><input class="easyui-combobox" name="technicist"
+							data-options="
+											editable:false,
+											required:true,
+											valueField: 'userId',
+											textField: 'name',
+											method: 'get',
+											url: '/salesman/loadAllTechnicist',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'userId') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+									" />
+						</td>
+					</tr>
+
+					<tr>
+						<td>属性:</td>
+						<td><input class="easyui-combobox" name="type"
+							data-options="
+											editable:false,
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/common/loadAllSysTechnicalApplicationType',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+									" />
+						</td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td></td>
+						<td></td>
+					</tr>
+
+				</table>
+			</div>
+		</form>
+
+		<div style="margin-left: auto; margin-right: auto; margin-top: 30px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				data-options="iconCls:'icon-ok'" onclick="add()">确定</a> <a
+				href="javascript:void(0)" class="easyui-linkbutton"
+				data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+		</div>
+
+		<script>
+			function verify() {
+				return true;
+			}
+
+			function add() {
+				if (verify() == false) {
+					return;
+				}
+
+				$('#technical-application-form').form('submit', {
+					type : 'POST',
+					url : '/salesman/add-technical-application',
+					onSubmit : function() {
+						return $(this).form('validate');
+					},
+					success : function(result) {
+						if (result == 'success') {
+							$('#event-table').datagrid('reload');
+
+							$.messager.show({
+								title : '成功',
+								msg : '添加成功',
+								showType : 'show'
+							});
+						} else {
+							$.messager.show({
+								title : '失败',
+								msg : '添加失败',
+								showType : 'show'
+							});
+						}
+
+					}
+				});
+			}
+
+			function clearff() {
+				$('#technical-application-form').form('clear');
+			}
+		</script>
+	</div>
+</body>
+</html>
