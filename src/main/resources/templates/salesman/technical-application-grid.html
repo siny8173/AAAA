@@ -47,7 +47,7 @@
 					<label>地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址： </label><span th:utext="${t.customer.contact.address}"></span><br>
 					<label>开&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时： </label><span th:utext="${t.startTime}"></span>
 					<label>结&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;束： </label><span th:utext="${t.startTime}"></span> <br>
-					<label>包该类型： </label><span th:utext="${t.sysReportType.name}"></span> <br>
+					<label>报告类型： </label><span th:utext="${t.sysReportType.name}"></span> <br>
 					<label>技&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;术： </label>
 					<span th:utext="${t.technicist} ? ${t.technicist.contact.name}:无"></span><br>
 					<label>属&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性： </label>
@@ -294,8 +294,10 @@
 					},
 					success : function(result) {
 						if (result == 'success') {
-							$('#event-table').datagrid('reload');
-
+							$('#technical-application-win').window('close');
+							
+							window.location.reload(); 
+							
 							$.messager.show({
 								title : '成功',
 								msg : '添加成功',

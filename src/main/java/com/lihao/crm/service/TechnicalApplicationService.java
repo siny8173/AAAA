@@ -29,7 +29,11 @@ public class TechnicalApplicationService {
 	}
 
 	public List<TechnicalApplication> loadMine(SysUser me) {
-		return (List<TechnicalApplication>) repository.findAllByUserAndIsDeleteNot(me, true);
+		return (List<TechnicalApplication>) repository.findAllByUserAndIsDeleteNotOrderByIdDesc(me, true);
+	}
+	
+	public List<TechnicalApplication> loadByTechnicist(SysUser technicist) {
+		return (List<TechnicalApplication>) repository.findAllByTechnicistAndIsDeleteNot(technicist, true);
 	}
 
 	public void save(TechnicalApplication technicalApplication) {

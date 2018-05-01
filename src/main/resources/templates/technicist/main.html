@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base :: common_header(~{::title},_)">
+<meta charset="UTF-8">
+<title>technicist</title>
+</head>
+
+<body>
+
+	<table id="technical-application-table" class="easyui-datagrid"
+		style="width: 100%;" data-options="toolbar:'#tb'">
+		<thead>
+			<tr>
+				<th
+					data-options="field:'id',width:40, halign:'center', align:'center'">ID</th>
+				<th
+					data-options="field:'name',width:150, halign:'center', align:'left'">名称</th>
+				<th
+					data-options="field:'context',width:500, halign:'center', align:'left'">详细信息</th>
+				<th
+					data-options="field:'op',width:100, halign:'center', align:'center'">操作</th>
+			</tr>
+		</thead>
+
+		<tr th:each="t, stat : ${technicalApplications}">
+			<td th:text="${t.id}">101</td>
+			<td th:text="${t.name}">aaaa</td>
+			<td>
+				<div>
+					<label>项&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目： </label><span
+						th:utext="${t.project.name}"></span><br> <label>联&nbsp;&nbsp;系&nbsp;人：
+					</label><span th:utext="${t.customer.contact.name}"></span><br> <label>电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：
+					</label><span th:utext="${t.customer.contact.phone}"></span><br> <label>地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址：
+					</label><span th:utext="${t.customer.contact.address}"></span><br> <label>开&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时：
+					</label><span th:utext="${t.startTime}"></span> <label>结&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;束：
+					</label><span th:utext="${t.startTime}"></span> <br> <label>报告类型：
+					</label><span th:utext="${t.sysReportType.name}"></span> <br> <label>技&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;术：
+					</label> <span th:utext="${t.technicist} ? ${t.technicist.contact.name}:无"></span><br>
+					<label>属&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性： </label> <span
+						th:utext="${t.type.name}"></span><br>
+				</div>
+
+			</td>
+
+			<td><div th:if="${t.sysReportType.id == 1}">
+					<span>无</span>
+				</div>
+				<div th:if="${t.sysReportType.id != 1}">
+					<a class="easyui-linkbutton"
+						data-options="iconCls:'icon-add',plain:true" onclick="alert()"></a>
+				</div></td>
+		</tr>
+
+	</table>
+</body>
+</html>
