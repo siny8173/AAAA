@@ -9,6 +9,6 @@ public interface TechnicalApplicationRepository extends BaseRepository<Technical
 	
 	public List<TechnicalApplication> findAllByUserAndIsDeleteNotOrderByIdDesc(SysUser me, boolean flag);
 	
-	public List<TechnicalApplication> findAllByTechnicistAndIsDeleteNot(SysUser technicist, boolean flag);
+	public List<TechnicalApplication> findAllByTechnicistAndIsDeleteNotOrderByIdDesc(SysUser technicist, boolean flag);
 	
 }

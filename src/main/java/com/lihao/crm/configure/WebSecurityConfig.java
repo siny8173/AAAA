@@ -22,6 +22,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/jquery-easyui-1.5.4/**").permitAll()
 				.antMatchers("/admin/**").hasRole("ADMIN")
 				.antMatchers("/salesman/**").hasRole("SALESMAN")
+				.antMatchers("/technicist/**").hasRole("TECHNICIST")
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()

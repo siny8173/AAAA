@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.entity.TechnicalApplication;
+import com.lihao.crm.repository.TechnicalApplicationReportRepository;
 import com.lihao.crm.repository.TechnicalApplicationRepository;
 
 @Service
@@ -16,6 +17,9 @@ public class TechnicalApplicationService {
 
 	@Autowired
 	TechnicalApplicationRepository repository;
+	
+	@Autowired
+	TechnicalApplicationReportRepository technicalApplicationReportRepository;
 
 	public TechnicalApplication findById(long id) {
 		TechnicalApplication technicalApplication = new TechnicalApplication();
@@ -33,10 +37,11 @@ public class TechnicalApplicationService {
 	}
 	
 	public List<TechnicalApplication> loadByTechnicist(SysUser technicist) {
-		return (List<TechnicalApplication>) repository.findAllByTechnicistAndIsDeleteNot(technicist, true);
+		return (List<TechnicalApplication>) repository.findAllByTechnicistAndIsDeleteNotOrderByIdDesc(technicist, true);
 	}
 
 	public void save(TechnicalApplication technicalApplication) {
+		technicalApplicationReportRepository.saveAll(technicalApplication.getReports());
 		repository.save(technicalApplication);
 	}
 }
