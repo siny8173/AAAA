@@ -27,7 +27,7 @@
 			<script>
 				function onClickRow(rowIndex, rowData) {
 					$('#event-form').form('load', rowData);
-					$('#customer-combobox').combobox('setValue', rowData['customer']['id'])
+					$('#event-customer-combobox').combobox('setValue', rowData['customer']['id'])
 				}
 			</script>
 		</div>
@@ -52,7 +52,7 @@
 							<tr>
 								<td>客户:</td>
 								<td>
-									<input id='customer-combobox' class="easyui-combobox" name="customer"
+									<input id='event-customer-combobox' class="easyui-combobox" name="customer"
 										data-options="
 											required:true,
 											valueField: 'customerId',
