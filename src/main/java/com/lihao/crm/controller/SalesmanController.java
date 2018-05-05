@@ -318,7 +318,7 @@ public class SalesmanController {
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		List<TechnicalApplication> technicalApplications = technicalApplicationService.loadMine((SysUser) user);
 		model.addAttribute("technicalApplications", technicalApplications);
-		return "/salesman/technical-application-grid";
+		return "salesman/technical-application-grid";
 	}
 	
 	@GetMapping("/data/{id}")
