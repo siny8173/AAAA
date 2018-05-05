@@ -26,9 +26,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.lihao.crm.entity.Inventory;
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.entity.TechnicalApplication;
 import com.lihao.crm.entity.TechnicalApplicationReport;
+import com.lihao.crm.service.InventoryService;
 import com.lihao.crm.service.TechnicalApplicationReportService;
 import com.lihao.crm.service.TechnicalApplicationService;
 
@@ -44,15 +46,62 @@ public class TechnicistController {
 	@Autowired
 	private TechnicalApplicationReportService technicalApplicationReportService;
 
+	@Autowired InventoryService inventoryService;
 	@GetMapping("/main")
-	private String main(Model model) {
-		logger.info("TechnicistController main");
+	private String main() {
+		return "technicist/main";
+	}
+	
+	
+	@GetMapping("/technical-application")
+	private String technicalApplication(Model model) {
+		logger.info("TechnicistController technicalApplication");
 
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		List<TechnicalApplication> technicalApplications = technicalApplicationService.loadByTechnicist((SysUser) user);
 		model.addAttribute("technicalApplications", technicalApplications);
 
-		return "technicist/main";
+		return "technicist/technical-application";
+	}
+	
+	@GetMapping("/inventory")
+	private String inventory() {
+		return "technicist/inventory";
+	}
+	
+	@GetMapping("/inventory-add")
+	private String inventoryAdd() {
+		return "technicist/inventory-add";
+	}
+	
+	
+	@GetMapping("loadAllInventory")
+	@ResponseBody
+	public List<Inventory> loadAllInventory() {
+		logger.info("TechnicistController loadAllInventory ");
+		return inventoryService.loadAll();
+	}
+	
+	@PostMapping("addInventory")
+	@ResponseBody
+	public String addInventory(Inventory inventory) {
+		logger.info("TechnicistController addInventory " + inventory.getName());
+		inventory.setId(null);
+		inventoryService.save(inventory);
+		return "success";
+	}
+	
+	@PostMapping("modInventory")
+	@ResponseBody
+	public String modInventory(Inventory inventory) {
+		logger.info("TechnicistController modInventory " + inventory.getName());
+		inventoryService.save(inventory);
+		return "success";
+	}
+	
+	@GetMapping("/inventory-application")
+	private String inventoryApplication() {
+		return "technicist/inventory-application";
 	}
 
 	@PostMapping("/upload")

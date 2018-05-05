@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="common_header(title,links)">
+<meta charset="UTF-8">
+<title th:replace="${title}">The awesome application</title>
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/themes/default/easyui.css" th:href="@{/jquery-easyui-1.5.4/themes/default/easyui.css}">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/themes/icon.css" th:href="@{/jquery-easyui-1.5.4/themes/icon.css}">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/demo/demo.css" th:href="@{/jquery-easyui-1.5.4/demo.css}">
+<link rel="stylesheet" type="text/css" href="/css/main.css" th:href="@{/css/main3.css}">
+<script type="text/javascript" src="/jquery-easyui-1.5.4/jquery.min.js" th:src="@{/jquery-easyui-1.5.4/jquery.min.js}"></script>
+<script type="text/javascript" src="/jquery-easyui-1.5.4/jquery.easyui.min.js" th:src="@{/jquery-easyui-1.5.4/jquery.easyui.min.js}"></script>
+<!--/* Per-page placeholder for additional links */-->
+<th:block th:replace="${links}" />
+</head>
+<body>
+	
+</body>
+</html>

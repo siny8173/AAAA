@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base :: common_header(~{::title},_)">
+<meta charset="UTF-8">
+<title>technical-application</title>
+</head>
+
+<body>
+
+	<table id="technical-application-table" class="easyui-datagrid" style="width: 100%;" data-options="toolbar:'#tb'">
+		<thead>
+			<tr>
+				<th data-options="field:'id',width:40, halign:'center', align:'center'">ID</th>
+				<th data-options="field:'name',width:150, halign:'center', align:'left'">名称</th>
+				<th data-options="field:'context',width:300, halign:'center', align:'left'">详细信息</th>
+				<th data-options="field:'report',width:300, halign:'center', align:'left'">报告</th>
+				<th data-options="field:'op',width:100, halign:'center', align:'center'">操作</th>
+			</tr>
+		</thead>
+
+		<tr th:each="t, stat : ${technicalApplications}">
+			<td th:text="${t.id}">101</td>
+			<td th:text="${t.name}">aaaa</td>
+			<td>
+				<div style="margin-bottom: 20px">
+					<label>项&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目： </label>
+					<span th:utext="${t.project.name}"></span><br>
+					<label>联&nbsp;&nbsp;系&nbsp;人： </label>
+					<span th:utext="${t.customer.contact.name}"></span><br>
+					<label>电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话： </label>
+					<span th:utext="${t.customer.contact.phone}"></span><br>
+					<label>地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址： </label>
+					<span th:utext="${t.customer.contact.address}"></span><br>
+					<label>开&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时： </label>
+					<span th:utext="${t.startTime}"></span> <br>
+					<label>结&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;束： </label>
+					<span th:utext="${t.startTime}"></span> <br>
+					<label>报告类型： </label>
+					<span th:utext="${t.sysReportType.name}"></span> <br>
+					<label>技&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;术： </label>
+					<span th:utext="${t.technicist} ? ${t.technicist.contact.name}:无"></span><br>
+					<label>属&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性： </label>
+					<span th:utext="${t.type.name}"></span><br>
+				</div>
+
+			</td>
+
+			<td>
+				<ul th:if="${t.sysReportType.id != 1}">
+					<li th:each="r, stat : ${t.reports}">
+						<div>
+							<a th:href="'/technicist/data/'+${r.id}" th:utext="${r.filename}">aaa.xls</a>
+						</div>
+					</li>
+				</ul>
+
+				<div th:if="${t.sysReportType.id == 1}">
+					<span>无</span>
+				</div>
+			</td>
+
+			<td>
+				<div th:if="${t.sysReportType.id == 1}">
+					<span>无</span>
+				</div>
+				<div th:if="${t.sysReportType.id != 1}">
+					<a class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
+						th:onclick="'upload_file(' + ${t.id} + ')'"></a>
+				</div>
+			</td>
+		</tr>
+	</table>
+
+	<div id="file-upload-win" class="easyui-dialog" title="文件上传"
+		style="width: 300px; height: 180px; margin-left: auto; margin-right: auto;" align="center" data-options="closed:true">
+
+		<div style="margin-left: auto; margin-right: auto; margin-top: 20px"></div>
+		<form id="file-upload-form" enctype="multipart/form-data" method="post">
+			<input id="projectId" type="hidden" name="projectId"></input>
+			<table>
+				<tr>
+					<td>文件描述:</td>
+					<td>
+						<input class="easyui-textbox" name="description" style="width: 100%">
+					</td>
+				</tr>
+				<tr>
+					<td>请选择文件:</td>
+					<td>
+						<input class="easyui-filebox" name="file" data-options="prompt:'Choose a file...'" style="width: 100%">
+					</td>
+				</tr>
+			</table>
+		</form>
+
+
+		<div style="margin-left: auto; margin-right: auto; margin-top: 20px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="add()">确定</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+		</div>
+
+		<script>
+			function verify() {
+				return true;
+			}
+
+			function add() {
+				if (verify() == false) {
+					return;
+				}
+
+				$('#file-upload-form').form('submit', {
+					type : 'POST',
+					url : '/technicist/upload',
+					onSubmit : function() {
+						return $(this).form('validate');
+					},
+					success : function(result) {
+						if (result == 'success') {
+							$('#file-upload-win').window('close');
+
+							window.location.reload();
+
+							$.messager.show({
+								title : '成功',
+								msg : '添加成功',
+								showType : 'show'
+							});
+						} else {
+							$.messager.show({
+								title : '失败',
+								msg : '添加失败',
+								showType : 'show'
+							});
+						}
+
+					}
+				});
+			}
+
+			function clearff() {
+				$('#file-upload-form').form('clear');
+			}
+		</script>
+	</div>
+
+	<script type="text/javascript">
+		function upload_file(projectId) {
+			$('#projectId').val(projectId)
+			$('#file-upload-win').window('open');
+		}
+	</script>
+</body>
+</html>

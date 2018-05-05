@@ -28,12 +28,16 @@ import com.lihao.crm.entity.SysCity;
 import com.lihao.crm.entity.SysCustomerLevel;
 import com.lihao.crm.entity.SysCustomerSource;
 import com.lihao.crm.entity.SysCustomerType;
+import com.lihao.crm.entity.SysInventoryRecordState;
+import com.lihao.crm.entity.SysInventoryRecordType;
 import com.lihao.crm.entity.SysProvince;
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.entity.TechnicalApplication;
 import com.lihao.crm.entity.TechnicalApplicationReport;
 import com.lihao.crm.service.CustomerService;
 import com.lihao.crm.service.EventService;
+import com.lihao.crm.service.InventoryRecordService;
+import com.lihao.crm.service.InventoryService;
 import com.lihao.crm.service.ProjectService;
 import com.lihao.crm.service.SysCityService;
 import com.lihao.crm.service.SysCustomerLevelService;
@@ -48,6 +52,8 @@ import com.lihao.crm.web.object.SysUserDto;
 import com.lihao.crm.web.transform.CustomerTransform;
 import com.lihao.crm.web.transform.SysUserTransform;
 import com.lihao.crm.entity.Event;
+import com.lihao.crm.entity.Inventory;
+import com.lihao.crm.entity.InventoryRecord;
 import com.lihao.crm.entity.Project;
 
 @Controller
@@ -81,12 +87,15 @@ public class SalesmanController {
 
 	@Autowired
 	private SysUserService sysUserService;
-	
+
 	@Autowired
 	private TechnicalApplicationService technicalApplicationService;
-	
+
 	@Autowired
 	private TechnicalApplicationReportService technicalApplicationReportService;
+	
+	@Autowired
+	private InventoryRecordService inventoryRecordService;
 
 	@GetMapping("loadAllCustomer")
 	@ResponseBody
@@ -109,7 +118,8 @@ public class SalesmanController {
 		dto.userId = 0l;
 		dto.name = "无";
 		dtos.add(dto);
-		sysUserService.findAllTechnicist().forEach(u -> dtos.add(SysUserTransform.SysUser2Dto(u)));;
+		sysUserService.findAllTechnicist().forEach(u -> dtos.add(SysUserTransform.SysUser2Dto(u)));
+		;
 		return dtos;
 	}
 
@@ -276,7 +286,7 @@ public class SalesmanController {
 		projectService.save(project);
 		return "success";
 	}
-	
+
 	@PostMapping("add-technical-application")
 	@ResponseBody
 	public String addTechnicalApplication(TechnicalApplication technicalApplication) {
@@ -307,20 +317,20 @@ public class SalesmanController {
 	private String technicalApplication() {
 		return "salesman/technical-application";
 	}
-	
+
 	@GetMapping("/technical-application-grid")
 	private String technicalApplicationGird(long id, Model model) {
 		logger.info("SalesmanController technicalApplicationGird id=" + id);
 
-		Project project = projectService.findById(id);		
+		Project project = projectService.findById(id);
 		model.addAttribute(project);
-		
+
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		List<TechnicalApplication> technicalApplications = technicalApplicationService.loadMine((SysUser) user);
 		model.addAttribute("technicalApplications", technicalApplications);
 		return "salesman/technical-application-grid";
 	}
-	
+
 	@GetMapping("/data/{id}")
 	public ResponseEntity<byte[]> download(@PathVariable long id, HttpServletRequest request) {
 		logger.info("SalesmanController download " + id);
@@ -333,7 +343,7 @@ public class SalesmanController {
 			body = new byte[in.available()];// 返回下一次对此输入流调用的方法可以不受阻塞地从此输入流读取（或跳过）的估计剩余字节数
 			in.read(body);// 读入到输入流里面
 			in.close();
-			
+
 			String fileName = new String(report.getFilename().getBytes("gbk"), "iso8859-1");// 防止中文乱码
 			HttpHeaders headers = new HttpHeaders();// 设置响应头
 			headers.add("Content-Disposition", "attachment;filename=" + fileName);
@@ -347,5 +357,52 @@ public class SalesmanController {
 			return response;
 		}
 
+	}
+
+	@GetMapping("/inventory-application")
+	private String inventoryApplication() {
+		return "salesman/inventory-application";
+	}
+
+	@Autowired
+	private InventoryService inventoryService;
+
+	@GetMapping("/loadAllInventory")
+	@ResponseBody
+	private List<Inventory> loadAllInventory() {
+		return inventoryService.loadAll();
+	}
+
+	@GetMapping("/inventory-application-grid")
+	private String inventoryApplicationGird(long id, Model model) {
+		logger.info("SalesmanController inventoryApplicationGird id=" + id);
+
+		Inventory inventory = inventoryService.findById(id);
+		model.addAttribute(inventory);
+		
+		List<InventoryRecord> inventoryRecords = inventoryRecordService.findByInventory(inventory);
+		model.addAttribute("inventoryRecords", inventoryRecords);
+		return "salesman/inventory-application-grid";
+	}
+	
+	@PostMapping("add-inventory-application")
+	@ResponseBody
+	public String addInventoryApplication(InventoryRecord inventoryRecord) {
+		logger.info("SalesmanController addInventoryApplication " + inventoryRecord.getInventory().getName());
+		inventoryRecord.setId(null);
+		
+		SysInventoryRecordState state = new SysInventoryRecordState();
+		state.setId(1l);
+		inventoryRecord.setState(state);
+		
+		SysInventoryRecordType type = new SysInventoryRecordType();
+		type.setId(1l);
+		inventoryRecord.setType(type);
+		
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		inventoryRecord.setProposer((SysUser) user);
+
+		inventoryRecordService.save(inventoryRecord);
+		return "success";
 	}
 }

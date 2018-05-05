@@ -1,5 +1,6 @@
 package com.lihao.crm.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ public class Inventory {
 	
 	private String name;
 	private String trademark;
+	@Column(updatable = false)
 	private Float count;
 	@OneToOne
 	private SysInventoryType type;

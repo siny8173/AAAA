@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base2 :: common_header(~{::title},_)">
+<meta charset="UTF-8">
+<title>inventory-application</title>
+</head>
+
+<body>
+	<div class="easyui-layout" style="width: 100%; height: 100%;">
+		<div style="width: 25%;" data-options="region:'west',split:true">
+
+			<table id="inventory-table" class="easyui-datagrid" title="资产申请"
+				style="width: 100%; height: 100%"
+				data-options="
+					singleSelect:true,
+					url:'/technicist/loadAllInventory',
+					method:'get',
+					onClickRow:onClickRow
+				">
+				<thead>
+					<tr>
+						<th data-options="field:'id',width:40">ID</th>
+						<th data-options="field:'name',width:150">资产</th>
+					</tr>
+				</thead>
+			</table>
+
+			<script>
+				function onClickRow(rowIndex, rowData) {
+					
+					$('#technical-application-frame').attr('src', '/salesman/inventory-application-grid?id=' + rowData["id"]);
+				}
+			</script>
+		</div>
+
+		<div style="width: 75%;" data-options="region:'center',split:true">
+			<iframe id="technical-application-frame"
+				name="technical-application-frame"
+				style="width: 100%; height: 95%; border: 0; position: absolute"></iframe>
+		</div>
+
+
+	</div>
+
+</body>
+</html>

@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.lihao.crm.entity.SysDepartment;
 import com.lihao.crm.entity.SysDuty;
 import com.lihao.crm.entity.SysEventType;
+import com.lihao.crm.entity.SysInventoryRecordState;
+import com.lihao.crm.entity.SysInventoryRecordType;
+import com.lihao.crm.entity.SysInventoryType;
 import com.lihao.crm.entity.SysProjectState;
 import com.lihao.crm.entity.SysReportType;
 import com.lihao.crm.entity.SysSex;
@@ -18,6 +21,9 @@ import com.lihao.crm.entity.SysTechnicalApplicationType;
 import com.lihao.crm.repository.SysDepartmentRepository;
 import com.lihao.crm.repository.SysDutyRepository;
 import com.lihao.crm.repository.SysEventTypeRepository;
+import com.lihao.crm.repository.SysInventoryRecordStateRepository;
+import com.lihao.crm.repository.SysInventoryRecordTypeRepository;
+import com.lihao.crm.repository.SysInventoryTypeRepository;
 import com.lihao.crm.repository.SysProjectStateRepository;
 import com.lihao.crm.repository.SysReportTypeRepository;
 import com.lihao.crm.repository.SysSexRepository;
@@ -47,7 +53,16 @@ public class CommonController {
 	
 	@Autowired
 	private SysTechnicalApplicationTypeRepository sysTechnicalApplicationTypeRepository;
-
+	
+	@Autowired
+	private SysInventoryTypeRepository sysInventoryTypeRepository;
+	
+	@Autowired
+	private SysInventoryRecordTypeRepository sysInventoryRecordTypeRepository;
+	
+	@Autowired
+	private SysInventoryRecordStateRepository sysInventoryRecordStateRepository;
+	
 	@GetMapping("loadAllSysSex")
 	@ResponseBody
 	public List<SysSex> loadAllSysSex() {
@@ -88,5 +103,25 @@ public class CommonController {
 	@ResponseBody
 	public List<SysTechnicalApplicationType> loadAllSysTechnicalApplicationType() {
 		return (List<SysTechnicalApplicationType>) sysTechnicalApplicationTypeRepository.findAll();
+	}
+	
+	@GetMapping("loadAllSysInventoryType")
+	@ResponseBody
+	public List<SysInventoryType> loadAllSysInventoryType() {
+		return (List<SysInventoryType>) sysInventoryTypeRepository.findAll();
+	}
+	
+	@GetMapping("loadAllSysInventoryRecordTypeRepository")
+	@ResponseBody
+	public List<SysInventoryRecordType> loadAllSysInventoryRecordTypeRepository() {
+		return (List<SysInventoryRecordType>) sysInventoryRecordTypeRepository.findAll();
+	}
+	
+//	
+	
+	@GetMapping("loadAllSysInventoryRecordStateRepository")
+	@ResponseBody
+	public List<SysInventoryRecordState> loadAllSysInventoryRecordStateRepository() {
+		return (List<SysInventoryRecordState>) sysInventoryRecordStateRepository.findAll();
 	}
 }
