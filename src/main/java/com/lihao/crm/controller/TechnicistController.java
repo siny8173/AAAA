@@ -52,7 +52,7 @@ public class TechnicistController {
 		List<TechnicalApplication> technicalApplications = technicalApplicationService.loadByTechnicist((SysUser) user);
 		model.addAttribute("technicalApplications", technicalApplications);
 
-		return "/technicist/main";
+		return "technicist/main";
 	}
 
 	@PostMapping("/upload")

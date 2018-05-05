@@ -290,22 +290,22 @@ public class SalesmanController {
 
 	@GetMapping("/main")
 	private String main() {
-		return "/salesman/main";
+		return "salesman/main";
 	}
 
 	@GetMapping("/event")
 	private String event() {
-		return "/salesman/event";
+		return "salesman/event";
 	}
 
 	@GetMapping("/project")
 	private String project() {
-		return "/salesman/project";
+		return "salesman/project";
 	}
 
 	@GetMapping("/technical-application")
 	private String technicalApplication() {
-		return "/salesman/technical-application";
+		return "salesman/technical-application";
 	}
 	
 	@GetMapping("/technical-application-grid")

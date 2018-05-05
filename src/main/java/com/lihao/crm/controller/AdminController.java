@@ -134,6 +134,6 @@ public class AdminController {
 
 	@GetMapping("/main")
 	private String main() {
-		return "/admin/main";
+		return "admin/main";
 	}
 }
