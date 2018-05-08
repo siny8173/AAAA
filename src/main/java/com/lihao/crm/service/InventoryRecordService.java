@@ -1,8 +1,10 @@
 package com.lihao.crm.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import com.lihao.crm.entity.Inventory;
@@ -15,25 +17,26 @@ public class InventoryRecordService {
 	@Autowired
 	InventoryRecordRepository inventoryRecordRepository;
 
-	// public Inventory findById(long id) {
-	// Inventory inventory = new Inventory();
-	//
-	// inventory.setId(id);
-	// Example<Inventory> example = Example.of(inventory);
-	// Optional<Inventory> temp = inventoryRepository.findOne(example);
-	//
-	// return temp.get();
-	// }
-	//
-	// public List<Inventory> loadAll() {
-	// return (List<Inventory>) inventoryRepository.findAll();
-	// }
+	public InventoryRecord findById(long id) {
+		InventoryRecord inventoryRecord = new InventoryRecord();
+
+		inventoryRecord.setId(id);
+		inventoryRecord.setTimeApplication(null);
+		Example<InventoryRecord> example = Example.of(inventoryRecord);
+		Optional<InventoryRecord> temp = inventoryRecordRepository.findOne(example);
+
+		return temp.get();
+	}
+
+	public List<InventoryRecord> loadAll() {
+		return (List<InventoryRecord>) inventoryRecordRepository.findAll();
+	}
 
 	public void save(InventoryRecord inventoryRecord) {
 		inventoryRecordRepository.save(inventoryRecord);
 	}
-	
-	public List<InventoryRecord> findByInventory(Inventory inventory) {		
+
+	public List<InventoryRecord> findByInventory(Inventory inventory) {
 		return (List<InventoryRecord>) inventoryRecordRepository.findByInventory(inventory);
 	}
 

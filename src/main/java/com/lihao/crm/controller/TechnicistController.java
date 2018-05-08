@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,9 +28,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.lihao.crm.entity.Inventory;
+import com.lihao.crm.entity.InventoryRecord;
+import com.lihao.crm.entity.SysInventoryRecordState;
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.entity.TechnicalApplication;
 import com.lihao.crm.entity.TechnicalApplicationReport;
+import com.lihao.crm.service.InventoryRecordService;
 import com.lihao.crm.service.InventoryService;
 import com.lihao.crm.service.TechnicalApplicationReportService;
 import com.lihao.crm.service.TechnicalApplicationService;
@@ -46,13 +50,17 @@ public class TechnicistController {
 	@Autowired
 	private TechnicalApplicationReportService technicalApplicationReportService;
 
-	@Autowired InventoryService inventoryService;
+	@Autowired
+	private InventoryService inventoryService;
+
+	@Autowired
+	private InventoryRecordService inventoryRecordService;
+
 	@GetMapping("/main")
 	private String main() {
 		return "technicist/main";
 	}
-	
-	
+
 	@GetMapping("/technical-application")
 	private String technicalApplication(Model model) {
 		logger.info("TechnicistController technicalApplication");
@@ -63,25 +71,24 @@ public class TechnicistController {
 
 		return "technicist/technical-application";
 	}
-	
+
 	@GetMapping("/inventory")
 	private String inventory() {
 		return "technicist/inventory";
 	}
-	
+
 	@GetMapping("/inventory-add")
 	private String inventoryAdd() {
 		return "technicist/inventory-add";
 	}
-	
-	
+
 	@GetMapping("loadAllInventory")
 	@ResponseBody
 	public List<Inventory> loadAllInventory() {
 		logger.info("TechnicistController loadAllInventory ");
 		return inventoryService.loadAll();
 	}
-	
+
 	@PostMapping("addInventory")
 	@ResponseBody
 	public String addInventory(Inventory inventory) {
@@ -90,7 +97,7 @@ public class TechnicistController {
 		inventoryService.save(inventory);
 		return "success";
 	}
-	
+
 	@PostMapping("modInventory")
 	@ResponseBody
 	public String modInventory(Inventory inventory) {
@@ -98,7 +105,7 @@ public class TechnicistController {
 		inventoryService.save(inventory);
 		return "success";
 	}
-	
+
 	@GetMapping("/inventory-application")
 	private String inventoryApplication() {
 		return "technicist/inventory-application";
@@ -180,7 +187,7 @@ public class TechnicistController {
 			body = new byte[in.available()];// 返回下一次对此输入流调用的方法可以不受阻塞地从此输入流读取（或跳过）的估计剩余字节数
 			in.read(body);// 读入到输入流里面
 			in.close();
-			
+
 			String fileName = new String(report.getFilename().getBytes("gbk"), "iso8859-1");// 防止中文乱码
 			HttpHeaders headers = new HttpHeaders();// 设置响应头
 			headers.add("Content-Disposition", "attachment;filename=" + fileName);
@@ -196,4 +203,38 @@ public class TechnicistController {
 
 	}
 
+	@GetMapping("/inventory-application-grid")
+	private String inventoryApplicationGird(long id, Model model) {
+		logger.info("SalesmanController inventoryApplicationGird id=" + id);
+
+		Inventory inventory = inventoryService.findById(id);
+		model.addAttribute(inventory);
+
+		List<InventoryRecord> inventoryRecords = inventoryRecordService.findByInventory(inventory);
+		model.addAttribute("inventoryRecords", inventoryRecords);
+		return "technicist/inventory-application-grid";
+	}
+
+	@GetMapping("/inventory-application-deal")
+	@ResponseBody
+	private String inventoryApplicationDeal(long id, boolean agree) {
+		logger.info("SalesmanController inventoryApplicationDeal " + String.format("id=%d, agree=%b", id, agree));
+
+		InventoryRecord inventoryRecord = inventoryRecordService.findById(id);
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		inventoryRecord.setApprover((SysUser) user);
+
+		inventoryRecord.setTimeApproach(new Date());
+
+		SysInventoryRecordState state = new SysInventoryRecordState();
+
+		if (agree)
+			state.setId(2l);
+		else
+			state.setId(3l);
+		inventoryRecord.setState(state);
+		
+		inventoryRecordService.save(inventoryRecord);
+		return "success";
+	}
 }
