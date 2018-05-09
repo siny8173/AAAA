@@ -86,7 +86,8 @@ public class TechnicistController {
 	@ResponseBody
 	public List<Inventory> loadAllInventory() {
 		logger.info("TechnicistController loadAllInventory ");
-		return inventoryService.loadAll();
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return inventoryService.loadByUser((SysUser) user);
 	}
 
 	@PostMapping("addInventory")
@@ -94,6 +95,8 @@ public class TechnicistController {
 	public String addInventory(Inventory inventory) {
 		logger.info("TechnicistController addInventory " + inventory.getName());
 		inventory.setId(null);
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		inventory.setUser((SysUser) user);
 		inventoryService.save(inventory);
 		return "success";
 	}
@@ -102,6 +105,14 @@ public class TechnicistController {
 	@ResponseBody
 	public String modInventory(Inventory inventory) {
 		logger.info("TechnicistController modInventory " + inventory.getName());
+		Inventory temp =  inventoryService.findById(inventory.getId());
+		SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if(temp.getUser().getId().equals(user.getId()) == false) {
+			logger.warn(String.format("TechnicistController modInventory the inventory belong to %ld %s", temp.getUser().getId(), temp.getUser().getContact().getName()));
+			logger.warn(String.format("TechnicistController modInventory the inventory not belong to %ld %s", user.getId(), user.getContact().getName()));
+			return "failed";
+		}
+		
 		inventoryService.save(inventory);
 		return "success";
 	}
@@ -221,7 +232,15 @@ public class TechnicistController {
 		logger.info("SalesmanController inventoryApplicationDeal " + String.format("id=%d, agree=%b", id, agree));
 
 		InventoryRecord inventoryRecord = inventoryRecordService.findById(id);
-		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		Inventory temp =  inventoryRecord.getInventory();
+		if(temp.getUser().getId().equals(user.getId()) == false) {
+			logger.warn(String.format("TechnicistController inventoryApplicationDeal the inventory belong to %ld %s", temp.getUser().getId(), temp.getUser().getContact().getName()));
+			logger.warn(String.format("TechnicistController inventoryApplicationDeal the inventory not belong to %ld %s", user.getId(), user.getContact().getName()));
+			return "failed";
+		}
+		
 		inventoryRecord.setApprover((SysUser) user);
 
 		inventoryRecord.setTimeApproach(new Date());

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import com.lihao.crm.entity.Inventory;
+import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.repository.InventoryRepository;
 
 @Service
@@ -28,6 +29,10 @@ public class InventoryService {
 
 	public List<Inventory> loadAll() {
 		return (List<Inventory>) inventoryRepository.findAll();
+	}
+	
+	public List<Inventory> loadByUser(SysUser user) {
+		return (List<Inventory>) inventoryRepository.findAllByUser(user);
 	}
 
 	public void save(Inventory inventory) {
