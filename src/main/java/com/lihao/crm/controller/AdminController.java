@@ -136,4 +136,14 @@ public class AdminController {
 	private String main() {
 		return "admin/main";
 	}
+	
+	@GetMapping("/system-user")
+	private String systemUser() {
+		return "admin/system-user";
+	}
+	
+	@GetMapping("/system-tools")
+	private String systemTools() {
+		return "admin/system-tools";
+	}
 }

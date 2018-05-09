@@ -363,6 +363,12 @@ public class SalesmanController {
 	private String inventoryApplication() {
 		return "salesman/inventory-application";
 	}
+	
+//	information 
+	@GetMapping("/customer-information")
+	private String customerInformation() {
+		return "salesman/customer-information";
+	}
 
 	@Autowired
 	private InventoryService inventoryService;

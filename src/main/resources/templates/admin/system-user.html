@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base :: common_header(~{::title},_)">
+<meta charset="UTF-8">
+<title>system-user</title>
+</head>
+
+<body>
+	<div class="easyui-layout" style="width: 100%; height: 450px;">
+		<div data-options="region:'west',split:true" style="width: 20%;">
+
+			<table id="sysUsers" class="easyui-datagrid" title="系统用户" style="width: 100%; height: 100%"
+				data-options="
+					singleSelect:true,
+					url:'/admin/loadAllSysUser',
+					method:'get',
+					onClickRow:onClickRow
+				">
+				<thead>
+					<tr>
+						<th data-options="field:'userId',width:40">ID</th>
+						<th data-options="field:'username',width:150">用户名</th>
+					</tr>
+				</thead>
+			</table>
+
+			<script>
+				function onClickRow(rowIndex, rowData) {
+					clearff();
+					document.getElementById("ROLE_ADMIN").checked = false
+					document.getElementById("ROLE_MANAGER").checked = false
+					document.getElementById("ROLE_SALESMAN").checked = false
+					document.getElementById("ROLE_TECHNICIST").checked = false
+
+					$('#ff').form('load', rowData);
+					$('#ff').form('load', rowData['contact']);
+
+					var roles = rowData['roles'];
+					for ( var role in roles) {
+						document.getElementById(roles[role]['name']).checked = true
+					}
+
+					if (rowData['isPrimary'] == true) {
+						document.getElementById('primary').checked = true
+					} else {
+						document.getElementById('primary').checked = false
+					}
+
+				}
+			</script>
+		</div>
+
+		<div data-options="region:'center',split:true" style="width: 80%;">
+			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;"
+				align="left" data-options="border:false, fit:true">
+
+				<form id="ff" method="post">
+					<div style="width: 300px; padding: 10px 60px 20px 60px">
+						<input type="hidden" name="userId"></input>
+						<table>
+							<tr>
+								<td>账号:</td>
+								<td>
+									<input class="easyui-textbox" type="text" name="username" data-options="required:true"></input>
+								</td>
+							</tr>
+
+							<tr>
+								<td>密码:</td>
+								<td>
+									<input class="easyui-textbox" type="text" name="password" data-options="required:true"></input>
+								</td>
+							</tr>
+							<tr>
+								<td>权限:</td>
+								<td>
+									<div>
+										<input id="ROLE_ADMIN" type="checkbox" name="roles" value=1>
+										管理员
+										<input id="ROLE_MANAGER" type="checkbox" name="roles" value=2>
+										经理
+										<input id="ROLE_SALESMAN" type="checkbox" name="roles" value=3>
+										销售
+										<input id="ROLE_TECHNICIST" type="checkbox" name="roles" value=4>
+										技术
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div style="width: 500px; padding: 10px 60px 20px 60px">
+						<table th:replace="contact :: add-contact">
+						</table>
+					</div>
+				</form>
+
+				<div style="margin-left: 60px; margin-right: auto; margin-top: 10px">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit()">删除</a>
+				</div>
+
+
+			</div>
+
+
+
+			<script>
+				function modify() {
+
+					$('#ff').form('submit', {
+						type : 'POST',
+						url : '/admin/modSysUser',
+						onSubmit : function() {
+							return $(this).form('validate');
+						},
+						success : function(result) {
+							if (result == 'success') {
+								$('#sysUsers').datagrid('reload');
+
+								$.messager.show({
+									title : '成功',
+									msg : '修改成功',
+									showType : 'show'
+								});
+							} else {
+								$.messager.show({
+									title : '失败',
+									msg : '修改失败',
+									showType : 'show'
+								});
+							}
+
+						}
+					});
+				}
+
+				function add() {
+					$('#ff').form('submit', {
+						type : 'POST',
+						url : '/admin/addSysUser',
+						onSubmit : function() {
+							return $(this).form('validate');
+						},
+						success : function(result) {
+							if (result == 'success') {
+								$('#sysUsers').datagrid('reload');
+
+								$.messager.show({
+									title : '成功',
+									msg : '添加成功',
+									showType : 'show'
+								});
+							} else {
+								$.messager.show({
+									title : '失败',
+									msg : '添加失败',
+									showType : 'show'
+								});
+							}
+
+						}
+					});
+				}
+				function clearff() {
+					$('#ff').form('clear');
+				}
+				function removeit() {
+
+					$('#ff').form('submit', {
+						type : 'POST',
+						url : '/admin/delSysUser',
+						onSubmit : function() {
+							return $(this).form('validate');
+						},
+						success : function(result) {
+							if (result == 'success') {
+								$('#sysUsers').datagrid('reload');
+								$('#ff').form('clear');
+								$.messager.show({
+									title : '成功',
+									msg : '删除成功',
+									showType : 'show'
+								});
+							} else {
+								$.messager.show({
+									title : '失败',
+									msg : '删除失败',
+									showType : 'show'
+								});
+							}
+
+						}
+					});
+				}
+			</script>
+		</div>
+
+
+	</div>
+	</div>
+
+
+</body>
+</html>
