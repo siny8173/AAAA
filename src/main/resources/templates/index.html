@@ -15,12 +15,13 @@
 				<div sec:authorize="hasRole('ROLE_ADMIN')" title="系统用户" data-options="href:'/admin/system-user'" style="padding: 0px"></div>
 				<div sec:authorize="hasRole('ROLE_ADMIN')" title="系统工具" data-options="href:'/admin/system-tools'" style="padding: 0px"></div>
 
-				<div sec:authorize="hasRole('ROLE_SALESMAN')" title="客户信息" data-options="href:'/salesman/customer-information'" style="padding: 0px"></div>
+				<div sec:authorize="hasRole('ROLE_SALESMAN')" title="客户信息" data-options="href:'/salesman/company'" style="padding: 0px"></div>
+				<div sec:authorize="hasRole('ROLE_SALESMAN')" title="联系人" data-options="href:'/salesman/customer-information'" style="padding: 0px"></div>
 				<div sec:authorize="hasRole('ROLE_SALESMAN')" title="项目管理" data-options="href:'/salesman/project'" style="padding: 0px"></div>
 				<div sec:authorize="hasRole('ROLE_SALESMAN')" title="技术申请" data-options="href:'/salesman/technical-application'" style="padding: 0px"></div>
 				<div sec:authorize="hasRole('ROLE_SALESMAN')" title="活动管理" data-options="href:'/salesman/event'" style="padding: 0px"></div>
 				<div sec:authorize="hasRole('ROLE_SALESMAN')" title="资产申请" data-options="href:'/salesman/inventory-application'" style="padding: 0px"></div>
-				
+
 				<div sec:authorize="hasRole('ROLE_TECHNICIST')" title="技术申请" data-options="href:'/technicist/technical-application'" style="padding: 0px"></div>
 				<div sec:authorize="hasRole('ROLE_TECHNICIST')" title="库存管理" data-options="href:'/technicist/inventory'" style="padding: 0px"></div>
 			</div>
