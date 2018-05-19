@@ -30,7 +30,6 @@
 							rowData['city']['provinceId']);
 					$('#company-form').form('load', rowData);
 
-					var aa = rowData['departments'];
 					$('#company-department-grid').datagrid('loadData',
 							rowData['departments']);
 				}
@@ -294,9 +293,11 @@
 
 				<div class="easyui-panel" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
 
-					<table id="company-department-grid" class="easyui-datagrid" style="width: 100%; height: 100%" data-options="
+					<table id="company-department-grid" class="easyui-datagrid" style="width: 100%; height: 100%"
+						data-options="
 						singleSelect:true,
-						onClickRow:onClickRow
+						onDblClickRow:mod_technical_application,
+						toolbar:'#company-department-grid-tb'
 					">
 						<thead>
 							<tr>
@@ -305,6 +306,226 @@
 							</tr>
 						</thead>
 					</table>
+				</div>
+
+				<div id="company-department-grid-tb" style="padding: 5px; height: auto">
+					<div style="margin-bottom: 5px">
+						<a class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="add_technical_application()"></a>
+						<a class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="del_technical_application()"></a>
+					</div>
+
+					<script type="text/javascript">
+						function add_technical_application() {
+
+							var row = $('#company-grid')
+									.datagrid('getSelected');
+
+							if (row == null) {
+								alert("请选择左侧客户后再添加");
+								return;
+							}
+
+							$('#company-department-win').window('open');
+
+							$('#companyId').val(row['id']);
+
+						}
+
+						function mod_technical_application(rowIndex, rowData) {
+
+							var row = $('#company-grid')
+									.datagrid('getSelected');
+
+							if (row == null) {
+								alert("请选择左侧客户后再添加");
+								return;
+							}
+
+							$('#companyId').val(row['id']);
+							$('#company-department-form').form('load', rowData);
+
+							$('#company-department-win').window('open');
+
+						}
+
+						function del_technical_application() {
+
+							var rowCompany = $('#company-grid').datagrid(
+									'getSelected');
+
+							if (rowCompany == null) {
+								alert("请选择左侧客户后再添加");
+								return;
+							}
+
+							var row = $('#company-department-grid').datagrid(
+									'getSelected');
+
+							if (row == null) {
+								alert("请选择下面部门后删除");
+								return;
+							}
+
+							var dataStr = 'id=' + row['id'] + '&cid='
+									+ rowCompany['id'];
+							$.ajax({
+								url : "/salesman/del-company-department",
+								data : dataStr,
+								success : function(result) {
+									if (result == 'success') {
+										window.location.reload();
+										$.messager.show({
+											title : '成功',
+											msg : '处理成功',
+											showType : 'show'
+										});
+									} else {
+										$.messager.show({
+											title : '失败',
+											msg : '处理失败',
+											showType : 'show'
+										});
+									}
+
+								}
+							});
+
+						}
+					</script>
+				</div>
+
+				<div id="company-department-win" class="easyui-dialog" title="详细信息" style="width: 400px; height: 200px; margin-left: auto; margin-right: auto;" align="center" data-options="closed:true">
+
+					<form id="company-department-form" method="post">
+						<div style="width: 360px; height: 100px; padding: 10px 10px 10px 10px">
+
+							<input id="companyId" type="hidden" name="companyId">
+							<input id="id" type="hidden" name="id">
+							<table>
+								<tr>
+									<td>名称:</td>
+									<td>
+										<input style="width: 300px;" class="easyui-textbox" name="name" data-options="
+												required:true
+										" />
+									</td>
+								</tr>
+
+								<tr>
+									<td>功能:</td>
+									<td>
+										<input style="width: 300px; height: 50px" class="easyui-textbox" name="function" data-options="
+												required:true,
+												multiline:true
+										" />
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div style="margin-left: auto; margin-right: auto; margin-top: 0px">
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="addDepartment()">添加</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="modDepartment()">修改</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+						</div>
+
+						<script>
+							function verify() {
+								return true;
+							}
+
+							function addDepartment() {
+								if (verify() == false) {
+									return;
+								}
+
+								$('#company-department-form')
+										.form(
+												'submit',
+												{
+													type : 'POST',
+													url : '/salesman/add-company-department',
+													onSubmit : function() {
+														return $(this).form(
+																'validate');
+													},
+													success : function(result) {
+														if (result == 'success') {
+															$(
+																	'#company-department-win')
+																	.window(
+																			'close');
+
+															window.location
+																	.reload();
+
+															$.messager
+																	.show({
+																		title : '成功',
+																		msg : '添加成功',
+																		showType : 'show'
+																	});
+														} else {
+															$.messager
+																	.show({
+																		title : '失败',
+																		msg : '添加失败',
+																		showType : 'show'
+																	});
+														}
+
+													}
+												});
+							}
+
+							function modDepartment() {
+								if (verify() == false) {
+									return;
+								}
+
+								$('#company-department-form')
+										.form(
+												'submit',
+												{
+													type : 'POST',
+													url : '/salesman/mod-company-department',
+													onSubmit : function() {
+														return $(this).form(
+																'validate');
+													},
+													success : function(result) {
+														if (result == 'success') {
+															$(
+																	'#company-department-win')
+																	.window(
+																			'close');
+
+															window.location
+																	.reload();
+
+															$.messager
+																	.show({
+																		title : '成功',
+																		msg : '修改成功',
+																		showType : 'show'
+																	});
+														} else {
+															$.messager
+																	.show({
+																		title : '失败',
+																		msg : '修改失败',
+																		showType : 'show'
+																	});
+														}
+
+													}
+												});
+							}
+
+							function clearff() {
+								$('#company-department-form').form('clear');
+							}
+						</script>
+					</form>
 				</div>
 			</div>
 		</div>

@@ -37,9 +37,9 @@ public class CompanyService {
 	
 	public void add(Company company) {
 		Department department = new Department();
-		department.setId(0l);
 		department.setName("默认");
-		departmentRepository.save(department);
+		department.setFunction("默认");
+		department = departmentRepository.save(department);
 		List<Department> departments = new ArrayList<>();
 		departments.add(department);
 		company.setDepartments(departments);
@@ -48,5 +48,13 @@ public class CompanyService {
 
 	public void save(Company company) {
 		companyRepository.save(company);
+	}
+	
+	public Department saveDepartment(Department department) {
+		return departmentRepository.save(department);
+	}
+	
+	public void deleteDepartment(long id) {
+		departmentRepository.deleteById(id);
 	}
 }
