@@ -23,6 +23,7 @@ public class TreaNodeTransform {
 		treeNode.setId(company.getId());
 		treeNode.setText(company.getName());
 		treeNode.setState(COLSED);
+		treeNode.setType(TreeNode.COMPANY);
 
 		List<TreeNode> children = new ArrayList<TreeNode>();
 		company.getDepartments().forEach(d -> children.add(CompanyToTreeNode(d)));
@@ -35,6 +36,7 @@ public class TreaNodeTransform {
 		treeNode.setId(department.getId());
 		treeNode.setText(department.getName());
 		treeNode.setState(COLSED);
+		treeNode.setType(TreeNode.DEPARTMENT);
 		return treeNode;
 	}
 
