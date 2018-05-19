@@ -17,6 +17,8 @@ import com.lihao.crm.entity.Company;
 import com.lihao.crm.entity.Department;
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.service.CompanyService;
+import com.lihao.crm.web.object.TreeNode;
+import com.lihao.crm.web.transform.TreaNodeTransform;
 
 @Controller
 @RequestMapping("/salesman")
@@ -72,49 +74,61 @@ public class SalesmanCompanyController {
 		companyService.save(company);
 		return "success";
 	}
-	
+
 	@PostMapping("/add-company-department")
 	@ResponseBody
 	private String addCompanyDepartment(long companyId, Department department) {
 		logger.info("SalesmanCompanyController addCompanyDepartment ");
-		
+
 		Company company = companyService.findById(companyId);
-		
+
 		department = companyService.saveDepartment(department);
-		
+
 		company.getDepartments().add(department);
-		
+
 		companyService.save(company);
 		return "success";
 	}
-	
+
 	@PostMapping("/mod-company-department")
 	@ResponseBody
 	private String modCompanyDepartment(long companyId, Department department) {
 		logger.info("SalesmanCompanyController addCompanyDepartment ");
-		
+
 		companyService.saveDepartment(department);
 		return "success";
 	}
-	
+
 	@GetMapping("/del-company-department")
 	@ResponseBody
 	private String delCompanyDepartment(long id, long cid) {
 		logger.info("SalesmanCompanyController delCompanyDepartment " + id);
-			
+
 		Company company = companyService.findById(cid);
-			
+
 		List<Department> departments = new ArrayList<>();
 		company.getDepartments().forEach(d -> {
-			if(d.getId() != id) {
+			if (d.getId() != id) {
 				departments.add(d);
 			}
 		});
-		
+
 		company.setDepartments(departments);
 		companyService.save(company);
 		companyService.deleteDepartment(id);
 		return "success";
 	}
 
+	@PostMapping("/load-all-customer-tree")
+	@ResponseBody
+	private List<TreeNode> loadAllCustomerTree(Long id) {
+		logger.info("SalesmanCompanyController loadAllCustomerTree id=" + id);
+
+		if (id == null) {
+			SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			return TreaNodeTransform.CompanyToTreeNode(companyService.loadMine(user));
+		}
+		
+		return null;
+	}
 }

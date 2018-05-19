@@ -2,12 +2,13 @@ package com.lihao.crm.web.object;
 
 import java.util.Date;
 
+import com.lihao.crm.entity.Company;
+import com.lihao.crm.entity.Department;
 import com.lihao.crm.entity.SysCity;
 import com.lihao.crm.entity.SysContactType;
 import com.lihao.crm.entity.SysCustomerLevel;
 import com.lihao.crm.entity.SysCustomerSource;
 import com.lihao.crm.entity.SysCustomerType;
-import com.lihao.crm.entity.SysDepartment;
 import com.lihao.crm.entity.SysDuty;
 import com.lihao.crm.entity.SysSex;
 import com.lihao.crm.entity.SysUser;
@@ -33,7 +34,8 @@ public class CustomerDto {
 	public Long contactId;
 	public String name;
 	public SysSex sex;
-	public SysDepartment department;
+	public Company company;
+	public Department department;
 	public SysDuty duty;
 	public SysContactType type;
 	public String officePhone;

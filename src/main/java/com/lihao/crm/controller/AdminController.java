@@ -1,6 +1,5 @@
 package com.lihao.crm.controller;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,8 +23,6 @@ import com.lihao.crm.service.SysCityService;
 import com.lihao.crm.service.SysProvinceService;
 import com.lihao.crm.service.SysUserService;
 import com.lihao.crm.service.WebAdministrativeRegionService;
-import com.lihao.crm.web.object.SysUserDto;
-import com.lihao.crm.web.transform.SysUserTransform;
 
 @Controller
 @RequestMapping("/admin")
@@ -96,38 +93,31 @@ public class AdminController {
 
 	@GetMapping("loadAllSysUser")
 	@ResponseBody
-	public List<SysUserDto> loadAllSysUser() {
-		List<SysUser> sysUsers = sysUserService.findAll();	
-		List<SysUserDto> dtos = new ArrayList<>();	
-		sysUsers.forEach(sysUser -> dtos.add(SysUserTransform.SysUser2Dto(sysUser)));
-		return dtos;
+	public List<SysUser> loadAllSysUser() {
+		return sysUserService.findAll();
 	}
 
 	@PostMapping("addSysUser")
 	@ResponseBody
-	public String addSysUser(SysUserDto sysUserDto) {
-		logger.info("AdminController addSysUser " + sysUserDto.name);
-		sysUserDto.userId = null;
-		sysUserDto.contactId = null;
-		SysUser sysUser = SysUserTransform.Dto2SysUser(sysUserDto);
+	public String addSysUser(SysUser sysUser) {
+		logger.info("AdminController addSysUser " + sysUser.getName());
+		sysUser.setId(null);
 		sysUserService.save(sysUser);
 		return "success";
 	}
 
 	@PostMapping("modSysUser")
 	@ResponseBody
-	public String modSysUser(SysUserDto sysUserDto) {
-		logger.info("AdminController modSysUser " + sysUserDto.name);
-		SysUser sysUser = SysUserTransform.Dto2SysUser(sysUserDto);
+	public String modSysUser(SysUser sysUser) {
+		logger.info("AdminController modSysUser " + sysUser.getName());
 		sysUserService.save(sysUser);
 		return "success";
 	}
 
 	@PostMapping("delSysUser")
 	@ResponseBody
-	public String delSysUser(SysUserDto sysUserDto) {
-		logger.info("AdminController delSysUser " + sysUserDto.name);
-		SysUser sysUser = SysUserTransform.Dto2SysUser(sysUserDto);
+	public String delSysUser(SysUser sysUser) {
+		logger.info("AdminController delSysUser " + sysUser.getName());
 		sysUserService.delete(sysUser);
 		return "success";
 	}

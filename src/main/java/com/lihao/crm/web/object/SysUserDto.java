@@ -2,8 +2,9 @@ package com.lihao.crm.web.object;
 
 import java.util.List;
 
+import com.lihao.crm.entity.Company;
+import com.lihao.crm.entity.Department;
 import com.lihao.crm.entity.SysContactType;
-import com.lihao.crm.entity.SysDepartment;
 import com.lihao.crm.entity.SysDuty;
 import com.lihao.crm.entity.SysRole;
 import com.lihao.crm.entity.SysSex;
@@ -22,7 +23,8 @@ public class SysUserDto {
 	public Long contactId;
 	public String name;
 	public SysSex sex;
-	public SysDepartment department;
+	public Company company;
+	public Department department;
 	public SysDuty duty;
 	public SysContactType type;
 	public String officePhone;

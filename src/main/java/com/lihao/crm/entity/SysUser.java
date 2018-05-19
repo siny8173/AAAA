@@ -10,7 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,8 +29,16 @@ public class SysUser implements UserDetails {
     private String username;
     private String password;
     
-    @OneToOne
-	private Contact contact;
+    private String name;
+	@ManyToOne
+	private SysSex sex;
+
+	private String officePhone;
+	private String fax;
+	private String phone;
+	private String email;
+	private String address;
+	private Boolean isPrimary;
     
     @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
     private List<SysRole> roles;

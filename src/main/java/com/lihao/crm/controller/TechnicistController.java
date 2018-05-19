@@ -108,8 +108,8 @@ public class TechnicistController {
 		Inventory temp =  inventoryService.findById(inventory.getId());
 		SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(temp.getUser().getId().equals(user.getId()) == false) {
-			logger.warn(String.format("TechnicistController modInventory the inventory belong to %ld %s", temp.getUser().getId(), temp.getUser().getContact().getName()));
-			logger.warn(String.format("TechnicistController modInventory the inventory not belong to %ld %s", user.getId(), user.getContact().getName()));
+			logger.warn(String.format("TechnicistController modInventory the inventory belong to %ld %s", temp.getUser().getId(), temp.getUser().getName()));
+			logger.warn(String.format("TechnicistController modInventory the inventory not belong to %ld %s", user.getId(), user.getName()));
 			return "failed";
 		}
 		
@@ -193,21 +193,21 @@ public class TechnicistController {
 
 			TechnicalApplicationReport report = technicalApplicationReportService.findById(id);
 
-			InputStream in = new FileInputStream(new File("data/" + report.getUuid()));// 将该文件加入到输入流之中
+			InputStream in = new FileInputStream(new File("data/" + report.getUuid()));// 灏嗚鏂囦欢鍔犲叆鍒拌緭鍏ユ祦涔嬩腑
 			byte[] body = null;
-			body = new byte[in.available()];// 返回下一次对此输入流调用的方法可以不受阻塞地从此输入流读取（或跳过）的估计剩余字节数
-			in.read(body);// 读入到输入流里面
+			body = new byte[in.available()];// 杩斿洖涓嬩竴娆″姝よ緭鍏ユ祦璋冪敤鐨勬柟娉曞彲浠ヤ笉鍙楅樆濉炲湴浠庢杈撳叆娴佽鍙栵紙鎴栬烦杩囷級鐨勪及璁″墿浣欏瓧鑺傛暟
+			in.read(body);// 璇诲叆鍒拌緭鍏ユ祦閲岄潰
 			in.close();
 
-			String fileName = new String(report.getFilename().getBytes("gbk"), "iso8859-1");// 防止中文乱码
-			HttpHeaders headers = new HttpHeaders();// 设置响应头
+			String fileName = new String(report.getFilename().getBytes("gbk"), "iso8859-1");// 闃叉涓枃涔辩爜
+			HttpHeaders headers = new HttpHeaders();// 璁剧疆鍝嶅簲澶�
 			headers.add("Content-Disposition", "attachment;filename=" + fileName);
-			HttpStatus statusCode = HttpStatus.OK;// 设置响应吗
+			HttpStatus statusCode = HttpStatus.OK;// 璁剧疆鍝嶅簲鍚�
 			ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(body, headers, statusCode);
 			return response;
 		} catch (Exception e) {
-			HttpHeaders headers = new HttpHeaders();// 设置响应头
-			HttpStatus statusCode = HttpStatus.BAD_REQUEST;// 设置响应吗
+			HttpHeaders headers = new HttpHeaders();// 璁剧疆鍝嶅簲澶�
+			HttpStatus statusCode = HttpStatus.BAD_REQUEST;// 璁剧疆鍝嶅簲鍚�
 			ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(null, headers, statusCode);
 			return response;
 		}
@@ -236,8 +236,8 @@ public class TechnicistController {
 		
 		Inventory temp =  inventoryRecord.getInventory();
 		if(temp.getUser().getId().equals(user.getId()) == false) {
-			logger.warn(String.format("TechnicistController inventoryApplicationDeal the inventory belong to %ld %s", temp.getUser().getId(), temp.getUser().getContact().getName()));
-			logger.warn(String.format("TechnicistController inventoryApplicationDeal the inventory not belong to %ld %s", user.getId(), user.getContact().getName()));
+			logger.warn(String.format("TechnicistController inventoryApplicationDeal the inventory belong to %ld %s", temp.getUser().getId(), temp.getUser().getName()));
+			logger.warn(String.format("TechnicistController inventoryApplicationDeal the inventory not belong to %ld %s", user.getId(), user.getName()));
 			return "failed";
 		}
 		

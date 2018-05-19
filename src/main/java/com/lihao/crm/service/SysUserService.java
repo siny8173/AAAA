@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.lihao.crm.entity.SysUser;
-import com.lihao.crm.repository.ContactRepository;
 import com.lihao.crm.repository.SysUserRepository;
 
 @Service
@@ -20,9 +19,6 @@ public class SysUserService implements UserDetailsService {
 
 	@Autowired
 	SysUserRepository userRepository;
-
-	@Autowired
-	ContactRepository contactRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
@@ -57,9 +53,6 @@ public class SysUserService implements UserDetailsService {
 	}
 
 	public void save(SysUser sysUser) {
-
-		contactRepository.save(sysUser.getContact());
-
 		userRepository.save(sysUser);
 	}
 

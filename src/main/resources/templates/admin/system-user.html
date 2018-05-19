@@ -18,7 +18,7 @@
 				">
 				<thead>
 					<tr>
-						<th data-options="field:'userId',width:40">ID</th>
+						<th data-options="field:'id',width:40">ID</th>
 						<th data-options="field:'username',width:150">用户名</th>
 					</tr>
 				</thead>
@@ -33,7 +33,6 @@
 					document.getElementById("ROLE_TECHNICIST").checked = false
 
 					$('#ff').form('load', rowData);
-					$('#ff').form('load', rowData['contact']);
 
 					var roles = rowData['roles'];
 					for ( var role in roles) {
@@ -51,12 +50,11 @@
 		</div>
 
 		<div data-options="region:'center',split:true" style="width: 80%;">
-			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;"
-				align="left" data-options="border:false, fit:true">
+			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
 
 				<form id="ff" method="post">
 					<div style="width: 300px; padding: 10px 60px 20px 60px">
-						<input type="hidden" name="userId"></input>
+						<input type="hidden" name="id"></input>
 						<table>
 							<tr>
 								<td>账号:</td>
@@ -89,7 +87,70 @@
 						</table>
 					</div>
 					<div style="width: 500px; padding: 10px 60px 20px 60px">
-						<table th:replace="contact :: add-contact">
+						<table>
+							<tr>
+								<td>姓名:</td>
+								<td>
+									<input class="easyui-textbox" type="text" name="name" data-options="required:true"></input>
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>性别:</td>
+								<td>
+									<input class="easyui-combobox" name=sex
+										data-options="
+							required:true,
+							valueField: 'id',
+							textField: 'name',
+							method: 'get',
+							url: '/common/loadAllSysSex',
+										    
+							onLoadSuccess: function () { 
+								var val = $(this).combobox('getData'); 
+								for (var item in val[0]) {  
+									if (item == 'id') {  
+										$(this).combobox('select', val[0][item]);  
+									}  
+								}  
+							}
+											
+						" />
+								</td>
+							</tr>
+
+							<tr>
+								<td>固话:</td>
+								<td>
+									<input class="easyui-textbox" type="text" name="officePhone" data-options="required:true"></input>
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>手机:</td>
+								<td>
+									<input class="easyui-textbox" type="text" name="phone" data-options="required:true"></input>
+								</td>
+							</tr>
+
+							<tr>
+								<td>传真:</td>
+								<td>
+									<input class="easyui-textbox" type="text" name="fax" data-options="required:true"></input>
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>邮件:</td>
+								<td>
+									<input class="easyui-textbox" type="text" name="email" data-options="required:true,validType:'email'"></input>
+								</td>
+							</tr>
+							<tr>
+								<td>地址:</td>
+								<td>
+									<input class="easyui-textbox" name="address" data-options="multiline:true" style="height: 60px"></input>
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>主要联系人:</td>
+								<td>
+									<input id="primary" type="checkbox" name="isPrimary" value=1>
+								</td>
+							</tr>
 						</table>
 					</div>
 				</form>

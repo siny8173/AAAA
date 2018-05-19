@@ -3,7 +3,6 @@ package com.lihao.crm.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,10 +46,6 @@ import com.lihao.crm.service.SysProvinceService;
 import com.lihao.crm.service.SysUserService;
 import com.lihao.crm.service.TechnicalApplicationReportService;
 import com.lihao.crm.service.TechnicalApplicationService;
-import com.lihao.crm.web.object.CustomerDto;
-import com.lihao.crm.web.object.SysUserDto;
-import com.lihao.crm.web.transform.CustomerTransform;
-import com.lihao.crm.web.transform.SysUserTransform;
 import com.lihao.crm.entity.Event;
 import com.lihao.crm.entity.Inventory;
 import com.lihao.crm.entity.InventoryRecord;
@@ -93,34 +88,29 @@ public class SalesmanController {
 
 	@Autowired
 	private TechnicalApplicationReportService technicalApplicationReportService;
-	
+
 	@Autowired
 	private InventoryRecordService inventoryRecordService;
 
 	@GetMapping("loadAllCustomer")
 	@ResponseBody
-	public List<CustomerDto> loadAllCustomer() {
+	public List<Customer> loadAllCustomer() {
 		logger.info("message SalesmanController loadAllCustomer");
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		List<Customer> customers = customerService.loadMine((SysUser) user);
-
-		List<CustomerDto> dtos = new ArrayList<>();
-		customers.forEach(customer -> dtos.add(CustomerTransform.Customer2Dto(customer)));
-		return dtos;
+		return customers;
 	}
 
 	@GetMapping("loadAllTechnicist")
 	@ResponseBody
-	public List<SysUserDto> loadAllTechnicist() {
+	public List<SysUser> loadAllTechnicist() {
 		logger.info("message SalesmanController loadAllTechnicist");
-		List<SysUserDto> dtos = new ArrayList<SysUserDto>();
-		SysUserDto dto = new SysUserDto();
-		dto.userId = 0l;
-		dto.name = "无";
-		dtos.add(dto);
-		sysUserService.findAllTechnicist().forEach(u -> dtos.add(SysUserTransform.SysUser2Dto(u)));
-		;
-		return dtos;
+		SysUser user = new SysUser();
+		user.setId(0l);
+		user.setName("无");
+		List<SysUser> users = sysUserService.findAllTechnicist();
+		users.add(user);
+		return users;
 	}
 
 	@GetMapping("loadAllProvince")
@@ -160,17 +150,14 @@ public class SalesmanController {
 
 	@PostMapping("addCustomer")
 	@ResponseBody
-	public String addCustomer(CustomerDto customerDto) {
-		logger.info("SalesmanController addCustomer " + customerDto.name);
+	public String addCustomer(Customer customer) {
+		logger.info("SalesmanController addCustomer " + customer.getName());
 
-		customerDto.customerId = null;
-		customerDto.contactId = null;
+		customer.setId(null);
 
-		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		customerDto.setUser((SysUser) user);
+		SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		Customer customer = CustomerTransform.Dto2SysUser(customerDto);
-
+		customer.setUser(user);
 		customer.setIsDelete(false);
 		customerService.save(customer);
 		return "success";
@@ -178,13 +165,10 @@ public class SalesmanController {
 
 	@PostMapping("modCustomer")
 	@ResponseBody
-	public String modCustomer(CustomerDto customerDto) {
-		logger.info("SalesmanController modCustomer " + customerDto.name);
-		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		customerDto.setUser((SysUser) user);
-
-		Customer customer = CustomerTransform.Dto2SysUser(customerDto);
-
+	public String modCustomer(Customer customer) {
+		logger.info("SalesmanController modCustomer " + customer.getName());
+		SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		customer.setUser((SysUser) user);
 		customer.setIsDelete(false);
 
 		customerService.save(customer);
@@ -193,15 +177,11 @@ public class SalesmanController {
 
 	@PostMapping("delCustomer")
 	@ResponseBody
-	public String delCustomer(CustomerDto customerDto) {
-		logger.info("SalesmanController delCustomer " + customerDto.name);
-		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		customerDto.setUser((SysUser) user);
-
-		Customer customer = CustomerTransform.Dto2SysUser(customerDto);
-
+	public String delCustomer(Customer customer) {
+		logger.info("SalesmanController delCustomer " + customer.getName());
+		SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		customer.setUser((SysUser) user);
 		customer.setIsDelete(true);
-
 		customerService.save(customer);
 		return "success";
 	}
@@ -338,21 +318,21 @@ public class SalesmanController {
 
 			TechnicalApplicationReport report = technicalApplicationReportService.findById(id);
 
-			InputStream in = new FileInputStream(new File("data/" + report.getUuid()));// 将该文件加入到输入流之中
+			InputStream in = new FileInputStream(new File("data/" + report.getUuid()));// 灏嗚鏂囦欢鍔犲叆鍒拌緭鍏ユ祦涔嬩腑
 			byte[] body = null;
-			body = new byte[in.available()];// 返回下一次对此输入流调用的方法可以不受阻塞地从此输入流读取（或跳过）的估计剩余字节数
-			in.read(body);// 读入到输入流里面
+			body = new byte[in.available()];// 杩斿洖涓嬩竴娆″姝よ緭鍏ユ祦璋冪敤鐨勬柟娉曞彲浠ヤ笉鍙楅樆濉炲湴浠庢杈撳叆娴佽鍙栵紙鎴栬烦杩囷級鐨勪及璁″墿浣欏瓧鑺傛暟
+			in.read(body);// 璇诲叆鍒拌緭鍏ユ祦閲岄潰
 			in.close();
 
-			String fileName = new String(report.getFilename().getBytes("gbk"), "iso8859-1");// 防止中文乱码
-			HttpHeaders headers = new HttpHeaders();// 设置响应头
+			String fileName = new String(report.getFilename().getBytes("gbk"), "iso8859-1");// 闃叉涓枃涔辩爜
+			HttpHeaders headers = new HttpHeaders();// 璁剧疆鍝嶅簲澶�
 			headers.add("Content-Disposition", "attachment;filename=" + fileName);
-			HttpStatus statusCode = HttpStatus.OK;// 设置响应吗
+			HttpStatus statusCode = HttpStatus.OK;// 璁剧疆鍝嶅簲鍚�
 			ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(body, headers, statusCode);
 			return response;
 		} catch (Exception e) {
-			HttpHeaders headers = new HttpHeaders();// 设置响应头
-			HttpStatus statusCode = HttpStatus.BAD_REQUEST;// 设置响应吗
+			HttpHeaders headers = new HttpHeaders();// 璁剧疆鍝嶅簲澶�
+			HttpStatus statusCode = HttpStatus.BAD_REQUEST;// 璁剧疆鍝嶅簲鍚�
 			ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(null, headers, statusCode);
 			return response;
 		}
@@ -363,8 +343,8 @@ public class SalesmanController {
 	private String inventoryApplication() {
 		return "salesman/inventory-application";
 	}
-	
-//	information 
+
+	// information
 	@GetMapping("/customer-information")
 	private String customerInformation() {
 		return "salesman/customer-information";
@@ -385,26 +365,26 @@ public class SalesmanController {
 
 		Inventory inventory = inventoryService.findById(id);
 		model.addAttribute(inventory);
-		
+
 		List<InventoryRecord> inventoryRecords = inventoryRecordService.findByInventory(inventory);
 		model.addAttribute("inventoryRecords", inventoryRecords);
 		return "salesman/inventory-application-grid";
 	}
-	
+
 	@PostMapping("add-inventory-application")
 	@ResponseBody
 	public String addInventoryApplication(InventoryRecord inventoryRecord) {
 		logger.info("SalesmanController addInventoryApplication " + inventoryRecord.getInventory().getName());
 		inventoryRecord.setId(null);
-		
+
 		SysInventoryRecordState state = new SysInventoryRecordState();
 		state.setId(1l);
 		inventoryRecord.setState(state);
-		
+
 		SysInventoryRecordType type = new SysInventoryRecordType();
 		type.setId(1l);
 		inventoryRecord.setType(type);
-		
+
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		inventoryRecord.setProposer((SysUser) user);
 
