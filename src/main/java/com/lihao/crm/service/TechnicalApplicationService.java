@@ -17,7 +17,7 @@ public class TechnicalApplicationService {
 
 	@Autowired
 	TechnicalApplicationRepository repository;
-	
+
 	@Autowired
 	TechnicalApplicationReportRepository technicalApplicationReportRepository;
 
@@ -35,13 +35,14 @@ public class TechnicalApplicationService {
 	public List<TechnicalApplication> loadMine(SysUser me) {
 		return (List<TechnicalApplication>) repository.findAllByUserAndIsDeleteNotOrderByIdDesc(me, true);
 	}
-	
+
 	public List<TechnicalApplication> loadByTechnicist(SysUser technicist) {
 		return (List<TechnicalApplication>) repository.findAllByTechnicistAndIsDeleteNotOrderByIdDesc(technicist, true);
 	}
 
 	public void save(TechnicalApplication technicalApplication) {
-		technicalApplicationReportRepository.saveAll(technicalApplication.getReports());
+		if (technicalApplication.getReports() != null)
+			technicalApplicationReportRepository.saveAll(technicalApplication.getReports());
 		repository.save(technicalApplication);
 	}
 }

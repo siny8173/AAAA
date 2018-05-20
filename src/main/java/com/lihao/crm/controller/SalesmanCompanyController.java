@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.lihao.crm.entity.Company;
 import com.lihao.crm.entity.Customer;
 import com.lihao.crm.entity.Department;
+import com.lihao.crm.entity.Event;
 import com.lihao.crm.entity.Project;
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.service.CompanyService;
 import com.lihao.crm.service.CustomerService;
+import com.lihao.crm.service.EventService;
 import com.lihao.crm.service.ProjectService;
 import com.lihao.crm.web.object.TreeNode;
 import com.lihao.crm.web.transform.TreaNodeTransform;
@@ -37,6 +39,9 @@ public class SalesmanCompanyController {
 
 	@Autowired
 	private ProjectService projectService;
+	
+	@Autowired
+	private EventService eventService;
 
 	@GetMapping("/company")
 	private String inventoryApplication() {
@@ -162,4 +167,22 @@ public class SalesmanCompanyController {
 
 		return TreaNodeTransform.ProjectToTreeNode(projects);
 	}
+	
+	@PostMapping("/load-all-event-tree")
+	@ResponseBody
+	private List<TreeNode> loadAllEventTree(Long id) {
+		logger.info("SalesmanCompanyController loadAllEventTree id=" + id);
+		SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (id == null) {
+			return TreaNodeTransform.CompanyToTreeNode(companyService.loadMine(user));
+		}
+		
+		Department department = companyService.findDepartmentById(id);
+		
+		List<Event> events = eventService.loadMineByDepartment(user, department);
+
+		return TreaNodeTransform.EventToTreeNode(events);
+	}
+
 }

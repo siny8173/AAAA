@@ -17,22 +17,28 @@ public class Event {
 	@Id
 	@GeneratedValue
 	private Long id;
-	
+
 	private String title;
+
+	@ManyToOne
+	private Company company;
+	
+	@ManyToOne
+	private Department department;
 
 	@OneToOne
 	private Customer customer;
-	
+
 	private Date startTime;
-	
+
 	private Date stopTime;
 	@OneToOne
 	private SysEventType type;
-	
+
 	private String content;
-	
+
 	@ManyToOne
 	private SysUser user;
-	
-	private Boolean isDelete; 
+
+	private Boolean isDelete;
 }
