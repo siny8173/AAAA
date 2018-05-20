@@ -3,50 +3,67 @@
 <head th:replace="base :: common_header(~{::title},_)">
 <meta charset="UTF-8">
 <title>customer-information</title>
+
 </head>
 
 <body>
-	<div class="easyui-layout" style="width: 100%; height: 100%;">
-		<div data-options="region:'west',split:true" style="width: 25%;">
 
-			<ul id="tt" class="easyui-tree" data-options="
+
+	<script type="text/javascript">
+		var seleted_department_node = null;
+
+		function refresh() {
+			if (seleted_department_node == null)
+				return;
+
+			$('#customer-tree').tree('reload', seleted_department_node.target);
+		}
+	</script>
+	<div class="easyui-layout" style="width: 100%; height: 100%;">
+		<div data-options="region:'west',split:true" style="width: 25%;" title="客户">
+
+			<ul id="customer-tree" class="easyui-tree" 
+				data-options="
 				url : '/salesman/load-all-customer-tree',
 				onSelect: function(node) {
-				
+						
+					if(node['type'] == 'DEPARTMENT') {
 					
+						var parent = $('#customer-tree').tree('getParent', node.target);
+						
+						$('#company').val(parent['id']);
+						$('#department').val(node['id']);
+						
+						$('#company-name').textbox('setText', parent['text']);
+						$('#department-name').textbox('setText', node['text']);
+						
+						seleted_department_node = node;
+					} else if(node['type'] == 'CONTACT') {
+						var customer = node['customer'];
+						$('#ff').form('load', customer);
+						
+						$('#company').val(customer['company']['id']);
+						$('#department').val(customer['department']['id']);
+						
+						$('#company-name').textbox('setText', customer['company']['name']);
+						$('#department-name').textbox('setText', customer['department']['name']);
+						
+						var parent = $('#customer-tree').tree('getParent', node.target);
+						
+						seleted_department_node = parent;
+						
+					}
+				}, 
+				
+				onDblClick: function(node) {
+				
+					if(node.state == 'closed')
+						$('#customer-tree').tree('expand', node.target);
+					else
+						$('#customer-tree').tree('collapse', node.target);
 				}
 			">
-
 			</ul>
-
-			<table id="sysUsers" class="easyui-datagrid" title="客户" style="width: 100%; height: 100%"
-				data-options="
-					singleSelect:true,
-					url:'/salesman/loadAllCustomer',
-					method:'get',
-					onClickRow:onClickRow
-				">
-				<thead>
-					<tr>
-						<th data-options="field:'id',width:40">ID</th>
-						<th data-options="field:'name',width:100">用户名</th>
-					</tr>
-				</thead>
-			</table>
-
-			<script>
-				function onClickRow(rowIndex, rowData) {
-					$('#province').combobox('setValue',
-							rowData['city']['provinceId']);
-					$('#ff').form('load', rowData);
-
-					if (rowData['isPrimary'] == true) {
-						document.getElementById('primary').checked = true
-					} else {
-						document.getElementById('primary').checked = false
-					}
-				}
-			</script>
 		</div>
 
 		<div data-options="region:'center',split:true" style="width: 75%;">
@@ -54,6 +71,9 @@
 
 				<form id="ff" method="post">
 					<div style="width: 600px; padding: 10px 60px 0px 60px">
+						<input type="hidden" name="id"></input>
+						<input id='company' type="hidden" name="company"></input>
+						<input id='department' type="hidden" name="department"></input>
 						<table>
 							<tr>
 								<td>姓名:</td>
@@ -65,69 +85,68 @@
 								<td>
 									<input class="easyui-combobox" name=sex
 										data-options="
-							required:true,
-							valueField: 'id',
-							textField: 'name',
-							method: 'get',
-							url: '/common/loadAllSysSex',
-										    
-							onLoadSuccess: function () { 
-								var val = $(this).combobox('getData'); 
-								for (var item in val[0]) {  
-									if (item == 'id') {  
-										$(this).combobox('select', val[0][item]);  
-									}  
-								}  
-							}
-											
-						" />
+										required:true,
+										valueField: 'id',
+										textField: 'name',
+										method: 'get',
+										url: '/common/loadAllSysSex',
+													    
+										onLoadSuccess: function () { 
+											var val = $(this).combobox('getData'); 
+											for (var item in val[0]) {  
+												if (item == 'id') {  
+													$(this).combobox('select', val[0][item]);  
+												}  
+											}  
+										}
+														
+									" />
 								</td>
 							</tr>
 
 							<tr>
-								<td>部门:</td>
+								<td>公司:</td>
 								<td>
-									<input class="easyui-combobox" name=department
-										data-options="
-							required:true,
-							valueField: 'id',
-							textField: 'name',
-							method: 'get',
-							url: '/common/loadAllSysDepartment',
-										    
-							onLoadSuccess: function () { 
-								var val = $(this).combobox('getData'); 
-								for (var item in val[0]) {  
-									if (item == 'id') {  
-										$(this).combobox('select', val[0][item]);  
-									}  
-								}  
-							}
-											
-						" />
+									<input id='company-name' class="easyui-textbox" data-options="
+										editable: false,
+										required: true									
+									" />
 								</td>
 								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 								<td>职责:</td>
 								<td>
 									<input class="easyui-combobox" name=duty
 										data-options="
-							required:true,
-							valueField: 'id',
-							textField: 'name',
-							method: 'get',
-							url: '/common/loadAllSysDuty',
-										    
-							onLoadSuccess: function () { 
-								var val = $(this).combobox('getData'); 
-								for (var item in val[0]) {  
-									if (item == 'id') {  
-										$(this).combobox('select', val[0][item]);  
-									}  
-								}  
-							}
-											
-						" />
+										required:true,
+										valueField: 'id',
+										textField: 'name',
+										method: 'get',
+										url: '/common/loadAllSysDuty',
+													    
+										onLoadSuccess: function () { 
+											var val = $(this).combobox('getData'); 
+											for (var item in val[0]) {  
+												if (item == 'id') {  
+													$(this).combobox('select', val[0][item]);  
+												}  
+											}  
+										}
+														
+									" />
 								</td>
+							</tr>
+
+							<tr>
+								<td>部门:</td>
+								<td>
+									<input id='department-name' class="easyui-textbox" data-options="
+										editable: false,
+										required: true									
+									" />
+								</td>
+								<td></td>
+								<td></td>
+								<td></td>
 							</tr>
 
 							<tr>
@@ -156,7 +175,10 @@
 							<tr>
 								<td>地址:</td>
 								<td>
-									<input class="easyui-textbox" name="address" data-options="multiline:true" style="height: 60px"></input>
+									<input class="easyui-textbox" name="address" style="height: 60px" data-options="
+										multiline:true,
+										required: true									
+									"></input>
 								</td>
 								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 								<td>主要联系人:</td>
@@ -164,172 +186,9 @@
 									<input id="primary" type="checkbox" name="isPrimary" value=1>
 								</td>
 							</tr>
-						</table>
-					</div>
-
-					<div style="width: 600px; padding: 0px 10px 10px 60px">
-
-						<input type="hidden" name="id"></input>
-
-						<table>
-
-							<tr>
-								<td>邮编:</td>
-								<td>
-									<input class="easyui-textbox" type="text" name="postcode" data-options="required:true" />
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>城市:</td>
-								<td>
-									<input id="province" class="easyui-combobox" style="width: 85px;"
-										data-options="
-											required:true,
-											valueField: 'id',
-											textField: 'name',
-											method: 'get',
-											url: '/salesman/loadAllProvince',
-											onSelect: function(rec){
-											    var url = '/salesman/loadCitis?id='+rec.id;
-											    $('#city').combobox('reload', url);
-										    },
-										    
-										    onLoadSuccess: function () { 
-										    	var val = $(this).combobox('getData'); 
-										    	for (var item in val[0]) {  
-				                                    if (item == 'id') {  
-				                                        $(this).combobox('select', val[0][item]);  
-				                                    }  
-				                                }  
-										    }
-										" />
-
-									<input id="city" name="city" class="easyui-combobox" style="width: 85px;"
-										data-options="
-											required:true,
-											valueField: 'id',
-											textField: 'name',
-											method: 'get',
-										    
-										    onLoadSuccess: function () { 
-										    	/*var val = $(this).combobox('getData'); 
-										    	for (var item in val[0]) {  
-				                                    if (item == 'id') {  
-				                                        $(this).combobox('select', val[0][item]);  
-				                                    }  
-				                                }  */
-										    }
-										" />
 
 
-								</td>
-							</tr>
-							<tr>
-								<td>来源:</td>
-								<td>
-									<input class="easyui-combobox" name="source"
-										data-options="
-											required:true,
-											valueField: 'id',
-											textField: 'name',
-											method: 'get',
-											url: '/salesman/loadCustomerSource',
-										    
-										    onLoadSuccess: function () { 
-										    	var val = $(this).combobox('getData'); 
-										    	for (var item in val[0]) {  
-				                                    if (item == 'id') {  
-				                                        $(this).combobox('select', val[0][item]);  
-				                                    }  
-				                                }  
-										    }
-											
-									" />
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>登记时间:</td>
-								<td>
-									<input class="easyui-datebox" name="registrationTime" value="aaa"
-										data-options="
-										required:true,
-										formatter: function (date) { 
-											var y = date.getFullYear();
-											var m = date.getMonth()+1;
-											var d = date.getDate();
-											return y+'-'+m+'-'+d;
-										},
-										
-										parser: function (s) { 
-											var t = Date.parse(s);
-											if (!isNaN(t)){
-												return new Date(t);
-											} else {
-												return new Date();
-											}
-										}
-									" />
-								</td>
-							</tr>
 
-							<tr>
-								<td>等级:</td>
-								<td>
-									<input class="easyui-combobox" name="level"
-										data-options="
-											equired:true,
-											valueField: 'id',
-											textField: 'name',
-											method: 'get',
-											url: '/salesman/loadCustomerLevel',
-										    
-										    onLoadSuccess: function () { 
-										    	var val = $(this).combobox('getData'); 
-										    	for (var item in val[0]) {  
-				                                    if (item == 'id') {  
-				                                        $(this).combobox('select', val[0][item]);  
-				                                    }  
-				                                }  
-										    }
-									" />
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>类型:</td>
-								<td>
-									<input class="easyui-combobox" name="customertype"
-										data-options="
-											equired:true,
-											valueField: 'id',
-											textField: 'name',
-											method: 'get',
-											url: '/salesman/loadCustomerType',
-										    
-										    onLoadSuccess: function () { 
-										    	var val = $(this).combobox('getData'); 
-										    	for (var item in val[0]) {  
-				                                    if (item == 'id') {  
-				                                        $(this).combobox('select', val[0][item]);  
-				                                    }  
-				                                }  
-										    }
-									" />
-								</td>
-							</tr>
-
-							<tr>
-								<td>行业:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" style="width: 100%;" name="business" data-options="required:true"></input>
-								</td>
-							</tr>
-
-							<tr>
-								<td>需求:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" name="demand" style="width: 100%; height: 80px;" data-options="
-												required:true,
-												multiline:true
-												" />
-								</td>
-							</tr>
 
 						</table>
 					</div>
@@ -358,8 +217,7 @@
 						},
 						success : function(result) {
 							if (result == 'success') {
-								$('#sysUsers').datagrid('reload');
-
+								refresh();
 								$.messager.show({
 									title : '成功',
 									msg : '修改成功',
@@ -386,8 +244,7 @@
 						},
 						success : function(result) {
 							if (result == 'success') {
-								$('#sysUsers').datagrid('reload');
-
+								refresh();
 								$.messager.show({
 									title : '成功',
 									msg : '添加成功',
@@ -417,7 +274,7 @@
 						},
 						success : function(result) {
 							if (result == 'success') {
-								$('#sysUsers').datagrid('reload');
+								refresh();
 								$('#ff').form('clear');
 								$.messager.show({
 									title : '成功',

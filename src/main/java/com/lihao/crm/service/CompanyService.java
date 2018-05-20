@@ -57,4 +57,12 @@ public class CompanyService {
 	public void deleteDepartment(long id) {
 		departmentRepository.deleteById(id);
 	}
+	
+	public Department findDepartmentById(long id) {
+		Department department = new Department();
+		department.setId(id);
+		Example<Department> example = Example.of(department);
+		Optional<Department> temp = departmentRepository.findOne(example);
+		return temp.get();
+	}
 }

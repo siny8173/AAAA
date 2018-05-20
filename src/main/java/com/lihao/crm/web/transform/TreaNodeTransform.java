@@ -4,12 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lihao.crm.entity.Company;
+import com.lihao.crm.entity.Customer;
 import com.lihao.crm.entity.Department;
 import com.lihao.crm.web.object.TreeNode;
 
 public class TreaNodeTransform {
 
 	public static final String COLSED = "closed";
+	public static final String OPEN = "OPEN";
+	
+	public static List<TreeNode> CustomerToTreeNode(List<Customer> customers) {
+
+		List<TreeNode> treeNodes = new ArrayList<TreeNode>();
+		customers.forEach(c -> treeNodes.add(CustomerToTreeNode(c)));
+		return treeNodes;
+	}
+	
+	public static TreeNode CustomerToTreeNode(Customer customer) {
+		TreeNode treeNode = new TreeNode();
+		treeNode.setId(customer.getId());
+		treeNode.setText(customer.getName());
+		treeNode.setState(OPEN);
+		treeNode.setType(TreeNode.CONTACT);
+		treeNode.setCustomer(customer);
+		return treeNode;
+	}
 
 	public static List<TreeNode> CompanyToTreeNode(List<Company> companies) {
 

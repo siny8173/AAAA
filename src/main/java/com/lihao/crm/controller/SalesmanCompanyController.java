@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lihao.crm.entity.Company;
+import com.lihao.crm.entity.Customer;
 import com.lihao.crm.entity.Department;
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.service.CompanyService;
+import com.lihao.crm.service.CustomerService;
 import com.lihao.crm.web.object.TreeNode;
 import com.lihao.crm.web.transform.TreaNodeTransform;
 
@@ -27,6 +29,9 @@ public class SalesmanCompanyController {
 
 	@Autowired
 	private CompanyService companyService;
+	
+	@Autowired
+	private CustomerService customerService;
 
 	@GetMapping("/company")
 	private String inventoryApplication() {
@@ -123,12 +128,17 @@ public class SalesmanCompanyController {
 	@ResponseBody
 	private List<TreeNode> loadAllCustomerTree(Long id) {
 		logger.info("SalesmanCompanyController loadAllCustomerTree id=" + id);
+		SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		if (id == null) {
-			SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			return TreaNodeTransform.CompanyToTreeNode(companyService.loadMine(user));
 		}
 		
-		return null;
+		Department department = companyService.findDepartmentById(id);
+		
+		List<Customer> customers =customerService.loadMineByDepartment(user, department);
+		
+		
+		return TreaNodeTransform.CustomerToTreeNode(customers);
 	}
 }

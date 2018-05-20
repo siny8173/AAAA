@@ -2,6 +2,8 @@ package com.lihao.crm.web.object;
 
 import java.util.List;
 
+import com.lihao.crm.entity.Customer;
+
 import lombok.Data;
 
 @Data
@@ -16,4 +18,6 @@ public class TreeNode {
 	private String state;
 	private List<TreeNode> children;
 	private String type;
+	
+	private Customer customer;
 }
