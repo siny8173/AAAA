@@ -8,36 +8,37 @@
 <body>
 
 	<div class="easyui-layout" style="width: 100%; height: 100%;">
-		<div style="width: 25%;" data-options="region:'west',split:true">
+		<div style="width: 25%;" data-options="region:'west',split:true" title="项目">
 
-			<table id="inventory-table" class="easyui-datagrid" title="资产申请"
-				style="width: 100%; height: 100%"
+			<ul id="inventory-application-tree" class="easyui-tree"
 				data-options="
-					singleSelect:true,
-					url:'/salesman/loadAllInventory',
-					method:'get',
-					onClickRow:onClickRow
-				">
-				<thead>
-					<tr>
-						<th data-options="field:'id',width:40">ID</th>
-						<th data-options="field:'name',width:200">资产</th>
-					</tr>
-				</thead>
-			</table>
-
-			<script>
-				function onClickRow(rowIndex, rowData) {
-					
-					$('#technical-application-frame').attr('src', '/salesman/inventory-application-grid?id=' + rowData["id"]);
+				url : '/salesman/load-all-project-tree',
+				onSelect: function(node) {
+						
+					if(node['type'] == 'DEPARTMENT') {		
+						var parent = $('#inventory-application-tree').tree('getParent', node.target);
+						seleted_department_node = node;
+						alert(node['id']);
+						$('#inventory-application-frame').attr('src', '/salesman/inventory-application-grid?id=' + node['id']);
+					} else if(node['type'] == 'CONTACT') {
+						var attributes = node['attributes'];						
+						var parent = $('#inventory-application-tree').tree('getParent', node.target);
+						seleted_department_node = parent;
+					}
+				}, 
+				
+				onDblClick: function(node) {
+					if(node.state == 'closed')
+						$('#inventory-application-tree').tree('expand', node.target);
+					else
+						$('#inventory-application-tree').tree('collapse', node.target);
 				}
-			</script>
+			">
+			</ul>
 		</div>
 
 		<div style="width: 75%;" data-options="region:'center',split:true">
-			<iframe id="technical-application-frame"
-				name="technical-application-frame"
-				style="width: 100%; height: 95%; border: 0; position: absolute"></iframe>
+			<iframe id="inventory-application-frame" name="inventory-application-frame" style="width: 100%; height: 95%; border: 0; position: absolute"></iframe>
 		</div>
 
 

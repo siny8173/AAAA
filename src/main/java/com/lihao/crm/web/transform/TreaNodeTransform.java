@@ -6,6 +6,7 @@ import java.util.List;
 import com.lihao.crm.entity.Company;
 import com.lihao.crm.entity.Customer;
 import com.lihao.crm.entity.Department;
+import com.lihao.crm.entity.Event;
 import com.lihao.crm.entity.Project;
 import com.lihao.crm.web.object.TreeNode;
 
@@ -13,9 +14,24 @@ public class TreaNodeTransform {
 
 	public static final String COLSED = "closed";
 	public static final String OPEN = "OPEN";
+	
+	public static List<TreeNode> EventToTreeNode(List<Event> events) {
+		List<TreeNode> treeNodes = new ArrayList<TreeNode>();
+		events.forEach(e -> treeNodes.add(EventToTreeNode(e)));
+		return treeNodes;
+	}
+	
+	public static TreeNode EventToTreeNode(Event event) {
+		TreeNode treeNode = new TreeNode();
+		treeNode.setId(event.getId());
+		treeNode.setText(event.getTitle());
+		treeNode.setState(OPEN);
+		treeNode.setType(TreeNode.CONTACT);
+		treeNode.setAttributes(event);
+		return treeNode;
+	}
 
 	public static List<TreeNode> ProjectToTreeNode(List<Project> projects) {
-
 		List<TreeNode> treeNodes = new ArrayList<TreeNode>();
 		projects.forEach(p -> treeNodes.add(ProjectToTreeNode(p)));
 		return treeNodes;

@@ -3,6 +3,7 @@ package com.lihao.crm.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lihao.crm.entity.Customer;
+import com.lihao.crm.entity.Department;
 import com.lihao.crm.entity.SysCity;
 import com.lihao.crm.entity.SysCustomerLevel;
 import com.lihao.crm.entity.SysCustomerSource;
@@ -30,9 +32,11 @@ import com.lihao.crm.entity.SysCustomerType;
 import com.lihao.crm.entity.SysInventoryRecordState;
 import com.lihao.crm.entity.SysInventoryRecordType;
 import com.lihao.crm.entity.SysProvince;
+import com.lihao.crm.entity.SysRole;
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.entity.TechnicalApplication;
 import com.lihao.crm.entity.TechnicalApplicationReport;
+import com.lihao.crm.service.CompanyService;
 import com.lihao.crm.service.CustomerService;
 import com.lihao.crm.service.EventService;
 import com.lihao.crm.service.InventoryRecordService;
@@ -91,6 +95,9 @@ public class SalesmanController {
 
 	@Autowired
 	private InventoryRecordService inventoryRecordService;
+	
+	@Autowired
+	private CompanyService companyService;
 
 	@GetMapping("loadAllCustomer")
 	@ResponseBody
@@ -98,6 +105,16 @@ public class SalesmanController {
 		logger.info("message SalesmanController loadAllCustomer");
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		List<Customer> customers = customerService.loadMine((SysUser) user);
+		return customers;
+	}
+	
+	@GetMapping("loadAllCustomer/{departmentId}")
+	@ResponseBody
+	public List<Customer> loadAllCustomer(@PathVariable Long departmentId) {
+		logger.info("message SalesmanController loadAllCustomer departmentId=" + departmentId);
+		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Department department = companyService.findDepartmentById(departmentId);
+		List<Customer> customers = customerService.loadMineByDepartment((SysUser) user, department);
 		return customers;
 	}
 
@@ -108,8 +125,13 @@ public class SalesmanController {
 		SysUser user = new SysUser();
 		user.setId(0l);
 		user.setName("无");
-		List<SysUser> users = sysUserService.findAllTechnicist();
+		List<SysRole> roles = new ArrayList<SysRole>();
+		user.setRoles(roles);
+		List<SysUser> users = new ArrayList<>();
 		users.add(user);
+		List<SysUser> temp = sysUserService.findAllTechnicist();
+		temp.forEach(s -> users.add(s));
+		
 		return users;
 	}
 
@@ -363,10 +385,11 @@ public class SalesmanController {
 	private String inventoryApplicationGird(long id, Model model) {
 		logger.info("SalesmanController inventoryApplicationGird id=" + id);
 
-		Inventory inventory = inventoryService.findById(id);
-		model.addAttribute(inventory);
-
-		List<InventoryRecord> inventoryRecords = inventoryRecordService.findByInventory(inventory);
+//		Inventory inventory = inventoryService.findById(id);
+//		model.addAttribute(inventory);
+//
+//		List<InventoryRecord> inventoryRecords = inventoryRecordService.findByInventory(inventory);
+		List<InventoryRecord> inventoryRecords = new ArrayList<>();
 		model.addAttribute("inventoryRecords", inventoryRecords);
 		return "salesman/inventory-application-grid";
 	}

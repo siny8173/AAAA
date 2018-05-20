@@ -20,7 +20,7 @@
 				<th data-options="field:'id',width:40, halign:'center', align:'center'">ID</th>
 				<th data-options="field:'name',width:150, halign:'center', align:'left'">名称</th>
 				<th data-options="field:'context',width:280, halign:'center', align:'left'">详细信息</th>
-				<th data-options="field:'report',width:300, halign:'center', align:'left'">报告</th>
+				<th data-options="field:'report',width:224, halign:'center', align:'left'">报告</th>
 			</tr>
 		</thead>
 
@@ -32,11 +32,11 @@
 					<label>项&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目： </label>
 					<span th:utext="${t.project.name}"></span><br>
 					<label>联&nbsp;&nbsp;系&nbsp;人： </label>
-					<span th:utext="${t.customer.contact.name}"></span><br>
+					<span th:utext="${t.customer.name}"></span><br>
 					<label>电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话： </label>
-					<span th:utext="${t.customer.contact.phone}"></span><br>
+					<span th:utext="${t.customer.phone}"></span><br>
 					<label>地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址： </label>
-					<span th:utext="${t.customer.contact.address}"></span><br>
+					<span th:utext="${t.customer.address}"></span><br>
 					<label>开&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时： </label>
 					<span th:utext="${t.startTime}"></span><br>
 					<label>结&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;束： </label>
@@ -44,7 +44,7 @@
 					<label>报告类型： </label>
 					<span th:utext="${t.sysReportType.name}"></span> <br>
 					<label>技&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;术： </label>
-					<span th:utext="${t.technicist} ? ${t.technicist.contact.name}:无"></span><br>
+					<span th:utext="${t.technicist} ? ${t.technicist.name}:无"></span><br>
 					<label>属&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性： </label>
 					<span th:utext="${t.type.name}"></span><br>
 				</div>
@@ -109,7 +109,7 @@
 								data-options="
 											editable:false,
 											required:true,
-											valueField: 'customerId',
+											valueField: 'id',
 											textField: 'name',
 											method: 'get',
 											url: '/salesman/loadAllCustomer',
@@ -233,7 +233,7 @@
 								data-options="
 											editable:false,
 											required:true,
-											valueField: 'userId',
+											valueField: 'id',
 											textField: 'name',
 											method: 'get',
 											url: '/salesman/loadAllTechnicist',
