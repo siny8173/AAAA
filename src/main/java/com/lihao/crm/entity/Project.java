@@ -22,6 +22,12 @@ public class Project {
 	private String name;
 
 	private String subject;
+	
+	@ManyToOne
+	private Company company;
+
+	@ManyToOne
+	private Department department;
 
 	@OneToOne
 	private Customer customer;

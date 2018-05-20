@@ -20,4 +20,6 @@ public class TreeNode {
 	private String type;
 	
 	private Customer customer;
+	
+	private Object attributes;
 }

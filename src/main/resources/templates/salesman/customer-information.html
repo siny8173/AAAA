@@ -8,21 +8,21 @@
 
 <body>
 
-
-	<script type="text/javascript">
-		var seleted_department_node = null;
-
-		function refresh() {
-			if (seleted_department_node == null)
-				return;
-
-			$('#customer-tree').tree('reload', seleted_department_node.target);
-		}
-	</script>
 	<div class="easyui-layout" style="width: 100%; height: 100%;">
 		<div data-options="region:'west',split:true" style="width: 25%;" title="客户">
+			<script type="text/javascript">
+				var seleted_department_node = null;
 
-			<ul id="customer-tree" class="easyui-tree" 
+				function refresh() {
+					if (seleted_department_node == null)
+						return;
+
+					$('#customer-tree').tree('reload',
+							seleted_department_node.target);
+				}
+			</script>
+
+			<ul id="customer-tree" class="easyui-tree"
 				data-options="
 				url : '/salesman/load-all-customer-tree',
 				onSelect: function(node) {

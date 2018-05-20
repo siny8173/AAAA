@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.lihao.crm.entity.Company;
 import com.lihao.crm.entity.Customer;
 import com.lihao.crm.entity.Department;
+import com.lihao.crm.entity.Project;
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.service.CompanyService;
 import com.lihao.crm.service.CustomerService;
+import com.lihao.crm.service.ProjectService;
 import com.lihao.crm.web.object.TreeNode;
 import com.lihao.crm.web.transform.TreaNodeTransform;
 
@@ -29,9 +31,12 @@ public class SalesmanCompanyController {
 
 	@Autowired
 	private CompanyService companyService;
-	
+
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private ProjectService projectService;
 
 	@GetMapping("/company")
 	private String inventoryApplication() {
@@ -133,12 +138,28 @@ public class SalesmanCompanyController {
 		if (id == null) {
 			return TreaNodeTransform.CompanyToTreeNode(companyService.loadMine(user));
 		}
-		
+
 		Department department = companyService.findDepartmentById(id);
-		
-		List<Customer> customers =customerService.loadMineByDepartment(user, department);
-		
-		
+
+		List<Customer> customers = customerService.loadMineByDepartment(user, department);
+
 		return TreaNodeTransform.CustomerToTreeNode(customers);
+	}
+
+	@PostMapping("/load-all-project-tree")
+	@ResponseBody
+	private List<TreeNode> loadAllProjectTree(Long id) {
+		logger.info("SalesmanCompanyController loadAllProjectTree id=" + id);
+		SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (id == null) {
+			return TreaNodeTransform.CompanyToTreeNode(companyService.loadMine(user));
+		}
+
+		Department department = companyService.findDepartmentById(id);
+
+		List<Project> projects = projectService.loadMineByDepartment(user, department);
+
+		return TreaNodeTransform.ProjectToTreeNode(projects);
 	}
 }
