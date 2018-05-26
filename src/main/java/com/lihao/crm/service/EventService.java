@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.lihao.crm.entity.Department;
 import com.lihao.crm.entity.Event;
+import com.lihao.crm.entity.Project;
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.repository.EventRepository;
 
