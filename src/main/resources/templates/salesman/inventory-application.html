@@ -18,7 +18,6 @@
 					if(node['type'] == 'DEPARTMENT') {		
 						var parent = $('#inventory-application-tree').tree('getParent', node.target);
 						seleted_department_node = node;
-						alert(node['id']);
 						$('#inventory-application-frame').attr('src', '/salesman/inventory-application-grid?id=' + node['id']);
 					} else if(node['type'] == 'CONTACT') {
 						var attributes = node['attributes'];						
