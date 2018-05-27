@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import com.lihao.crm.entity.Department;
 import com.lihao.crm.entity.Inventory;
 import com.lihao.crm.entity.InventoryRecord;
+import com.lihao.crm.entity.Project;
+import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.repository.InventoryRecordRepository;
 
 @Service
@@ -38,6 +41,14 @@ public class InventoryRecordService {
 
 	public List<InventoryRecord> findByInventory(Inventory inventory) {
 		return (List<InventoryRecord>) inventoryRecordRepository.findByInventory(inventory);
+	}
+	
+	public List<InventoryRecord> findByInventory(Department department, SysUser proposer) {
+		return (List<InventoryRecord>) inventoryRecordRepository.findByDepartmentAndProposer(department, proposer);
+	}
+	
+	public List<InventoryRecord> findByInventory(Project project, SysUser proposer) {
+		return (List<InventoryRecord>) inventoryRecordRepository.findByProjectAndProposer(project, proposer);
 	}
 
 }

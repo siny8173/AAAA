@@ -18,11 +18,12 @@
 					if(node['type'] == 'DEPARTMENT') {		
 						var parent = $('#inventory-application-tree').tree('getParent', node.target);
 						seleted_department_node = node;
-						$('#inventory-application-frame').attr('src', '/salesman/inventory-application-grid?id=' + node['id']);
+						$('#inventory-application-frame').attr('src', '/salesman/inventory-application-grid?type=1&projectId=0&departmentId=' + node['id'] + '&companyId=' + parent['id'] );
 					} else if(node['type'] == 'CONTACT') {
-						var attributes = node['attributes'];						
-						var parent = $('#inventory-application-tree').tree('getParent', node.target);
-						seleted_department_node = parent;
+					 	var department = $('#inventory-application-tree').tree('getParent', node.target);
+					 	var company = $('#inventory-application-tree').tree('getParent', department.target);
+						$('#inventory-application-frame').attr('src', '/salesman/inventory-application-grid?type=2&projectId=' + node['id'] + '&departmentId=' + department['id'] + '&companyId=' + company['id']);
+						seleted_department_node = company;
 					}
 				}, 
 				

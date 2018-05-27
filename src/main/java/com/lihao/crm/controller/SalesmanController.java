@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
+import com.lihao.crm.entity.Company;
 import com.lihao.crm.entity.Customer;
 import com.lihao.crm.entity.Department;
 import com.lihao.crm.entity.SysCity;
@@ -95,7 +97,7 @@ public class SalesmanController {
 
 	@Autowired
 	private InventoryRecordService inventoryRecordService;
-	
+
 	@Autowired
 	private CompanyService companyService;
 
@@ -107,7 +109,7 @@ public class SalesmanController {
 		List<Customer> customers = customerService.loadMine((SysUser) user);
 		return customers;
 	}
-	
+
 	@GetMapping("loadAllCustomer/{departmentId}")
 	@ResponseBody
 	public List<Customer> loadAllCustomer(@PathVariable Long departmentId) {
@@ -131,7 +133,7 @@ public class SalesmanController {
 		users.add(user);
 		List<SysUser> temp = sysUserService.findAllTechnicist();
 		temp.forEach(s -> users.add(s));
-		
+
 		return users;
 	}
 
@@ -382,16 +384,34 @@ public class SalesmanController {
 	}
 
 	@GetMapping("/inventory-application-grid")
-	private String inventoryApplicationGird(long id, Model model) {
-		logger.info("SalesmanController inventoryApplicationGird id=" + id);
+	private String inventoryApplicationGird(long type, long projectId, long departmentId, long companyId, Model model) {
+		logger.info("SalesmanController inventoryApplicationGird projectId=" + projectId + " type=" + type);
+		SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-//		Inventory inventory = inventoryService.findById(id);
-//		model.addAttribute(inventory);
-//
-//		List<InventoryRecord> inventoryRecords = inventoryRecordService.findByInventory(inventory);
-		List<InventoryRecord> inventoryRecords = new ArrayList<>();
-		model.addAttribute("inventoryRecords", inventoryRecords);
-		return "salesman/inventory-application-grid";
+		if (type == 1) {
+			Department department = companyService.findDepartmentById(departmentId);
+			List<InventoryRecord> inventoryRecords = inventoryRecordService.findByInventory(department, user);
+			model.addAttribute("inventoryRecords", inventoryRecords);
+			return "salesman/inventory-application-grid-department";
+		} else {
+			
+			
+			Company company = companyService.findById(companyId);
+			model.addAttribute("company", company);
+			Department department = companyService.findDepartmentById(departmentId);
+			model.addAttribute("department", department);
+			Project project = projectService.findById(projectId);
+			model.addAttribute("project", project);
+			List<Customer> customers = customerService.loadMineByDepartment(user, department);
+			model.addAttribute("customers", JSON.toJSONString(customers));
+			List<Inventory> inventories = inventoryService.loadAll();
+			model.addAttribute("inventories", JSON.toJSONString(inventories));
+
+			List<InventoryRecord> inventoryRecords = inventoryRecordService.findByInventory(project, user);
+			model.addAttribute("inventoryRecords", inventoryRecords);
+			return "salesman/inventory-application-grid";
+		}
+
 	}
 
 	@PostMapping("add-inventory-application")
