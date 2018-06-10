@@ -49,7 +49,7 @@ function passwordmodify() {
 	$('#password-modify-win').window({
 		title : "修改密码",
 		width : 400,
-		height : 400,
+		height : 200,
 		padding : 5,
 		minimizable : false,
 		maximizable : false,
