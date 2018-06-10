@@ -96,7 +96,7 @@
 					<a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitForm()">登陆</a>
 					<a class="easyui-linkbutton" iconCls="icon-cancel" onclick="clearForm()">重置</a>
 				</div>
-				<p th:if="${loginError}" class="error">Wrong user or password</p>
+				<p th:if="${loginError}" class="error">用户名或密码不匹配，请重新登陆</p>
 			</div>
 		</div>
 	</div>
