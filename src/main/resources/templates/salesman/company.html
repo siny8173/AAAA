@@ -223,13 +223,13 @@
 				</form>
 
 				<div style="margin-left: 160px; margin-right: auto; margin-top: 5px; margin-bottom: 10px">
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify_company_form()">修改</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add_company_form()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_company_form()">重置</a>
 				</div>
 
 				<script>
-					function modify() {
+					function modify_company_form() {
 
 						$('#company-form').form('submit', {
 							type : 'POST',
@@ -258,7 +258,7 @@
 						});
 					}
 
-					function add() {
+					function add_company_form() {
 						$('#company-form').form('submit', {
 							type : 'POST',
 							url : '/salesman/add-company',
@@ -286,7 +286,7 @@
 						});
 					}
 
-					function clearff() {
+					function clear_company_form() {
 						$('#company-form').form('clear');
 					}
 				</script>
