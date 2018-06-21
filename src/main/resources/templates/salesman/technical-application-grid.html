@@ -14,6 +14,10 @@
 </head>
 
 <body>
+
+	<script type="text/javascript">
+		var c= [(${customers})];
+	</script>
 	<table id="technical-application-table" class="easyui-datagrid" style="width: 700px;" data-options="toolbar:'#tb'">
 		<thead>
 			<tr>
@@ -111,8 +115,7 @@
 											required:true,
 											valueField: 'id',
 											textField: 'name',
-											method: 'get',
-											url: '/salesman/loadAllCustomer',
+											data: c,
 										    
 										    onSelect: function(record) {										    	
 										    	$('#phone').textbox('setValue', record['phone']);

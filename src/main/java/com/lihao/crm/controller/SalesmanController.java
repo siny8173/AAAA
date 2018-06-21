@@ -323,14 +323,19 @@ public class SalesmanController {
 	}
 
 	@GetMapping("/technical-application-grid")
-	private String technicalApplicationGird(long id, Model model) {
-		logger.info("SalesmanController technicalApplicationGird id=" + id);
+	private String technicalApplicationGird(Long projectId, Long departmentId, Model model) {
+		logger.info("SalesmanController technicalApplicationGird projectId=" + projectId + " departmentId=" + departmentId);
 
-		Project project = projectService.findById(id);
+		Project project = projectService.findById(projectId);
 		model.addAttribute(project);
 
 		Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		List<TechnicalApplication> technicalApplications = technicalApplicationService.loadMine((SysUser) user);
+		Department department = companyService.findDepartmentById(departmentId);
+		
+		List<Customer> customers = customerService.loadMineByDepartment((SysUser) user, department);
+		model.addAttribute("customers", JSON.toJSON(customers));
+		
+		List<TechnicalApplication> technicalApplications = technicalApplicationService.loadMine((SysUser) user, project);
 		model.addAttribute("technicalApplications", technicalApplications);
 		return "salesman/technical-application-grid";
 	}
@@ -342,21 +347,21 @@ public class SalesmanController {
 
 			TechnicalApplicationReport report = technicalApplicationReportService.findById(id);
 
-			InputStream in = new FileInputStream(new File("data/" + report.getUuid()));// 灏嗚鏂囦欢鍔犲叆鍒拌緭鍏ユ祦涔嬩腑
+			InputStream in = new FileInputStream(new File("data/" + report.getUuid()));
 			byte[] body = null;
-			body = new byte[in.available()];// 杩斿洖涓嬩竴娆″姝よ緭鍏ユ祦璋冪敤鐨勬柟娉曞彲浠ヤ笉鍙楅樆濉炲湴浠庢杈撳叆娴佽鍙栵紙鎴栬烦杩囷級鐨勪及璁″墿浣欏瓧鑺傛暟
-			in.read(body);// 璇诲叆鍒拌緭鍏ユ祦閲岄潰
+			body = new byte[in.available()];
+			in.read(body);
 			in.close();
 
-			String fileName = new String(report.getFilename().getBytes("gbk"), "iso8859-1");// 闃叉涓枃涔辩爜
-			HttpHeaders headers = new HttpHeaders();// 璁剧疆鍝嶅簲澶�
+			String fileName = new String(report.getFilename().getBytes("gbk"), "iso8859-1");
+			HttpHeaders headers = new HttpHeaders();
 			headers.add("Content-Disposition", "attachment;filename=" + fileName);
-			HttpStatus statusCode = HttpStatus.OK;// 璁剧疆鍝嶅簲鍚�
+			HttpStatus statusCode = HttpStatus.OK;
 			ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(body, headers, statusCode);
 			return response;
 		} catch (Exception e) {
-			HttpHeaders headers = new HttpHeaders();// 璁剧疆鍝嶅簲澶�
-			HttpStatus statusCode = HttpStatus.BAD_REQUEST;// 璁剧疆鍝嶅簲鍚�
+			HttpHeaders headers = new HttpHeaders();
+			HttpStatus statusCode = HttpStatus.BAD_REQUEST;
 			ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(null, headers, statusCode);
 			return response;
 		}

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import com.lihao.crm.entity.Project;
 import com.lihao.crm.entity.SysUser;
 import com.lihao.crm.entity.TechnicalApplication;
 import com.lihao.crm.repository.TechnicalApplicationReportRepository;
@@ -34,6 +35,10 @@ public class TechnicalApplicationService {
 
 	public List<TechnicalApplication> loadMine(SysUser me) {
 		return (List<TechnicalApplication>) repository.findAllByUserAndIsDeleteNotOrderByIdDesc(me, true);
+	}
+	
+	public List<TechnicalApplication> loadMine(SysUser me, Project project) {
+		return (List<TechnicalApplication>) repository.findAllByUserAndProjectAndIsDeleteNotOrderByIdDesc(me, project, true);
 	}
 
 	public List<TechnicalApplication> loadByTechnicist(SysUser technicist) {

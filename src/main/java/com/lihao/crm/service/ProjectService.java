@@ -1,10 +1,8 @@
 package com.lihao.crm.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import com.lihao.crm.entity.Department;
@@ -19,14 +17,7 @@ public class ProjectService {
 	ProjectRepository projectRepository;
 	
 	public Project findById(long id) {
-		Project project = new Project();
-		project.setCretateTime(null);
-		project.setIsDelete(false);
-		project.setId(id);
-		Example<Project> example = Example.of(project);
-		Optional<Project> temp = projectRepository.findOne(example);
-		
-		return temp.get();
+		return projectRepository.findById(id).get();
 	}
 
 	public List<Project> loadMine(SysUser me) {
