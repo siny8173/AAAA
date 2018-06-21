@@ -35,11 +35,11 @@
 					
 						var parent = $('#event-tree').tree('getParent', node.target);
 						
-						$('#company').val(parent['id']);
-						$('#department').val(node['id']);
+						$('#event-form—company').val(parent['id']);
+						$('#event-form—department').val(node['id']);
 						
-						$('#company-name').textbox('setText', parent['text']);
-						$('#department-name').textbox('setText', node['text']);
+						$('#event-form—company-name').textbox('setText', parent['text']);
+						$('#event-form—department-name').textbox('setText', node['text']);
 						
 						seleted_department_node = node;
 						
@@ -49,11 +49,11 @@
 						var attributes = node['attributes'];
 						$('#event-form').form('load', attributes);
 						
-						$('#company').val(attributes['company']['id']);
-						$('#department').val(attributes['department']['id']);
+						$('#event-form—company').val(attributes['company']['id']);
+						$('#event-form—department').val(attributes['department']['id']);
 						
-						$('#company-name').textbox('setText', attributes['company']['name']);
-						$('#department-name').textbox('setText', attributes['department']['name']);
+						$('#event-form—company-name').textbox('setText', attributes['company']['name']);
+						$('#event-form—department-name').textbox('setText', attributes['department']['name']);
 						
 						var parent = $('#event-tree').tree('getParent', node.target);
 						
@@ -80,8 +80,8 @@
 					<div style="width: 600px; padding: 10px 10px 10px 60px">
 
 						<input type="hidden" name="id"></input>
-						<input id='company' type="hidden" name="company"></input>
-						<input id='department' type="hidden" name="department"></input>
+						<input id='event-form—company' type="hidden" name="company"></input>
+						<input id='event-form—department' type="hidden" name="department"></input>
 						<table>
 
 							<tr>
@@ -94,7 +94,7 @@
 							<tr>
 								<td>公司:</td>
 								<td>
-									<input id='company-name' class="easyui-textbox" data-options="
+									<input id='event-form—company-name' class="easyui-textbox" data-options="
 										editable: false,
 										required: true									
 									" />
@@ -102,7 +102,7 @@
 								<td></td>
 								<td>部门:</td>
 								<td>
-									<input id='department-name' class="easyui-textbox" data-options="
+									<input id='event-form—department-name' class="easyui-textbox" data-options="
 										editable: false,
 										required: true									
 									" />
