@@ -36,6 +36,9 @@
 						$('#project-form-department-name').textbox('setText', node['text']);
 						
 						seleted_department_node = node;
+						
+						var url = '/salesman/loadAllCustomer/'+node['id'];
+   						$('#project-form-customer-combobox').combobox('reload', url);
 					} else if(node['type'] == 'CONTACT') {
 						var attributes = node['attributes'];
 						$('#project-form').form('load', attributes);
@@ -49,7 +52,8 @@
 						var parent = $('#project-tree').tree('getParent', node.target);
 						
 						seleted_department_node = parent;
-						
+						var url = '/salesman/loadAllCustomer/'+attributes['department']['id'];
+   						$('#project-form-customer-combobox').combobox('reload', url);
 					}
 				}, 
 				
@@ -110,23 +114,12 @@
 							<tr>
 								<td>联系人:</td>
 								<td>
-									<input id='customer-combobox' class="easyui-combobox" name="customer"
+									<input id='project-form-customer-combobox' class="easyui-combobox" name="customer"
 										data-options="
 											required:true,
 											valueField: 'id',
 											textField: 'name',
-											method: 'get',
-											url: '/salesman/loadAllCustomer',
-										    
-										    onLoadSuccess: function () { 
-										    	var val = $(this).combobox('getData'); 
-										    	for (var item in val[0]) {  
-				                                    if (item == 'customerId') {  
-				                                        $(this).combobox('select', val[0][item]);  
-				                                    }  
-				                                }  
-										    }
-											
+											method: 'get'											
 									" />
 								</td>
 								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
