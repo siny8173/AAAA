@@ -241,10 +241,10 @@
 						}
 						return true;
 					}
+
 					function modify_company_form() {
 						if (!check_company_form())
 							return;
-
 						$('#company-form').form('submit', {
 							type : 'POST',
 							url : '/salesman/mod-company',
