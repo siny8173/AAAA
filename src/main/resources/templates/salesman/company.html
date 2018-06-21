@@ -42,7 +42,7 @@
 				<form id="company-form" method="post">
 					<div style="width: 600px; padding: 10px 10px 10px 60px">
 
-						<input type="hidden" name="id"></input>
+						<input type="hidden" id="id" name="id"></input>
 
 						<table>
 
@@ -223,13 +223,27 @@
 				</form>
 
 				<div style="margin-left: 160px; margin-right: auto; margin-top: 5px; margin-bottom: 10px">
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify_company_form()">修改</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add_company_form()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_company_form()">重置</a>
 				</div>
 
 				<script>
-					function modify() {
+					function check_company_form() {
+
+						if ($('#id').val() == "") {
+							$.messager.show({
+								title : '失败',
+								msg : "请先选择要修的客户或者点击\"添加\"",
+								showType : 'show'
+							});
+							return false;
+						}
+						return true;
+					}
+					function modify_company_form() {
+						if (!check_company_form())
+							return;
 
 						$('#company-form').form('submit', {
 							type : 'POST',
@@ -246,10 +260,18 @@
 										msg : '修改成功',
 										showType : 'show'
 									});
-								} else {
+								} else if (result == 'failed') {
+
 									$.messager.show({
 										title : '失败',
 										msg : '修改失败',
+										showType : 'show'
+									});
+								} else {
+
+									$.messager.show({
+										title : '失败',
+										msg : result,
 										showType : 'show'
 									});
 								}
@@ -258,7 +280,7 @@
 						});
 					}
 
-					function add() {
+					function add_company_form() {
 						$('#company-form').form('submit', {
 							type : 'POST',
 							url : '/salesman/add-company',
@@ -286,7 +308,7 @@
 						});
 					}
 
-					function clearff() {
+					function clear_company_form() {
 						$('#company-form').form('clear');
 					}
 				</script>
@@ -296,7 +318,7 @@
 					<table id="company-department-grid" class="easyui-datagrid" style="width: 100%; height: 100%"
 						data-options="
 						singleSelect:true,
-						onDblClickRow:mod_technical_application,
+						onDblClickRow:mod_company_department,
 						toolbar:'#company-department-grid-tb'
 					">
 						<thead>
@@ -310,12 +332,12 @@
 
 				<div id="company-department-grid-tb" style="padding: 5px; height: auto">
 					<div style="margin-bottom: 5px">
-						<a class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="add_technical_application()"></a>
-						<a class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="del_technical_application()"></a>
+						<a class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="add_company_department()"></a>
+						<a class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="del_company_department()"></a>
 					</div>
 
 					<script type="text/javascript">
-						function add_technical_application() {
+						function add_company_department() {
 
 							var row = $('#company-grid')
 									.datagrid('getSelected');
@@ -331,7 +353,7 @@
 
 						}
 
-						function mod_technical_application(rowIndex, rowData) {
+						function mod_company_department(rowIndex, rowData) {
 
 							var row = $('#company-grid')
 									.datagrid('getSelected');
@@ -348,7 +370,7 @@
 
 						}
 
-						function del_technical_application() {
+						function del_company_department() {
 
 							var rowCompany = $('#company-grid').datagrid(
 									'getSelected');
@@ -379,10 +401,16 @@
 											msg : '处理成功',
 											showType : 'show'
 										});
-									} else {
+									} else if (result == 'failed') {
 										$.messager.show({
 											title : '失败',
 											msg : '处理失败',
+											showType : 'show'
+										});
+									} else {
+										$.messager.show({
+											title : '失败',
+											msg : result,
 											showType : 'show'
 										});
 									}
@@ -423,9 +451,9 @@
 							</table>
 						</div>
 						<div style="margin-left: auto; margin-right: auto; margin-top: 0px">
-							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="addDepartment()">添加</a>
-							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="modDepartment()">修改</a>
-							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="add_company_department_form()">添加</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="mod_company_department_form()">修改</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_company_department_form()">重置</a>
 						</div>
 
 						<script>
@@ -433,7 +461,7 @@
 								return true;
 							}
 
-							function addDepartment() {
+							function add_company_department_form() {
 								if (verify() == false) {
 									return;
 								}
@@ -477,7 +505,7 @@
 												});
 							}
 
-							function modDepartment() {
+							function mod_company_department_form() {
 								if (verify() == false) {
 									return;
 								}
@@ -521,7 +549,7 @@
 												});
 							}
 
-							function clearff() {
+							function clear_company_department_form() {
 								$('#company-department-form').form('clear');
 							}
 						</script>

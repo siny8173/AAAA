@@ -71,6 +71,11 @@ public class SalesmanCompanyController {
 	@ResponseBody
 	private String modCompany(Company company) {
 		logger.info("SalesmanCompanyController modCompany " + company.getName());
+		
+		if(company.getId() == null) {
+			logger.warn("company is null return failed with prompt infomation");
+			return "请先选择要修的客户或者点击\"添加\"";
+		}
 		Company companyTemp = companyService.findById(company.getId());
 
 		SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -96,7 +101,7 @@ public class SalesmanCompanyController {
 		logger.info("SalesmanCompanyController addCompanyDepartment ");
 
 		Company company = companyService.findById(companyId);
-
+		department.setId(null);
 		department = companyService.saveDepartment(department);
 
 		company.getDepartments().add(department);
@@ -109,7 +114,6 @@ public class SalesmanCompanyController {
 	@ResponseBody
 	private String modCompanyDepartment(long companyId, Department department) {
 		logger.info("SalesmanCompanyController addCompanyDepartment ");
-
 		companyService.saveDepartment(department);
 		return "success";
 	}
@@ -121,6 +125,12 @@ public class SalesmanCompanyController {
 
 		Company company = companyService.findById(cid);
 
+		if(company.getDepartments().size() == 1) {
+			logger.warn("department size is 1, this req can`t excute, return prompt infomation");
+
+			return "必须保留1个部门";
+		}
+		
 		List<Department> departments = new ArrayList<>();
 		company.getDepartments().forEach(d -> {
 			if (d.getId() != id) {

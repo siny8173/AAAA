@@ -29,22 +29,22 @@
 					
 						var parent = $('#project-tree').tree('getParent', node.target);
 						
-						$('#company').val(parent['id']);
-						$('#department').val(node['id']);
+						$('#project-form-company').val(parent['id']);
+						$('#project-form-department').val(node['id']);
 						
-						$('#company-name').textbox('setText', parent['text']);
-						$('#department-name').textbox('setText', node['text']);
+						$('#project-form-company-name').textbox('setText', parent['text']);
+						$('#project-form-department-name').textbox('setText', node['text']);
 						
 						seleted_department_node = node;
 					} else if(node['type'] == 'CONTACT') {
 						var attributes = node['attributes'];
 						$('#project-form').form('load', attributes);
 						
-						$('#company').val(attributes['company']['id']);
-						$('#department').val(attributes['department']['id']);
+						$('#project-form-company').val(attributes['company']['id']);
+						$('#project-form-department').val(attributes['department']['id']);
 						
-						$('#company-name').textbox('setText', attributes['company']['name']);
-						$('#department-name').textbox('setText', attributes['department']['name']);
+						$('#project-form-company-name').textbox('setText', attributes['company']['name']);
+						$('#project-form-department-name').textbox('setText', attributes['department']['name']);
 						
 						var parent = $('#project-tree').tree('getParent', node.target);
 						
@@ -71,8 +71,8 @@
 					<div style="width: 600px; padding: 10px 10px 10px 60px">
 
 						<input type="hidden" name="id"></input>
-						<input id='company' type="hidden" name="company"></input>
-						<input id='department' type="hidden" name="department"></input>
+						<input id='project-form-company' type="hidden" name="company"></input>
+						<input id='project-form-department' type="hidden" name="department"></input>
 						<table>
 
 							<tr>
@@ -92,7 +92,7 @@
 							<tr>
 								<td>公司:</td>
 								<td>
-									<input id='company-name' class="easyui-textbox" data-options="
+									<input id='project-form-company-name' class="easyui-textbox" data-options="
 										editable: false,
 										required: true									
 									" />
@@ -100,7 +100,7 @@
 								<td></td>
 								<td>部门:</td>
 								<td>
-									<input id='department-name' class="easyui-textbox" data-options="
+									<input id='project-form-department-name' class="easyui-textbox" data-options="
 										editable: false,
 										required: true									
 									" />
