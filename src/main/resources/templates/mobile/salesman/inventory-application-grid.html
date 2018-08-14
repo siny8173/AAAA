@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>inventory application grid</title>
+
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/themes/default/easyui.css" th:href="@{/jquery-easyui-1.5.4/themes/default/easyui.css}">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/themes/icon.css" th:href="@{/jquery-easyui-1.5.4/themes/icon.css}">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/demo/demo.css" th:href="@{/jquery-easyui-1.5.4/demo.css}">
+<script type="text/javascript" src="/jquery-easyui-1.5.4/jquery.min.js" th:src="@{/jquery-easyui-1.5.4/jquery.min.js}"></script>
+<script type="text/javascript" src="/jquery-easyui-1.5.4/jquery.easyui.min.js" th:src="@{/jquery-easyui-1.5.4/jquery.easyui.min.js}"></script>
+<script type="text/javascript" src="/js/main.js" th:src="@{/js/main.js}"></script>
+<script type="text/javascript">
+
+var customers = [(${customers})];
+var inventories = [(${inventories})];
+
+</script>
+</head>
+
+<body>
+	<table id="inventory-application-table" class="easyui-datagrid" style="width: 700px;" data-options="toolbar:'#tb'">
+		<thead>
+			<tr>
+				<th data-options="field:'id',width:40, halign:'center', align:'center'">ID</th>
+				<th data-options="field:'context',width:380, halign:'center', align:'left'">详细信息</th>
+				<th data-options="field:'type',width:80, halign:'center', align:'center'">类型</th>
+				<th data-options="field:'state',width:80, halign:'center', align:'center'">状态</th>
+			</tr>
+		</thead>
+
+
+		<tr th:each="i, stat : ${inventoryRecords}">
+			<td th:text="${i.id}">101</td>
+			<td>
+				<label>资&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;产： </label>
+				<span th:utext="${i.inventory.name}"></span><br>
+				<label>数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量： </label>
+				<span th:utext="${i.count}"></span><br>
+				<label>申请人员： </label>
+				<span th:utext="${i.proposer.name}"></span><br>
+				<label>申请时间： </label>
+				<span th:utext="${i.timeApplication}"></span><br>
+
+				<label>审批人员： </label>
+				<span th:utext="${i.approver==null} ? ' ' : ${i.approver.name}"></span><br>
+				<label>批复时间： </label>
+				<span th:utext="${i.timeApproach == null}? '' : ${i.timeApproach}"></span><br>
+			</td>
+			<td th:text="${i.type.name}"></td>
+			<td th:text="${i.state.name}"></td>
+		</tr>
+
+	</table>
+
+	<div id="tb" style="padding: 5px; height: auto">
+		<div style="margin-bottom: 5px">
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="add_inventory_application()"></a>
+		</div>
+
+		<script type="text/javascript">
+			function add_inventory_application() {
+				$('#inventory-application-win').window('open');
+			}
+		</script>
+	</div>
+
+	<div id="inventory-application-win" class="easyui-dialog" title="详细信息" style="width: 350px; height: 360px; margin-left: auto; margin-right: auto;" align="center" data-options="closed:true">
+
+		<form id="inventory-application-form" method="post">
+			<div style="width: 300px; height: 170px; padding: 20px 0px 0px 0px">
+
+				<input type="hidden" name="id"></input>
+				<input type="hidden" name="company" th:value="${company.id}"></input>
+				<input type="hidden" name="department" th:value="${department.id}"></input>
+				<input type="hidden" name="project" th:value="${project.id}"></input>
+				<table>
+					<tr>
+						<td>公司:</td>
+						<td>
+							<input th:value="${company.name}" class="easyui-textbox" data-options="
+										editable: false,
+										required: true									
+									" />
+						</td>
+					</tr>
+					<tr>
+						<td>部门:</td>
+						<td>
+							<input th:value="${department.name}" class="easyui-textbox" data-options="
+										editable: false,
+										required: true									
+									" />
+						</td>
+					</tr>
+					<tr>
+						<td>项目:</td>
+						<td>
+							<input th:value="${project.name}" class="easyui-textbox" data-options="
+										editable: false,
+										required: true									
+									" />
+						</td>
+					</tr>
+					<tr>
+						<td>联系人:</td>
+						<td>
+							<input class="easyui-combobox" name="customer" data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											data: customers
+							" />
+						</td>
+					</tr>
+					<tr>
+						<td>资产:</td>
+						<td>
+							<input class="easyui-combobox" name="inventory" data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											data: inventories
+							" />
+						</td>
+					</tr>
+					<tr>
+						<td>数量:</td>
+						<td>
+							<input class="easyui-numberbox" name="count" required="required" value="0" data-options="min:0.00,precision:2" />
+						</td>
+					</tr>
+
+				</table>
+			</div>
+		</form>
+
+		<div style="margin-left: auto; margin-right: auto; margin-top: 10px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="add()">确定</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+		</div>
+
+		<script>
+			function verify() {
+				return true;
+			}
+
+			function add() {
+				if (verify() == false) {
+					return;
+				}
+
+				$('#inventory-application-form').form('submit', {
+					type : 'POST',
+					url : '/salesman/add-inventory-application',
+					onSubmit : function() {
+						return $(this).form('validate');
+					},
+					success : function(result) {
+						if (result == 'success') {
+							$('#inventory-application-win').window('close');
+
+							window.location.reload();
+
+							$.messager.show({
+								title : '成功',
+								msg : '添加成功',
+								showType : 'show'
+							});
+						} else {
+							$.messager.show({
+								title : '失败',
+								msg : '添加失败',
+								showType : 'show'
+							});
+						}
+
+					}
+				});
+			}
+
+			function clearff() {
+				$('#inventory-application-form').form('clear');
+			}
+		</script>
+	</div>
+</body>
+</html>

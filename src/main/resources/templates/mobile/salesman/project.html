@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base :: common_header(~{::title},_)">
+<meta charset="UTF-8">
+<title>project</title>
+</head>
+
+<body>
+	<div class="easyui-layout" style="width: 100%; height: 100%;">
+		<div data-options="region:'west',split:true" style="width: 25%;" title="客户">
+			<script type="text/javascript">
+				var seleted_department_node = null;
+
+				function refresh() {
+					if (seleted_department_node == null)
+						return;
+
+					$('#project-tree').tree('reload',
+							seleted_department_node.target);
+				}
+			</script>
+
+			<ul id="project-tree" class="easyui-tree"
+				data-options="
+				url : '/salesman/load-all-project-tree',
+				onSelect: function(node) {
+						
+					if(node['type'] == 'DEPARTMENT') {
+					
+						var parent = $('#project-tree').tree('getParent', node.target);
+						
+						$('#project-form-company').val(parent['id']);
+						$('#project-form-department').val(node['id']);
+						
+						$('#project-form-company-name').textbox('setText', parent['text']);
+						$('#project-form-department-name').textbox('setText', node['text']);
+						
+						seleted_department_node = node;
+						
+						var url = '/salesman/loadAllCustomer/'+node['id'];
+   						$('#project-form-customer-combobox').combobox('reload', url);
+					} else if(node['type'] == 'CONTACT') {
+						var attributes = node['attributes'];
+						$('#project-form').form('load', attributes);
+						
+						$('#project-form-company').val(attributes['company']['id']);
+						$('#project-form-department').val(attributes['department']['id']);
+						
+						$('#project-form-company-name').textbox('setText', attributes['company']['name']);
+						$('#project-form-department-name').textbox('setText', attributes['department']['name']);
+						
+						var parent = $('#project-tree').tree('getParent', node.target);
+						
+						seleted_department_node = parent;
+						var url = '/salesman/loadAllCustomer/'+attributes['department']['id'];
+   						$('#project-form-customer-combobox').combobox('reload', url);
+					}
+				}, 
+				
+				onDblClick: function(node) {
+				
+					if(node.state == 'closed')
+						$('#project-tree').tree('expand', node.target);
+					else
+						$('#project-tree').tree('collapse', node.target);
+				}
+			">
+			</ul>
+		</div>
+
+		<div data-options="region:'center',split:true" style="width: 75%;">
+			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
+
+				<form id="project-form" method="post">
+					<div style="width: 600px; padding: 10px 10px 10px 60px">
+
+						<input type="hidden" name="id"></input>
+						<input id='project-form-company' type="hidden" name="company"></input>
+						<input id='project-form-department' type="hidden" name="department"></input>
+						<table>
+
+							<tr>
+								<td>名称:</td>
+								<td colspan="4">
+									<input class="easyui-textbox" style="width: 100%;" name="name" data-options="required:true"></input>
+								</td>
+							</tr>
+
+							<tr>
+								<td>主题:</td>
+								<td colspan="4">
+									<input class="easyui-textbox" style="width: 100%;" name="subject" data-options="required:true"></input>
+								</td>
+							</tr>
+
+							<tr>
+								<td>公司:</td>
+								<td>
+									<input id='project-form-company-name' class="easyui-textbox" data-options="
+										editable: false,
+										required: true									
+									" />
+								</td>
+								<td></td>
+								<td>部门:</td>
+								<td>
+									<input id='project-form-department-name' class="easyui-textbox" data-options="
+										editable: false,
+										required: true									
+									" />
+								</td>
+							</tr>
+
+							<tr>
+								<td>联系人:</td>
+								<td>
+									<input id='project-form-customer-combobox' class="easyui-combobox" name="customer"
+										data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get'											
+									" />
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>状态:</td>
+								<td>
+									<input class="easyui-combobox" name="state"
+										data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/common/loadAllSysProjectState',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+											
+									" />
+								</td>
+							</tr>
+
+							<tr>
+								<td>金额(单位:元):</td>
+								<td>
+									<input name="money" class="easyui-numberbox" required="required" value="0" data-options="min:0.00,precision:2">
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>赢单时间:</td>
+								<td>
+									<input id='stop-datetimebox' class="easyui-datebox" name="timeToSuccess" value="aaa"
+										data-options="
+											required:true,
+											formatter: function (date) { 
+												var y = date.getFullYear();
+												var m = date.getMonth()+1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+												var d = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
+												return y+'-'+m+'-'+d;
+											},
+											
+											parser: function (s) { 
+												var t = Date.parse(s);
+												if (!isNaN(t)){
+													return new Date(t);
+												} else {
+													return new Date();
+												}
+											}
+										" />
+								</td>
+							</tr>
+
+							<tr>
+								<td>可能性:</td>
+								<td>
+									<input name="probability" class="easyui-numberspinner" required="required" value="0" data-options="min:0,max:100,suffix:'%'">
+								</td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+
+							<tr>
+								<td>内容:</td>
+								<td colspan="4">
+									<input class="easyui-textbox" name="content" style="width: 100%; height: 80px;" data-options="
+												required:true,
+												multiline:true
+												" />
+								</td>
+							</tr>
+
+						</table>
+					</div>
+				</form>
+
+				<div style="margin-left: 120px; margin-right: auto; margin-top: 10px">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit()">删除</a>
+				</div>
+			</div>
+
+			<script>
+				function verify() {
+					return true;
+				}
+
+				function modify() {
+					if (verify() == false) {
+						return;
+					}
+
+					$('#project-form').form('submit', {
+						type : 'POST',
+						url : '/salesman/modProject',
+						onSubmit : function() {
+							return $(this).form('validate');
+						},
+						success : function(result) {
+							if (result == 'success') {
+								refresh();
+
+								$.messager.show({
+									title : '成功',
+									msg : '修改成功',
+									showType : 'show'
+								});
+							} else {
+								$.messager.show({
+									title : '失败',
+									msg : '修改失败',
+									showType : 'show'
+								});
+							}
+
+						}
+					});
+				}
+
+				function add() {
+					if (verify() == false) {
+						return;
+					}
+
+					$('#project-form').form('submit', {
+						type : 'POST',
+						url : '/salesman/addProject',
+						onSubmit : function() {
+							return $(this).form('validate');
+						},
+						success : function(result) {
+							if (result == 'success') {
+								refresh();
+
+								$.messager.show({
+									title : '成功',
+									msg : '添加成功',
+									showType : 'show'
+								});
+							} else {
+								$.messager.show({
+									title : '失败',
+									msg : '添加失败',
+									showType : 'show'
+								});
+							}
+
+						}
+					});
+				}
+
+				function clearff() {
+					$('#project-form').form('clear');
+				}
+
+				function removeit() {
+
+					$('#project-form').form('submit', {
+						type : 'POST',
+						url : '/salesman/delProject',
+						onSubmit : function() {
+							return $(this).form('validate');
+						},
+						success : function(result) {
+							if (result == 'success') {
+								refresh();
+								
+								$('#ff').form('clear');
+								$.messager.show({
+									title : '成功',
+									msg : '删除成功',
+									showType : 'show'
+								});
+							} else {
+								$.messager.show({
+									title : '失败',
+									msg : '删除失败',
+									showType : 'show'
+								});
+							}
+
+						}
+					});
+				}
+			</script>
+		</div>
+	</div>
+
+</body>
+</html>

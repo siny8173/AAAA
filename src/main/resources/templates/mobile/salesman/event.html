@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base :: common_header(~{::title},_)">
+<meta charset="UTF-8">
+<title>event</title>
+</head>
+
+<body>
+	<div class="easyui-layout" style="width: 100%; height: 100%;">
+		<div data-options="region:'west',split:true" style="width: 25%;" title="活动">
+
+			<script type="text/javascript">
+				var seleted_department_node = null;
+
+				function refresh() {
+					if (seleted_department_node == null)
+						return;
+
+					$('#event-tree').tree('reload',
+							seleted_department_node.target);
+				}
+
+				function loadCustomer(department) {
+					var url = '/salesman/loadAllCustomer/' + department;
+					$('#event-customer-combobox').combobox('reload', url);
+				}
+			</script>
+
+			<ul id="event-tree" class="easyui-tree"
+				data-options="
+				url : '/salesman/load-all-event-tree',
+				onSelect: function(node) {
+						
+					if(node['type'] == 'DEPARTMENT') {
+					
+						var parent = $('#event-tree').tree('getParent', node.target);
+						
+						$('#event-form—company').val(parent['id']);
+						$('#event-form—department').val(node['id']);
+						
+						$('#event-form—company-name').textbox('setText', parent['text']);
+						$('#event-form—department-name').textbox('setText', node['text']);
+						
+						seleted_department_node = node;
+						
+						loadCustomer(node['id']);
+												
+					} else if(node['type'] == 'CONTACT') {
+						var attributes = node['attributes'];
+						$('#event-form').form('load', attributes);
+						
+						$('#event-form—company').val(attributes['company']['id']);
+						$('#event-form—department').val(attributes['department']['id']);
+						
+						$('#event-form—company-name').textbox('setText', attributes['company']['name']);
+						$('#event-form—department-name').textbox('setText', attributes['department']['name']);
+						
+						var parent = $('#event-tree').tree('getParent', node.target);
+						
+						seleted_department_node = parent;
+						
+						loadCustomer(seleted_department_node['id']);						
+					}
+				}, 
+				
+				onDblClick: function(node) {
+				
+					if(node.state == 'closed')
+						$('#event-tree').tree('expand', node.target);
+					else
+						$('#event-tree').tree('collapse', node.target);
+				}
+			">
+			</ul>
+		</div>
+		<div data-options="region:'center',split:true" style="width: 75%;">
+			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
+
+				<form id="event-form" method="post">
+					<div style="width: 600px; padding: 10px 10px 10px 60px">
+
+						<input type="hidden" name="id"></input>
+						<input id='event-form—company' type="hidden" name="company"></input>
+						<input id='event-form—department' type="hidden" name="department"></input>
+						<table>
+
+							<tr>
+								<td>主题:</td>
+								<td colspan="4">
+									<input class="easyui-textbox" style="width: 100%;" name="title" data-options="required:true"></input>
+								</td>
+							</tr>
+
+							<tr>
+								<td>公司:</td>
+								<td>
+									<input id='event-form—company-name' class="easyui-textbox" data-options="
+										editable: false,
+										required: true									
+									" />
+								</td>
+								<td></td>
+								<td>部门:</td>
+								<td>
+									<input id='event-form—department-name' class="easyui-textbox" data-options="
+										editable: false,
+										required: true									
+									" />
+								</td>
+							</tr>
+
+							<tr>
+								<td>联系人:</td>
+								<td>
+									<input id='event-customer-combobox' class="easyui-combobox" name="customer"
+										data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get'
+											
+									" />
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>类型:</td>
+								<td>
+									<input class="easyui-combobox" name="type"
+										data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/common/loadAllSysEventType',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+											
+									" />
+								</td>
+							</tr>
+
+							<tr>
+								<td>开始:</td>
+								<td>
+									<input id='start-datetimebox' class="easyui-datetimebox" name="startTime" value="aaa"
+										data-options="
+											required:true,
+											formatter: function (date) { 
+												var y = date.getFullYear();
+												var m = date.getMonth()+1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+												var d = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
+												var h = date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours();
+												var M = date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes();
+												return y+'-'+m+'-'+d + ' ' + h + ':' + M;
+											},
+											
+											parser: function (s) { 
+												var t = Date.parse(s);
+												if (!isNaN(t)){
+													return new Date(t);
+												} else {
+													return new Date();
+												}
+											}
+										" />
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>结束:</td>
+								<td>
+									<input id='stop-datetimebox' class="easyui-datetimebox" name="stopTime" value="aaa"
+										data-options="
+											required:true,
+											formatter: function (date) { 
+												var y = date.getFullYear();
+												var m = date.getMonth()+1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+												var d = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
+												var h = date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours();
+												var M = date.getMinutes() < 10 ? '0' + (date.getMinutes()) : date.getMinutes();
+												return y+'-'+m+'-'+d + ' ' + h + ':' + M;
+											},
+											
+											parser: function (s) { 
+												var t = Date.parse(s);
+												if (!isNaN(t)){
+													return new Date(t);
+												} else {
+													return new Date();
+												}
+											}
+										" />
+								</td>
+							</tr>
+
+							<tr>
+								<td>内容:</td>
+								<td colspan="4">
+									<input class="easyui-textbox" name="content" style="width: 100%; height: 80px;" data-options="
+												required:true,
+												multiline:true
+												" />
+								</td>
+							</tr>
+
+						</table>
+					</div>
+				</form>
+
+				<div style="margin-left: 120px; margin-right: auto; margin-top: 10px">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit()">删除</a>
+				</div>
+			</div>
+
+			<script>
+				function verify() {
+					var start = new Date(Date.parse($('#start-datetimebox')
+							.datetimebox('getValue')));
+					var stop = new Date(Date.parse($('#stop-datetimebox')
+							.datetimebox('getValue')));
+					var now = new Date();
+
+					if (now.getTime() > start.getTime()) {
+						$.messager.alert('校验失败', '开始时间早于当前时间');
+						return false;
+					}
+
+					if (now.getTime() > stop.getTime()) {
+						$.messager.alert('校验失败', '结束时间早于当前时间');
+						return false;
+					}
+
+					if (start.getTime() > stop.getTime()) {
+						$.messager.alert('校验失败', '结束时间早于开始时间');
+						return false;
+					}
+
+				}
+
+				function modify() {
+					if (verify() == false) {
+						return;
+					}
+
+					$('#event-form').form('submit', {
+						type : 'POST',
+						url : '/salesman/modEvent',
+						onSubmit : function() {
+							return $(this).form('validate');
+						},
+						success : function(result) {
+							if (result == 'success') {
+								refresh();
+
+								$.messager.show({
+									title : '成功',
+									msg : '修改成功',
+									showType : 'show'
+								});
+							} else {
+								$.messager.show({
+									title : '失败',
+									msg : '修改失败',
+									showType : 'show'
+								});
+							}
+
+						}
+					});
+				}
+
+				function add() {
+					if (verify() == false) {
+						return;
+					}
+
+					$('#event-form').form('submit', {
+						type : 'POST',
+						url : '/salesman/addEvent',
+						onSubmit : function() {
+							return $(this).form('validate');
+						},
+						success : function(result) {
+							if (result == 'success') {
+								refresh();
+
+								$.messager.show({
+									title : '成功',
+									msg : '添加成功',
+									showType : 'show'
+								});
+							} else {
+								$.messager.show({
+									title : '失败',
+									msg : '添加失败',
+									showType : 'show'
+								});
+							}
+
+						}
+					});
+				}
+
+				function clearff() {
+					$('#event-form').form('clear');
+				}
+
+				function removeit() {
+
+					$('#event-form').form('submit', {
+						type : 'POST',
+						url : '/salesman/delEvent',
+						onSubmit : function() {
+							return $(this).form('validate');
+						},
+						success : function(result) {
+							if (result == 'success') {
+								refresh();
+								$('#ff').form('clear');
+								$.messager.show({
+									title : '成功',
+									msg : '删除成功',
+									showType : 'show'
+								});
+							} else {
+								$.messager.show({
+									title : '失败',
+									msg : '删除失败',
+									showType : 'show'
+								});
+							}
+
+						}
+					});
+				}
+			</script>
+		</div>
+	</div>
+
+</body>
+</html>

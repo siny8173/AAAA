@@ -59,8 +59,8 @@
 	}
 
 	window.onload = function() {
-		$('#username').textbox('setValue', getCookies("business_cookie_user"));
-		$('#password').textbox('setValue', getCookies("business_cookie_pass"));
+		$('#txtName').textbox('setValue', getCookies("business_cookie_user"));
+		$('#txtPassword').textbox('setValue', getCookies("business_cookie_pass"));
 	}
 </script>
 </head>
@@ -78,13 +78,13 @@
 						<tr>
 							<td>账号:</td>
 							<td>
-								<input class="easyui-textbox" type="text" id="username" name="username" data-options="required:true"></input>
+								<input class="easyui-textbox" type="text" id="txtName" name="username" data-options="required:true"></input>
 							</td>
 						</tr>
 						<tr>
 							<td>密码:</td>
 							<td>
-								<input class="easyui-textbox" type="password" id="password" name="password" data-options="required:true"></input>
+								<input class="easyui-textbox" type="password" id="txtPassword" name="password" data-options="required:true"></input>
 							</td>
 						</tr>
 					</table>

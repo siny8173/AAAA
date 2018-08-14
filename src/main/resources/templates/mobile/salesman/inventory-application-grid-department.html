@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>inventory application grid</title>
+
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/themes/default/easyui.css" th:href="@{/jquery-easyui-1.5.4/themes/default/easyui.css}">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/themes/icon.css" th:href="@{/jquery-easyui-1.5.4/themes/icon.css}">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/demo/demo.css" th:href="@{/jquery-easyui-1.5.4/demo.css}">
+<script type="text/javascript" src="/jquery-easyui-1.5.4/jquery.min.js" th:src="@{/jquery-easyui-1.5.4/jquery.min.js}"></script>
+<script type="text/javascript" src="/jquery-easyui-1.5.4/jquery.easyui.min.js" th:src="@{/jquery-easyui-1.5.4/jquery.easyui.min.js}"></script>
+<script type="text/javascript" src="/js/main.js" th:src="@{/js/main.js}"></script>
+
+</head>
+
+<body>
+	<table id="inventory-application-table" class="easyui-datagrid" style="width: 700px;">
+		<thead>
+			<tr>
+				<th data-options="field:'id',width:40, halign:'center', align:'center'">ID</th>
+				<th data-options="field:'context',width:380, halign:'center', align:'left'">详细信息</th>
+				<th data-options="field:'type',width:80, halign:'center', align:'center'">类型</th>
+				<th data-options="field:'state',width:80, halign:'center', align:'center'">状态</th>
+			</tr>
+		</thead>
+
+
+		<tr th:each="i, stat : ${inventoryRecords}">
+			<td th:text="${i.id}">101</td>
+			<td>
+				<label>资&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;产： </label>
+				<span th:utext="${i.inventory.name}"></span><br>
+				<label>数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量： </label>
+				<span th:utext="${i.count}"></span><br>
+				<label>申请人员： </label>
+				<span th:utext="${i.proposer.name}"></span><br>
+				<label>申请时间： </label>
+				<span th:utext="${i.timeApplication}"></span><br>
+
+				<label>审批人员： </label>
+				<span th:utext="${i.approver==null} ? ' ' : ${i.approver.name}"></span><br>
+				<label>批复时间： </label>
+				<span th:utext="${i.timeApproach == null}? '' : ${i.timeApproach}"></span><br>
+			</td>
+			<td th:text="${i.type.name}"></td>
+			<td th:text="${i.state.name}"></td>
+		</tr>
+
+	</table>
+</body>
+</html>

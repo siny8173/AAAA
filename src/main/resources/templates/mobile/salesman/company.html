@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base :: common_header(~{::title},_)">
+<meta charset="UTF-8">
+<title>company</title>
+</head>
+
+<body>
+	<div class="easyui-layout" style="width: 100%; height: 100%;">
+		<div data-options="region:'west',split:true" style="width: 25%;">
+
+			<table id="company-grid" class="easyui-datagrid" title="客户" style="width: 100%; height: 100%"
+				data-options="
+					singleSelect:true,
+					url:'/salesman/load-company',
+					method:'get',
+					onClickRow:onClickRow
+				">
+				<thead>
+					<tr>
+						<th data-options="field:'id',width:40">ID</th>
+						<th data-options="field:'name',width:100">名称</th>
+					</tr>
+				</thead>
+			</table>
+
+			<script>
+				function onClickRow(rowIndex, rowData) {
+					$('#province').combobox('setValue',
+							rowData['city']['provinceId']);
+					$('#company-form').form('load', rowData);
+
+					$('#company-department-grid').datagrid('loadData',
+							rowData['departments']);
+				}
+			</script>
+		</div>
+
+		<div data-options="region:'center',split:true" style="width: 75%;">
+			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
+
+				<form id="company-form" method="post">
+					<div style="width: 600px; padding: 10px 10px 10px 60px">
+
+						<input type="hidden" id="id" name="id"></input>
+
+						<table>
+
+							<tr>
+								<td>名称:</td>
+								<td colspan="4">
+									<input class="easyui-textbox" style="width: 100%;" name="name" data-options="required:true"></input>
+								</td>
+							</tr>
+
+							<tr>
+								<td>邮编:</td>
+								<td>
+									<input class="easyui-textbox" type="text" name="postcode" data-options="required:true" />
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>城市:</td>
+								<td>
+									<input id="province" class="easyui-combobox" style="width: 85px;"
+										data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/salesman/loadAllProvince',
+											onSelect: function(rec){
+											    var url = '/salesman/loadCitis?id='+rec.id;
+											    $('#city').combobox('reload', url);
+										    },
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+										" />
+
+									<input id="city" name="city" class="easyui-combobox" style="width: 85px;"
+										data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+										    
+										    onLoadSuccess: function () { 
+										    	/*var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  */
+										    }
+										" />
+
+
+								</td>
+							</tr>
+
+							<tr>
+								<td>地址:</td>
+								<td colspan="4">
+									<input class="easyui-textbox" style="width: 100%;" name="address" data-options="required:true"></input>
+								</td>
+							</tr>
+							<tr>
+								<td>来源:</td>
+								<td>
+									<input class="easyui-combobox" name="source"
+										data-options="
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/salesman/loadCustomerSource',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+											
+									" />
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>登记时间:</td>
+								<td>
+									<input class="easyui-datebox" name="registrationTime" value="aaa"
+										data-options="
+										required:true,
+										formatter: function (date) { 
+											var y = date.getFullYear();
+											var m = date.getMonth()+1;
+											var d = date.getDate();
+											return y+'-'+m+'-'+d;
+										},
+										
+										parser: function (s) { 
+											var t = Date.parse(s);
+											if (!isNaN(t)){
+												return new Date(t);
+											} else {
+												return new Date();
+											}
+										}
+									" />
+								</td>
+							</tr>
+
+							<tr>
+								<td>等级:</td>
+								<td>
+									<input class="easyui-combobox" name="level"
+										data-options="
+											equired:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/salesman/loadCustomerLevel',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+									" />
+								</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<td>类型:</td>
+								<td>
+									<input class="easyui-combobox" name="type"
+										data-options="
+											equired:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/salesman/loadCustomerType',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+									" />
+								</td>
+							</tr>
+
+							<tr>
+								<td>行业:</td>
+								<td colspan="4">
+									<input class="easyui-textbox" style="width: 100%;" name="business" data-options="required:true"></input>
+								</td>
+							</tr>
+
+							<tr>
+								<td>需求:</td>
+								<td colspan="4">
+									<input class="easyui-textbox" name="demand" style="width: 100%; height: 60px;" data-options="
+												required:true,
+												multiline:true
+												" />
+								</td>
+							</tr>
+
+						</table>
+					</div>
+				</form>
+
+				<div style="margin-left: 160px; margin-right: auto; margin-top: 5px; margin-bottom: 10px">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify_company_form()">修改</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add_company_form()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_company_form()">重置</a>
+				</div>
+
+				<script>
+					function check_company_form() {
+
+						if ($('#id').val() == "") {
+							$.messager.show({
+								title : '失败',
+								msg : "请先选择要修的客户或者点击\"添加\"",
+								showType : 'show'
+							});
+							return false;
+						}
+						return true;
+					}
+
+					function modify_company_form() {
+						if (!check_company_form())
+							return;
+						$('#company-form').form('submit', {
+							type : 'POST',
+							url : '/salesman/mod-company',
+							onSubmit : function() {
+								return $(this).form('validate');
+							},
+							success : function(result) {
+								if (result == 'success') {
+									$('#company-grid').datagrid('reload');
+
+									$.messager.show({
+										title : '成功',
+										msg : '修改成功',
+										showType : 'show'
+									});
+								} else if (result == 'failed') {
+
+									$.messager.show({
+										title : '失败',
+										msg : '修改失败',
+										showType : 'show'
+									});
+								} else {
+
+									$.messager.show({
+										title : '失败',
+										msg : result,
+										showType : 'show'
+									});
+								}
+
+							}
+						});
+					}
+
+					function add_company_form() {
+						$('#company-form').form('submit', {
+							type : 'POST',
+							url : '/salesman/add-company',
+							onSubmit : function() {
+								return $(this).form('validate');
+							},
+							success : function(result) {
+								if (result == 'success') {
+									$('#company-grid').datagrid('reload');
+
+									$.messager.show({
+										title : '成功',
+										msg : '添加成功',
+										showType : 'show'
+									});
+								} else {
+									$.messager.show({
+										title : '失败',
+										msg : '添加失败',
+										showType : 'show'
+									});
+								}
+
+							}
+						});
+					}
+
+					function clear_company_form() {
+						$('#company-form').form('clear');
+					}
+				</script>
+
+				<div class="easyui-panel" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
+
+					<table id="company-department-grid" class="easyui-datagrid" style="width: 100%; height: 100%"
+						data-options="
+						singleSelect:true,
+						onDblClickRow:mod_company_department,
+						toolbar:'#company-department-grid-tb'
+					">
+						<thead>
+							<tr>
+								<th data-options="field:'id',width:40">ID</th>
+								<th data-options="field:'name',width:100">部门</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+
+				<div id="company-department-grid-tb" style="padding: 5px; height: auto">
+					<div style="margin-bottom: 5px">
+						<a class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="add_company_department()"></a>
+						<a class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="del_company_department()"></a>
+					</div>
+
+					<script type="text/javascript">
+						function add_company_department() {
+
+							var row = $('#company-grid')
+									.datagrid('getSelected');
+
+							if (row == null) {
+								alert("请选择左侧客户后再添加");
+								return;
+							}
+
+							$('#company-department-win').window('open');
+
+							$('#companyId').val(row['id']);
+
+						}
+
+						function mod_company_department(rowIndex, rowData) {
+
+							var row = $('#company-grid')
+									.datagrid('getSelected');
+
+							if (row == null) {
+								alert("请选择左侧客户后再添加");
+								return;
+							}
+
+							$('#companyId').val(row['id']);
+							$('#company-department-form').form('load', rowData);
+
+							$('#company-department-win').window('open');
+
+						}
+
+						function del_company_department() {
+
+							var rowCompany = $('#company-grid').datagrid(
+									'getSelected');
+
+							if (rowCompany == null) {
+								alert("请选择左侧客户后再添加");
+								return;
+							}
+
+							var row = $('#company-department-grid').datagrid(
+									'getSelected');
+
+							if (row == null) {
+								alert("请选择下面部门后删除");
+								return;
+							}
+
+							var dataStr = 'id=' + row['id'] + '&cid='
+									+ rowCompany['id'];
+							$.ajax({
+								url : "/salesman/del-company-department",
+								data : dataStr,
+								success : function(result) {
+									if (result == 'success') {
+										window.location.reload();
+										$.messager.show({
+											title : '成功',
+											msg : '处理成功',
+											showType : 'show'
+										});
+									} else if (result == 'failed') {
+										$.messager.show({
+											title : '失败',
+											msg : '处理失败',
+											showType : 'show'
+										});
+									} else {
+										$.messager.show({
+											title : '失败',
+											msg : result,
+											showType : 'show'
+										});
+									}
+
+								}
+							});
+
+						}
+					</script>
+				</div>
+
+				<div id="company-department-win" class="easyui-dialog" title="详细信息" style="width: 400px; height: 200px; margin-left: auto; margin-right: auto;" align="center" data-options="closed:true">
+
+					<form id="company-department-form" method="post">
+						<div style="width: 360px; height: 100px; padding: 10px 10px 10px 10px">
+
+							<input id="companyId" type="hidden" name="companyId">
+							<input id="id" type="hidden" name="id">
+							<table>
+								<tr>
+									<td>名称:</td>
+									<td>
+										<input style="width: 300px;" class="easyui-textbox" name="name" data-options="
+												required:true
+										" />
+									</td>
+								</tr>
+
+								<tr>
+									<td>功能:</td>
+									<td>
+										<input style="width: 300px; height: 50px" class="easyui-textbox" name="function" data-options="
+												required:true,
+												multiline:true
+										" />
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div style="margin-left: auto; margin-right: auto; margin-top: 0px">
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="add_company_department_form()">添加</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="mod_company_department_form()">修改</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_company_department_form()">重置</a>
+						</div>
+
+						<script>
+							function verify() {
+								return true;
+							}
+
+							function add_company_department_form() {
+								if (verify() == false) {
+									return;
+								}
+
+								$('#company-department-form')
+										.form(
+												'submit',
+												{
+													type : 'POST',
+													url : '/salesman/add-company-department',
+													onSubmit : function() {
+														return $(this).form(
+																'validate');
+													},
+													success : function(result) {
+														if (result == 'success') {
+															$(
+																	'#company-department-win')
+																	.window(
+																			'close');
+
+															window.location
+																	.reload();
+
+															$.messager
+																	.show({
+																		title : '成功',
+																		msg : '添加成功',
+																		showType : 'show'
+																	});
+														} else {
+															$.messager
+																	.show({
+																		title : '失败',
+																		msg : '添加失败',
+																		showType : 'show'
+																	});
+														}
+
+													}
+												});
+							}
+
+							function mod_company_department_form() {
+								if (verify() == false) {
+									return;
+								}
+
+								$('#company-department-form')
+										.form(
+												'submit',
+												{
+													type : 'POST',
+													url : '/salesman/mod-company-department',
+													onSubmit : function() {
+														return $(this).form(
+																'validate');
+													},
+													success : function(result) {
+														if (result == 'success') {
+															$(
+																	'#company-department-win')
+																	.window(
+																			'close');
+
+															window.location
+																	.reload();
+
+															$.messager
+																	.show({
+																		title : '成功',
+																		msg : '修改成功',
+																		showType : 'show'
+																	});
+														} else {
+															$.messager
+																	.show({
+																		title : '失败',
+																		msg : '修改失败',
+																		showType : 'show'
+																	});
+														}
+
+													}
+												});
+							}
+
+							function clear_company_department_form() {
+								$('#company-department-form').form('clear');
+							}
+						</script>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

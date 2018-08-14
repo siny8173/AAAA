@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base :: common_header(~{::title},_)">
+<meta charset="UTF-8">
+<title>system-tools</title>
+</head>
+
+<body>
+
+	<div>
+		<h2>系统工具</h2>
+		<div style="margin: 20px 0;"></div>
+		<div style="margin-left: auto; margin-right: auto; margin-top: 20px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
+				onclick="update_administrative_region()">行政区域更新</a>
+		</div>
+
+		<script>
+			function update_administrative_region() {
+
+				$.get("/admin/updateAdministrativeRegion", function(data,
+						status) {
+					alert("Data: " + data + "\nStatus: " + status);
+				});
+			}
+		</script>
+	</div>
+</body>
+</html>

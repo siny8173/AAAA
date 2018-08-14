@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base :: common_header(~{::title},_)">
+<meta charset="UTF-8">
+<title>technicist</title>
+</head>
+
+<body>
+
+	<div class="easyui-tabs" style="width: 100%; height: 100%">
+		<div title="技术申请" data-options="href:'/technicist/technical-application'" style="padding: 0px"></div>
+		<div title="库存管理" data-options="href:'/technicist/inventory'" style="padding: 0px"></div>
+	</div>
+</body>
+</html>
