@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="common_header(title,links)">
+<title th:replace="${title}">The awesome application</title>
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.5.6/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.5.6/themes/mobile.css">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.5.6/themes/icon.css">
+<script type="text/javascript" src="/jquery-easyui-1.5.5.6/jquery.min.js"></script>
+<script type="text/javascript" src="/jquery-easyui-1.5.5.6/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/jquery-easyui-1.5.5.6/jquery.easyui.mobile.js"></script>
+<!--/* Per-page placeholder for additional links */-->
+<th:block th:replace="${links}" />
+</head>
+<body>
+	
+</body>
+</html>
