@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="common_header(title,links)">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8">
+<title th:replace="${title}">The awesome application</title>
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.5.6/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.5.6/themes/mobile.css">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.5.6/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="/css/main_mobile.css">
+<script type="text/javascript" src="/jquery-easyui-1.5.5.6/jquery.min.js"></script>
+<script type="text/javascript" src="/jquery-easyui-1.5.5.6/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/jquery-easyui-1.5.5.6/jquery.easyui.mobile.js"></script>
+<th:block th:replace="${links}" />
+
+<script type="text/javascript">
+	function logout() {
+		$('#logout').submit();
+	}
+</script>
+</head>
+<body>
+	<div th:fragment="header" style="height: 55px">
+		<div class="threed" style="float: left" th:text="#{company.name} + #{app.version}">移动证书服务系统软件V3.0</div>
+		<div class="right_div">
+			<form id="logout" action="/logout" method="get"></form>
+			
+			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-man'" onclick="logout()"> 登出 </a>
+			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'" onclick="passwordmodify()">修改密码</a>
+		</div>
+		<div id="password-modify-win"></div>
+	</div>
+</body>
+</html>

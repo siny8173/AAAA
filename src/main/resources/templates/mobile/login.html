@@ -1,10 +1,57 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="US-ASCII">
-<title>Insert title here</title>
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base_mobile :: common_header(~{::title},_)">
+<title th:text="#{company.name} + #{app.version}">login</title>
 </head>
 <body>
+	<div class="easyui-navpanel">
+		<header>
+			<div class="m-toolbar">
+				<span class="m-title" th:text="#{company.name}">Login to System</span>
+			</div>
+		</header>
+		<div style="margin: 20px 0;"></div>
+		<div style="padding: 0 20px">
+			<form id="UserLogin" th:action="@{/login}" method="post">
+				<div style="margin-bottom: 10px">
+					<input class="easyui-textbox" id="username" name="username" data-options="prompt:'用户',iconCls:'icon-man'" style="width: 100%; height: 38px">
+				</div>
+				<div>
+					<input class="easyui-passwordbox" id="password" name="password" data-options="prompt:'密码'" style="width: 100%; height: 38px">
+				</div>
+			</form>
+			<div style="text-align: center; margin-top: 30px">
+				<a href="#" class="easyui-linkbutton" iconCls="icon-ok" style="width: 100px; height: 40px" onclick="submitForm()">
+					<span style="font-size: 16px">登陆</span>
+				</a>
+				<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" style="width: 100px; height: 40px" onclick="clearForm()">
+					<span style="font-size: 16px">重置</span>
+				</a>
+			</div>
+			<div style="text-align: center; margin-top: 30px">
+				<p th:if="${loginError}" class="error">用户名或密码不匹配，请重新登陆</p>
+			</div>
 
+			<div style="text-align: center; margin-top: 30px">
+				<p id="showMsg" class="error"></p>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function submitForm() {
+			if ($("input[name='username']").val() == ""
+					|| $("input[name='password']").val() == "") {
+				$("#showMsg").html("用户名或密码为空，请输入");
+				$("input[name='username']").focus();
+			} else {
+				$('#UserLogin').submit();
+			}
+		}
+
+		function clearForm() {
+			$('#UserLogin').form('clear');
+		}
+	</script>
 </body>
 </html>
