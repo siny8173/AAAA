@@ -2,61 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="base_mobile :: common_header(~{::title},_)">
 <title th:text="#{company.name} + #{app.version}">login</title>
-
-<script type="text/javascript">
-	// 写入cookie
-	function setCookies(name, value) {
-		//此 cookie 将被保存 30 天
-		var Days = 30;
-		var expdate = new Date();
-		expdate.setTime(expdate.getTime() + Days * 24 * 60 * 60 * 1000);
-		document.cookie = name + "=" + escape(value) + ";expires="
-				+ expdate.toGMTString();
-	}
-
-	// 读取cookie
-	function getCookies(name) {
-		var arr = document.cookie.match(new RegExp("(^| )" + name
-				+ "=([^;]*)(;|$)"));
-		if (arr != null)
-			return unescape(arr[2]);
-		else
-			return null;
-	}
-
-	// 删除cookie
-	function deleteCookies(name) {
-		var date = new Date();
-		date.setTime(date.getTime() - 10000);
-		document.cookie = name + "=a; expires=" + date.toGMTString();
-	}
-
-	//登录事件
-	function remember_login() {
-		try {
-			if (true == true) {
-				setCookies("business_cookie_user", document
-						.getElementById("txtName").value);
-				setCookies("business_cookie_pass", document
-						.getElementById("txtPassword").value);
-				setCookies("business_cookie_check", "yes");
-			} else {
-				deleteCookies("business_cookie_user");
-				deleteCookies("business_cookie_pass");
-				deleteCookies("business_cookie_check");
-				setCookies("business_cooki");
-			}
-		} catch (e) {
-		}
-		;
-	}
-
-	window.onload = function() {
-		$('#username').textbox('setValue', getCookies("business_cookie_user"));
-		$('#password').textbox('setValue', getCookies("business_cookie_pass"));
-	}
-</script>
->>>>>>> branch 'master' of https://github.com/siny8173/AAAA.git
 </head>
 <body>
 	<div class="easyui-navpanel">
@@ -83,7 +28,6 @@
 					<span style="font-size: 16px">重置</span>
 				</a>
 			</div>
-<<<<<<< HEAD
 			<div style="text-align: center; margin-top: 30px">
 				<p th:if="${loginError}" class="error">用户名或密码不匹配，请重新登陆</p>
 			</div>
@@ -105,22 +49,6 @@
 			}
 		}
 
-=======
-		</div>
-	</div>
-	
-	<script>
-		function submitForm() {
-			if ($("input[name='username']").val() == ""
-					|| $("input[name='password']").val() == "") {
-				$("#showMsg").html("<ul><li>用户名或密码为空，请输入</li></ul>");
-				$("input[name='username']").focus();
-			} else {
-				remember_login();
-				$('#UserLogin').submit();
-			}
-		}
->>>>>>> branch 'master' of https://github.com/siny8173/AAAA.git
 		function clearForm() {
 			$('#UserLogin').form('clear');
 		}
