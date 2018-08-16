@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="base :: common_header(~{::title},_)">
+<head th:replace="base_mobile :: common_header(~{::title},_)">
 <meta charset="UTF-8">
 <title>technical application</title>
 </head>
 
 <body>
+	<div class="easyui-layout" id="technical-application-mobile-layout" style="width: 100%; height: 100%;">
+		<div data-options="region:'west', split:true, title:'客户'" style="width: 100%;">
 
-	<div class="easyui-layout" style="width: 100%; height: 100%;">
-
-		<div data-options="region:'west',split:true" style="width: 25%;" title="客户">
 			<script type="text/javascript">
 				var seleted_department_node = null;
 
@@ -56,7 +55,8 @@
 							'src',
 							'/salesman/technical-application-grid?projectId='
 									+ node['attributes']['id'] + '&departmentId=' + attributes['department']['id']);
-						
+									
+						$('#technical-application-mobile-layout').layout('collapse', 'west');
 					}
 				}, 
 				
@@ -71,7 +71,7 @@
 			</ul>
 		</div>
 
-		<div style="width: 75%;" data-options="region:'center',split:true">
+		<div style="width: 100%;" data-options="region:'center',split:true">
 			<iframe id="technical-application-frame" name="technical-application-frame" style="width: 100%; height: 95%; border: 0; position: absolute"></iframe>
 		</div>
 

@@ -40,7 +40,7 @@
 						seleted_department_node = node;
 					} else if(node['type'] == 'CONTACT') {
 						var customer = node['customer'];
-						$('#ff').form('load', customer);
+						$('#customer-information-form').form('load', customer);
 						
 						$('#company').val(customer['company']['id']);
 						$('#department').val(customer['department']['id']);
@@ -52,6 +52,11 @@
 						
 						seleted_department_node = parent;
 						
+						if (customer['isPrimary'] == true) {
+							document.getElementById('customer-information-primary').checked = true
+						} else {
+							document.getElementById('customer-information-primary').checked = false
+						}
 					}
 				}, 
 				
@@ -69,7 +74,7 @@
 		<div data-options="region:'center',split:true" style="width: 75%;">
 			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
 
-				<form id="ff" method="post">
+				<form id="customer-information-form" method="post">
 					<div style="width: 600px; padding: 10px 60px 0px 60px">
 						<input type="hidden" name="id"></input>
 						<input id='company' type="hidden" name="company"></input>
@@ -183,7 +188,7 @@
 								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 								<td>主要联系人:</td>
 								<td>
-									<input id="primary" type="checkbox" name="isPrimary" value=1>
+									<input id="customer-information-primary" type="checkbox" name="isPrimary" value=1>
 								</td>
 							</tr>
 
@@ -195,10 +200,10 @@
 				</form>
 
 				<div style="margin-left: 60px; margin-right: auto; margin-top: 10px">
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit()">删除</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify_customer_information_form()">修改</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add_customer_information_form()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_customer_information_form()">重置</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit_customer_information_form()">删除</a>
 				</div>
 
 
@@ -207,9 +212,9 @@
 
 
 			<script>
-				function modify() {
+				function modify_customer_information_form() {
 
-					$('#ff').form('submit', {
+					$('#customer-information-form').form('submit', {
 						type : 'POST',
 						url : '/salesman/modCustomer',
 						onSubmit : function() {
@@ -235,8 +240,8 @@
 					});
 				}
 
-				function add() {
-					$('#ff').form('submit', {
+				function add_customer_information_form() {
+					$('#customer-information-form').form('submit', {
 						type : 'POST',
 						url : '/salesman/addCustomer',
 						onSubmit : function() {
@@ -261,12 +266,12 @@
 						}
 					});
 				}
-				function clearff() {
-					$('#ff').form('clear');
+				function clear_customer_information_form() {
+					$('#customer-information-form').form('clear');
 				}
-				function removeit() {
+				function removeit_customer_information_form() {
 
-					$('#ff').form('submit', {
+					$('#customer-information-form').form('submit', {
 						type : 'POST',
 						url : '/salesman/delCustomer',
 						onSubmit : function() {
@@ -275,7 +280,7 @@
 						success : function(result) {
 							if (result == 'success') {
 								refresh();
-								$('#ff').form('clear');
+								$('#customer-information-form').form('clear');
 								$.messager.show({
 									title : '成功',
 									msg : '删除成功',

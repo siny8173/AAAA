@@ -201,20 +201,20 @@
 				</form>
 
 				<div style="margin-left: 120px; margin-right: auto; margin-top: 10px">
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit()">删除</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify_project_form()">修改</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add_project_form()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_project_form()">重置</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit_project_form()">删除</a>
 				</div>
 			</div>
 
 			<script>
-				function verify() {
+				function verify_project_form() {
 					return true;
 				}
 
-				function modify() {
-					if (verify() == false) {
+				function modify_project_form() {
+					if (verify_project_form() == false) {
 						return;
 					}
 
@@ -245,8 +245,8 @@
 					});
 				}
 
-				function add() {
-					if (verify() == false) {
+				function add_project_form() {
+					if (verify_project_form() == false) {
 						return;
 					}
 
@@ -277,11 +277,11 @@
 					});
 				}
 
-				function clearff() {
+				function clear_project_form() {
 					$('#project-form').form('clear');
 				}
 
-				function removeit() {
+				function removeit_project_form() {
 
 					$('#project-form').form('submit', {
 						type : 'POST',

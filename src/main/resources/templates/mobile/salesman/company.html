@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="base :: common_header(~{::title},_)">
+<head th:replace="base_mobile :: common_header(~{::title},_)">
 <meta charset="UTF-8">
 <title>company</title>
 </head>
 
 <body>
-	<div class="easyui-layout" style="width: 100%; height: 100%;">
-		<div data-options="region:'west',split:true" style="width: 25%;">
+	<div class="easyui-layout" id="company-mobile-layout" style="width: 100%; height: 100%;">
+		<div data-options="region:'west', split:true, title:'客户'" style="width: 100%;">
 
-			<table id="company-grid" class="easyui-datagrid" title="客户" style="width: 100%; height: 100%"
+			<table id="company-grid" class="easyui-datagrid" style="width: 100%; height: 100%"
 				data-options="
 					singleSelect:true,
 					url:'/salesman/load-company',
@@ -32,37 +32,33 @@
 
 					$('#company-department-grid').datagrid('loadData',
 							rowData['departments']);
+					
+					$('#company-mobile-layout').layout('collapse', 'west');
 				}
 			</script>
 		</div>
 
-		<div data-options="region:'center',split:true" style="width: 75%;">
-			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
+		<div data-options="region:'center',title:'详细信息',split:true" style="width: 100%;">
+			<div class="easyui-panel" style="width: 90%;" align="left" data-options="border:false">
 
 				<form id="company-form" method="post">
-					<div style="width: 600px; padding: 10px 10px 10px 60px">
+					<div style="width: 100%; padding: 10px 10px 10px 20px">
 
 						<input type="hidden" id="id" name="id"></input>
 
-						<table>
+						<div style="margin-bottom: 10px">
+							<span>名称:</span>
+							<input class="easyui-textbox" name="name" data-options="required:true"></input>
+						</div>
 
-							<tr>
-								<td>名称:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" style="width: 100%;" name="name" data-options="required:true"></input>
-								</td>
-							</tr>
-
-							<tr>
-								<td>邮编:</td>
-								<td>
-									<input class="easyui-textbox" type="text" name="postcode" data-options="required:true" />
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>城市:</td>
-								<td>
-									<input id="province" class="easyui-combobox" style="width: 85px;"
-										data-options="
+						<div style="margin-bottom: 10px">
+							<span>邮编:</span>
+							<input class="easyui-textbox" type="text" name="postcode" data-options="required:true" />
+						</div>
+						<div style="margin-bottom: 10px">
+							<span>城市:</span>
+							<input id="province" class="easyui-combobox" style="width: 85px;"
+								data-options="
 											required:true,
 											valueField: 'id',
 											textField: 'name',
@@ -82,9 +78,9 @@
 				                                }  
 										    }
 										" />
-
-									<input id="city" name="city" class="easyui-combobox" style="width: 85px;"
-										data-options="
+							<span style="margin-left: 20px"> </span>
+							<input id="city" name="city" class="easyui-combobox" style="width: 85px;"
+								data-options="
 											required:true,
 											valueField: 'id',
 											textField: 'name',
@@ -99,22 +95,16 @@
 				                                }  */
 										    }
 										" />
+						</div>
 
-
-								</td>
-							</tr>
-
-							<tr>
-								<td>地址:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" style="width: 100%;" name="address" data-options="required:true"></input>
-								</td>
-							</tr>
-							<tr>
-								<td>来源:</td>
-								<td>
-									<input class="easyui-combobox" name="source"
-										data-options="
+						<div style="margin-bottom: 10px">
+							<span>地址:</span>
+							<input class="easyui-textbox" name="address" data-options="required:true"></input>
+						</div>
+						<div style="margin-bottom: 10px">
+							<span>来源:</span>
+							<input class="easyui-combobox" name="source"
+								data-options="
 											required:true,
 											valueField: 'id',
 											textField: 'name',
@@ -131,12 +121,12 @@
 										    }
 											
 									" />
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>登记时间:</td>
-								<td>
-									<input class="easyui-datebox" name="registrationTime" value="aaa"
-										data-options="
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>登记:</span>
+							<input class="easyui-datebox" name="registrationTime" value="aaa"
+								data-options="
 										required:true,
 										formatter: function (date) { 
 											var y = date.getFullYear();
@@ -154,14 +144,12 @@
 											}
 										}
 									" />
-								</td>
-							</tr>
+						</div>
 
-							<tr>
-								<td>等级:</td>
-								<td>
-									<input class="easyui-combobox" name="level"
-										data-options="
+						<div style="margin-bottom: 10px">
+							<span>等级:</span>
+							<input class="easyui-combobox" name="level"
+								data-options="
 											equired:true,
 											valueField: 'id',
 											textField: 'name',
@@ -176,18 +164,18 @@
 				                                    }  
 				                                }  
 										    }
-									" />
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>类型:</td>
-								<td>
-									<input class="easyui-combobox" name="type"
-										data-options="
+							" />
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>类型:</span>
+							<input class="easyui-combobox" name="level"
+								data-options="
 											equired:true,
 											valueField: 'id',
 											textField: 'name',
 											method: 'get',
-											url: '/salesman/loadCustomerType',
+											url: '/salesman/loadCustomerLevel',
 										    
 										    onLoadSuccess: function () { 
 										    	var val = $(this).combobox('getData'); 
@@ -197,32 +185,25 @@
 				                                    }  
 				                                }  
 										    }
-									" />
-								</td>
-							</tr>
+							" />
+						</div>
 
-							<tr>
-								<td>行业:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" style="width: 100%;" name="business" data-options="required:true"></input>
-								</td>
-							</tr>
+						<div style="margin-bottom: 10px">
+							<span>行业:</span>
+							<input class="easyui-textbox" name="business" data-options="required:true"></input>
+						</div>
 
-							<tr>
-								<td>需求:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" name="demand" style="width: 100%; height: 60px;" data-options="
+						<div style="margin-bottom: 10px">
+							<span>需求:</span>
+							<input class="easyui-textbox" name="demand" style="height: 60px;" data-options="
 												required:true,
 												multiline:true
 												" />
-								</td>
-							</tr>
-
-						</table>
+						</div>
 					</div>
 				</form>
 
-				<div style="margin-left: 160px; margin-right: auto; margin-top: 5px; margin-bottom: 10px">
+				<div style="margin-left: 50px; margin-right: auto; margin-top: 5px; margin-bottom: 10px">
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify_company_form()">修改</a>
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add_company_form()">添加</a>
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_company_form()">重置</a>
@@ -313,7 +294,7 @@
 					}
 				</script>
 
-				<div class="easyui-panel" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
+				<div class="easyui-panel" style="width: 300px; height: 300px; margin-left: 20px; margin-right: auto;" align="left" data-options="border:false">
 
 					<table id="company-department-grid" class="easyui-datagrid" style="width: 100%; height: 100%"
 						data-options="
@@ -422,38 +403,32 @@
 					</script>
 				</div>
 
-				<div id="company-department-win" class="easyui-dialog" title="详细信息" style="width: 400px; height: 200px; margin-left: auto; margin-right: auto;" align="center" data-options="closed:true">
+				<div id="company-department-win" class="easyui-dialog" title="详细信息" style="width: 300px; height: 200px; margin-left: auto; margin-right: auto;" align="center" data-options="closed:true">
 
 					<form id="company-department-form" method="post">
-						<div style="width: 360px; height: 100px; padding: 10px 10px 10px 10px">
+						<div style="width: 280px; height: 100px; padding: 10px 10px 10px 10px">
 
 							<input id="companyId" type="hidden" name="companyId">
 							<input id="id" type="hidden" name="id">
-							<table>
-								<tr>
-									<td>名称:</td>
-									<td>
-										<input style="width: 300px;" class="easyui-textbox" name="name" data-options="
+							<div style="margin-bottom: 10px">
+								<span>名称:</span>
+								<input class="easyui-textbox" name="name" data-options="
 												required:true
 										" />
-									</td>
-								</tr>
-
-								<tr>
-									<td>功能:</td>
-									<td>
-										<input style="width: 300px; height: 50px" class="easyui-textbox" name="function" data-options="
+							</div>
+							<div style="margin-bottom: 10px">
+								<span>功能:</span>
+								<input style="height: 50px" class="easyui-textbox" name="function" data-options="
 												required:true,
 												multiline:true
 										" />
-									</td>
-								</tr>
-							</table>
+							</div>
+
 						</div>
-						<div style="margin-left: auto; margin-right: auto; margin-top: 0px">
+						<div style="margin-left: auto; margin-right: auto; margin-top: 10px">
 							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="add_company_department_form()">添加</a>
 							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="mod_company_department_form()">修改</a>
-							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_company_department_form()">重置</a>
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_company_department_form()">关闭</a>
 						</div>
 
 						<script>
@@ -551,6 +526,7 @@
 
 							function clear_company_department_form() {
 								$('#company-department-form').form('clear');
+								$('#company-department-win').window('close')
 							}
 						</script>
 					</form>

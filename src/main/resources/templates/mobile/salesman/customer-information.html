@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="base :: common_header(~{::title},_)">
+<head th:replace="base_mobile :: common_header(~{::title},_)">
 <meta charset="UTF-8">
 <title>customer-information</title>
 
 </head>
 
 <body>
-
-	<div class="easyui-layout" style="width: 100%; height: 100%;">
-		<div data-options="region:'west',split:true" style="width: 25%;" title="客户">
+	<div class="easyui-layout" id="customer-information-mobile-layout" style="width: 100%; height: 100%;">
+		<div data-options="region:'west', split:true, title:'客户'" style="width: 100%;">
 			<script type="text/javascript">
 				var seleted_department_node = null;
 
@@ -40,7 +39,7 @@
 						seleted_department_node = node;
 					} else if(node['type'] == 'CONTACT') {
 						var customer = node['customer'];
-						$('#ff').form('load', customer);
+						$('#customer-information-form').form('load', customer);
 						
 						$('#company').val(customer['company']['id']);
 						$('#department').val(customer['department']['id']);
@@ -52,6 +51,13 @@
 						
 						seleted_department_node = parent;
 						
+						if (customer['isPrimary'] == true) {
+							document.getElementById('customer-information-primary').checked = true
+						} else {
+							document.getElementById('customer-information-primary').checked = false
+						}
+												
+						$('#customer-information-mobile-layout').layout('collapse', 'west');
 					}
 				}, 
 				
@@ -66,25 +72,24 @@
 			</ul>
 		</div>
 
-		<div data-options="region:'center',split:true" style="width: 75%;">
-			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
+		<div data-options="region:'center',split:true,title:'详细信息'" style="width: 100%;">
+			<div class="easyui-panel" style="width: 90%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false">
 
-				<form id="ff" method="post">
-					<div style="width: 600px; padding: 10px 60px 0px 60px">
+				<form id="customer-information-form" method="post">
+					<div style="padding: 10px 0px 0px 20px">
 						<input type="hidden" name="id"></input>
 						<input id='company' type="hidden" name="company"></input>
 						<input id='department' type="hidden" name="department"></input>
-						<table>
-							<tr>
-								<td>姓名:</td>
-								<td>
-									<input class="easyui-textbox" type="text" name="name" data-options="required:true"></input>
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>性别:</td>
-								<td>
-									<input class="easyui-combobox" name=sex
-										data-options="
+
+						<div style="margin-bottom: 10px">
+							<span>姓名:</span>
+							<input class="easyui-textbox" type="text" name="name" data-options="required:true"></input>
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>性别:</span>
+							<input class="easyui-combobox" name=sex
+								data-options="
 										required:true,
 										valueField: 'id',
 										textField: 'name',
@@ -101,22 +106,20 @@
 										}
 														
 									" />
-								</td>
-							</tr>
+						</div>
 
-							<tr>
-								<td>公司:</td>
-								<td>
-									<input id='company-name' class="easyui-textbox" data-options="
+						<div style="margin-bottom: 10px">
+							<span>公司:</span>
+							<input id='company-name' class="easyui-textbox" data-options="
 										editable: false,
 										required: true									
 									" />
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>职责:</td>
-								<td>
-									<input class="easyui-combobox" name=duty
-										data-options="
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>职责:</span>
+							<input class="easyui-combobox" name=duty
+								data-options="
 										required:true,
 										valueField: 'id',
 										textField: 'name',
@@ -133,72 +136,56 @@
 										}
 														
 									" />
-								</td>
-							</tr>
+						</div>
 
-							<tr>
-								<td>部门:</td>
-								<td>
-									<input id='department-name' class="easyui-textbox" data-options="
+						<div style="margin-bottom: 10px">
+							<span>部门:</span>
+							<input id='department-name' class="easyui-textbox" data-options="
 										editable: false,
 										required: true									
 									" />
-								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
+						</div>
 
-							<tr>
-								<td>固话:</td>
-								<td>
-									<input class="easyui-textbox" type="text" name="officePhone" data-options="required:true"></input>
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>手机:</td>
-								<td>
-									<input class="easyui-textbox" type="text" name="phone" data-options="required:true"></input>
-								</td>
-							</tr>
+						<div style="margin-bottom: 10px">
+							<span>固话:</span>
+							<input class="easyui-textbox" type="text" name="officePhone" data-options="required:true"></input>
+						</div>
 
-							<tr>
-								<td>传真:</td>
-								<td>
-									<input class="easyui-textbox" type="text" name="fax" data-options="required:true"></input>
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>邮件:</td>
-								<td>
-									<input class="easyui-textbox" type="text" name="email" data-options="required:true,validType:'email'"></input>
-								</td>
-							</tr>
-							<tr>
-								<td>地址:</td>
-								<td>
-									<input class="easyui-textbox" name="address" style="height: 60px" data-options="
+						<div style="margin-bottom: 10px">
+							<span>手机:</span>
+							<input class="easyui-textbox" type="text" name="phone" data-options="required:true"></input>
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>传真:</span>
+							<input class="easyui-textbox" type="text" name="fax" data-options="required:true"></input>
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>邮件:</span>
+							<input class="easyui-textbox" type="text" name="email" data-options="required:true,validType:'email'"></input>
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>地址:</span>
+							<input class="easyui-textbox" name="address" style="height: 60px" data-options="
 										multiline:true,
 										required: true									
 									"></input>
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>主要联系人:</td>
-								<td>
-									<input id="primary" type="checkbox" name="isPrimary" value=1>
-								</td>
-							</tr>
+						</div>
 
-
-
-
-						</table>
+						<div style="margin-bottom: 10px">
+							<span>主管:</span>
+							<input id="customer-information-primary" type="checkbox" name="isPrimary" value=1>
+						</div>
 					</div>
 				</form>
 
-				<div style="margin-left: 60px; margin-right: auto; margin-top: 10px">
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit()">删除</a>
+				<div style="margin-left: 20px; margin-right: auto; margin-top: 10px">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify_customer_information_form()">修改</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add_customer_information_form()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_customer_information_form()">重置</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit_customer_information_form()">删除</a>
 				</div>
 
 
@@ -207,9 +194,9 @@
 
 
 			<script>
-				function modify() {
+				function modify_customer_information_form() {
 
-					$('#ff').form('submit', {
+					$('#customer-information-form').form('submit', {
 						type : 'POST',
 						url : '/salesman/modCustomer',
 						onSubmit : function() {
@@ -235,8 +222,8 @@
 					});
 				}
 
-				function add() {
-					$('#ff').form('submit', {
+				function add_customer_information_form() {
+					$('#customer-information-form').form('submit', {
 						type : 'POST',
 						url : '/salesman/addCustomer',
 						onSubmit : function() {
@@ -261,12 +248,12 @@
 						}
 					});
 				}
-				function clearff() {
-					$('#ff').form('clear');
+				function clear_customer_information_form() {
+					$('#customer-information-form').form('clear');
 				}
-				function removeit() {
+				function removeit_customer_information_form() {
 
-					$('#ff').form('submit', {
+					$('#customer-information-form').form('submit', {
 						type : 'POST',
 						url : '/salesman/delCustomer',
 						onSubmit : function() {
@@ -275,7 +262,7 @@
 						success : function(result) {
 							if (result == 'success') {
 								refresh();
-								$('#ff').form('clear');
+								$('#customer-information-form').form('clear');
 								$.messager.show({
 									title : '成功',
 									msg : '删除成功',

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="base :: common_header(~{::title},_)">
+<head th:replace="base_mobile :: common_header(~{::title},_)">
 <meta charset="UTF-8">
 <title>project</title>
 </head>
 
 <body>
-	<div class="easyui-layout" style="width: 100%; height: 100%;">
-		<div data-options="region:'west',split:true" style="width: 25%;" title="客户">
+	<div class="easyui-layout" id="project-mobile-layout" style="width: 100%; height: 100%;">
+		<div data-options="region:'west', split:true, title:'客户'" style="width: 100%;">
 			<script type="text/javascript">
 				var seleted_department_node = null;
 
@@ -54,6 +54,8 @@
 						seleted_department_node = parent;
 						var url = '/salesman/loadAllCustomer/'+attributes['department']['id'];
    						$('#project-form-customer-combobox').combobox('reload', url);
+   						
+   						$('#project-mobile-layout').layout('collapse', 'west');
 					}
 				}, 
 				
@@ -68,65 +70,57 @@
 			</ul>
 		</div>
 
-		<div data-options="region:'center',split:true" style="width: 75%;">
-			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
+		<div data-options="region:'center',split:true,title:'详细信息'" style="width: 100%;">
+			<div class="easyui-panel" style="width: 90%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false">
 
 				<form id="project-form" method="post">
-					<div style="width: 600px; padding: 10px 10px 10px 60px">
+					<div style="padding: 10px 0px 0px 20px">
 
 						<input type="hidden" name="id"></input>
 						<input id='project-form-company' type="hidden" name="company"></input>
 						<input id='project-form-department' type="hidden" name="department"></input>
-						<table>
 
-							<tr>
-								<td>名称:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" style="width: 100%;" name="name" data-options="required:true"></input>
-								</td>
-							</tr>
+						<div style="margin-bottom: 10px">
+							<span>名称:</span>
+							<input class="easyui-textbox" style="width: 90%" name="name" data-options="required:true"></input>
+						</div>
 
-							<tr>
-								<td>主题:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" style="width: 100%;" name="subject" data-options="required:true"></input>
-								</td>
-							</tr>
+						<div style="margin-bottom: 10px">
+							<span>主题:</span>
+							<input class="easyui-textbox" style="width: 90%" name="subject" data-options="required:true"></input>
+						</div>
 
-							<tr>
-								<td>公司:</td>
-								<td>
-									<input id='project-form-company-name' class="easyui-textbox" data-options="
+						<div style="margin-bottom: 10px">
+							<span>公司:</span>
+							<input id='project-form-company-name' class="easyui-textbox" style="width: 90%" data-options="
 										editable: false,
 										required: true									
 									" />
-								</td>
-								<td></td>
-								<td>部门:</td>
-								<td>
-									<input id='project-form-department-name' class="easyui-textbox" data-options="
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>部门:</span>
+							<input id='project-form-department-name' class="easyui-textbox" style="width: 90%" data-options="
 										editable: false,
 										required: true									
 									" />
-								</td>
-							</tr>
+						</div>
 
-							<tr>
-								<td>联系人:</td>
-								<td>
-									<input id='project-form-customer-combobox' class="easyui-combobox" name="customer"
-										data-options="
+						<div style="margin-bottom: 10px">
+							<span>联系人:</span>
+							<input id='project-form-customer-combobox' class="easyui-combobox" style="width: 90%" name="customer"
+								data-options="
 											required:true,
 											valueField: 'id',
 											textField: 'name',
 											method: 'get'											
 									" />
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>状态:</td>
-								<td>
-									<input class="easyui-combobox" name="state"
-										data-options="
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>状态:</span>
+							<input class="easyui-combobox" name="state" style="width: 90%"
+								data-options="
 											required:true,
 											valueField: 'id',
 											textField: 'name',
@@ -143,19 +137,17 @@
 										    }
 											
 									" />
-								</td>
-							</tr>
+						</div>
 
-							<tr>
-								<td>金额(单位:元):</td>
-								<td>
-									<input name="money" class="easyui-numberbox" required="required" value="0" data-options="min:0.00,precision:2">
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>赢单时间:</td>
-								<td>
-									<input id='stop-datetimebox' class="easyui-datebox" name="timeToSuccess" value="aaa"
-										data-options="
+						<div style="margin-bottom: 10px">
+							<span>金额(单位:元):</span>
+							<input name="money" class="easyui-numberbox" required="required" value="0" style="width: 90%" data-options="min:0.00,precision:2">
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>赢单时间:</span>
+							<input id='stop-datetimebox' class="easyui-datebox" style="width: 90%" name="timeToSuccess" value="aaa"
+								data-options="
 											required:true,
 											formatter: function (date) { 
 												var y = date.getFullYear();
@@ -173,48 +165,38 @@
 												}
 											}
 										" />
-								</td>
-							</tr>
+						</div>
 
-							<tr>
-								<td>可能性:</td>
-								<td>
-									<input name="probability" class="easyui-numberspinner" required="required" value="0" data-options="min:0,max:100,suffix:'%'">
-								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
+						<div style="margin-bottom: 10px">
+							<span>可能性:</span>
+							<input name="probability" class="easyui-numberspinner" style="width: 90%" required="required" value="0" data-options="min:0,max:100,suffix:'%'">
+						</div>
 
-							<tr>
-								<td>内容:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" name="content" style="width: 100%; height: 80px;" data-options="
+						<div style="margin-bottom: 10px">
+							<span>内容:</span>
+							<input class="easyui-textbox" name="content" style="height: 80px; width: 90%" data-options="
 												required:true,
 												multiline:true
 												" />
-								</td>
-							</tr>
-
-						</table>
+						</div>
 					</div>
 				</form>
 
-				<div style="margin-left: 120px; margin-right: auto; margin-top: 10px">
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit()">删除</a>
+				<div style="margin-left: 20px; margin-bottom: 10px; margin-top: 10px">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify_project_form()">修改</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add_project_form()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_project_form()">重置</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit_project_form()">删除</a>
 				</div>
 			</div>
 
 			<script>
-				function verify() {
+				function verify_project_form() {
 					return true;
 				}
 
-				function modify() {
-					if (verify() == false) {
+				function modify_project_form() {
+					if (verify_project_form() == false) {
 						return;
 					}
 
@@ -245,8 +227,8 @@
 					});
 				}
 
-				function add() {
-					if (verify() == false) {
+				function add_project_form() {
+					if (verify_project_form() == false) {
 						return;
 					}
 
@@ -277,11 +259,11 @@
 					});
 				}
 
-				function clearff() {
+				function clear_project_form() {
 					$('#project-form').form('clear');
 				}
 
-				function removeit() {
+				function removeit_project_form() {
 
 					$('#project-form').form('submit', {
 						type : 'POST',
@@ -292,7 +274,7 @@
 						success : function(result) {
 							if (result == 'success') {
 								refresh();
-								
+
 								$('#ff').form('clear');
 								$.messager.show({
 									title : '成功',
