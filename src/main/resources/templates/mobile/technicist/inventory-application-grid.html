@@ -38,12 +38,12 @@
 				<label>数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量： </label>
 				<span th:utext="${i.count}"></span><br>
 				<label>申请人员： </label>
-				<span th:utext="${i.proposer.contact.name}"></span><br>
+				<span th:utext="${i.proposer.name}"></span><br>
 				<label>申请时间： </label>
 				<span th:utext="${i.timeApplication}"></span><br>
 
 				<label>审批人员： </label>
-				<span th:utext="${i.approver==null} ? ' ' : ${i.approver.contact.name}"></span><br>
+				<span th:utext="${i.approver==null} ? ' ' : ${i.approver.name}"></span><br>
 				<label>批复时间： </label>
 				<span th:utext="${i.timeApproach == null}? '' : ${i.timeApproach}"></span><br>
 			</td>
