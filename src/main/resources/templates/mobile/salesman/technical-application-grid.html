@@ -20,7 +20,7 @@
 		var c= [(${customers})];
 	</script>
 
-	<div class="easyui-panel" title="My Panel" data-options="iconCls:'icon-ok',tools:'#tb'">
+	<div class="easyui-panel" title="详细信息" data-options="iconCls:'icon-ok',tools:'#tb'">
 		<div class="easyui-panel" th:each="t, stat : ${technicalApplications}">
 			<label>ID： </label>
 			<span th:utext="${t.id}">101</span><br>
@@ -68,34 +68,27 @@
 		</script>
 	</div>
 
-	<div id="technical-application-win" class="easyui-dialog" title="详细信息" style="width: 600px; height: 350px; margin-left: auto; margin-right: auto;" align="center" data-options="closed:true">
+	<div id="technical-application-win" class="easyui-dialog" title="详细信息" style="height: 350px; margin-left: auto; margin-right: auto;" align="left" data-options="closed:true">
 
 		<form id="technical-application-form" method="post">
-			<div style="width: 500px; height: 200px; padding: 10px 10px 10px 60px">
+			<div style="height: 100%; padding: 10px 10px 10px 20px">
 
 				<input type="hidden" name="id"></input>
 				<input type="hidden" name="project" th:value="${project.id}"></input>
+				<div style="margin-bottom: 10px">
+					<span>名称:</span>
+					<input style="width: 100%;" class="easyui-textbox" name="name" />
+				</div>
 
-				<table>
-					<tr>
-						<td>名称:</td>
-						<td colspan="4">
-							<input style="width: 100%;" class="easyui-textbox" name="name" />
-						</td>
-					</tr>
+				<div style="margin-bottom: 10px">
+					<span>项目:</span>
+					<input style="width: 100%;" class="easyui-textbox" name="project-name" th:value="${project.name}" />
+				</div>
 
-					<tr>
-						<td>项目:</td>
-						<td colspan="4">
-							<input style="width: 100%;" class="easyui-textbox" name="project-name" th:value="${project.name}" />
-						</td>
-					</tr>
-
-					<tr>
-						<td>客户:</td>
-						<td>
-							<input id='customer-combobox' class="easyui-combobox" name="customer"
-								data-options="
+				<div style="margin-bottom: 10px">
+					<span>客户:</span>
+					<input id='customer-combobox' style="width: 100%;" class="easyui-combobox" name="customer"
+						data-options="
 											editable:false,
 											required:true,
 											valueField: 'id',
@@ -111,43 +104,37 @@
 										    }
 											
 									" />
-						</td>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td>传真:</td>
-						<td>
-							<input id='phone' class="easyui-textbox" data-options="readonly:true" />
-						</td>
-					</tr>
+				</div>
 
-					<tr>
-						<td>固话:</td>
-						<td>
-							<input id='officePhone' class="easyui-textbox" data-options="readonly:true" />
-						</td>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td>手机:</td>
-						<td>
-							<input id='fax' class="easyui-textbox" data-options="readonly:true" />
-						</td>
-					</tr>
+				<div style="margin-bottom: 10px">
+					<span>手机:</span>
+					<input id='phone' style="width: 100%;" class="easyui-textbox" data-options="readonly:true" />
+				</div>
 
-					<tr>
-						<td>邮件:</td>
-						<td>
-							<input id='email' class="easyui-textbox" data-options="readonly:true" />
-						</td>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td>地址:</td>
-						<td>
-							<input id='address' class="easyui-textbox" data-options="readonly:true" />
-						</td>
-					</tr>
+				<div style="margin-bottom: 10px">
+					<span>固话:</span>
+					<input id='officePhone' style="width: 100%;" class="easyui-textbox" data-options="readonly:true" />
+				</div>
 
-					<tr>
-						<td>开始:</td>
-						<td>
-							<input id='stop-datetimebox' class="easyui-datebox" name="startTime" value="aaa"
-								data-options="
+				<div style="margin-bottom: 10px">
+					<span>传真:</span>
+					<input id='fax' style="width: 100%;" class="easyui-textbox" data-options="readonly:true" />
+				</div>
+
+				<div style="margin-bottom: 10px">
+					<span>邮件:</span>
+					<input id='email' style="width: 100%;" class="easyui-textbox" data-options="readonly:true" />
+				</div>
+
+				<div style="margin-bottom: 10px">
+					<span>地址:</span>
+					<input id='address' style="width: 100%;" class="easyui-textbox" data-options="readonly:true" />
+				</div>
+
+				<div style="margin-bottom: 10px">
+					<span>开始:</span>
+					<input id='stop-datetimebox' style="width: 100%;" class="easyui-datebox" name="startTime" value="aaa"
+						data-options="
 											required:true,
 											formatter: function (date) { 
 												var y = date.getFullYear();
@@ -165,14 +152,14 @@
 												}
 											}
 										" />
-						</td>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td>结束:</td>
-						<td>
-							<input id='stop-datetimebox' class="easyui-datebox" name="stopTime" value="aaa"
-								data-options="
-											required:true,
-											formatter: function (date) { 
+				</div>
+
+				<div style="margin-bottom: 10px">
+					<span>结束:</span>
+					<input id='stop-datetimebox' style="width: 100%;" class="easyui-datebox" name="stopTime" value="aaa"
+						data-options="
+									required:true,
+									formatter: function (date) { 
 												var y = date.getFullYear();
 												var m = date.getMonth()+1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
 												var d = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
@@ -188,15 +175,12 @@
 												}
 											}
 										" />
-						</td>
-					</tr>
+				</div>
 
-
-					<tr>
-						<td>报告:</td>
-						<td>
-							<input class="easyui-combobox" name="sysReportType"
-								data-options="
+				<div style="margin-bottom: 10px">
+					<span>报告:</span>
+					<input class="easyui-combobox" style="width: 100%;" name="sysReportType"
+						data-options="
 											editable:false,
 											required:true,
 											valueField: 'id',
@@ -213,12 +197,13 @@
 				                                }  
 										    }
 									" />
-						</td>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td>技术:</td>
-						<td>
-							<input class="easyui-combobox" name="technicist"
-								data-options="
+				</div>
+
+
+				<div style="margin-bottom: 10px">
+					<span>技术:</span>
+					<input class="easyui-combobox" style="width: 100%;" name="technicist"
+						data-options="
 											editable:false,
 											required:true,
 											valueField: 'id',
@@ -235,13 +220,11 @@
 				                                }  
 										    }
 									" />
-						</td>
-					</tr>
-
-					<tr>
-						<td>属性:</td>
-						<td>
-							<input class="easyui-combobox" name="type"
+				</div>
+				
+				<div style="margin-bottom: 10px">
+					<span>属性:</span>
+					<input class="easyui-combobox" style="width: 100%;" name="type"
 								data-options="
 											editable:false,
 											required:true,
@@ -259,28 +242,44 @@
 				                                }  
 										    }
 									" />
-						</td>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td></td>
-						<td></td>
-					</tr>
-
-				</table>
+				</div>
+				
+				<div style="margin-bottom: 10px">
+					<span>属性:</span>
+					<input class="easyui-combobox" style="width: 100%;" name="type"
+								data-options="
+											editable:false,
+											required:true,
+											valueField: 'id',
+											textField: 'name',
+											method: 'get',
+											url: '/common/loadAllSysTechnicalApplicationType',
+										    
+										    onLoadSuccess: function () { 
+										    	var val = $(this).combobox('getData'); 
+										    	for (var item in val[0]) {  
+				                                    if (item == 'id') {  
+				                                        $(this).combobox('select', val[0][item]);  
+				                                    }  
+				                                }  
+										    }
+									" />
+				</div>
 			</div>
 		</form>
 
-		<div style="margin-left: auto; margin-right: auto; margin-top: 30px">
-			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="add()">确定</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+		<div style="margin-left: 30px; margin-bottom: 10px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="add_technical_application_win()">确定</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_technical_application_win()">关闭</a>
 		</div>
 
 		<script>
-			function verify() {
+			function verify_technical_application_win() {
 				return true;
 			}
 
-			function add() {
-				if (verify() == false) {
+			function add_technical_application_win() {
+				if (verify_technical_application_win() == false) {
 					return;
 				}
 
@@ -313,8 +312,9 @@
 				});
 			}
 
-			function clearff() {
+			function clear_technical_application_win() {
 				$('#technical-application-form').form('clear');
+				$('#technical-application-win').window('close');
 			}
 		</script>
 	</div>

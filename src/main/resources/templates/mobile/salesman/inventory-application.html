@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="base :: common_header(~{::title},_)">
+<head th:replace="base_mobile :: common_header(~{::title},_)">
 <meta charset="UTF-8">
 <title>inventory application</title>
 </head>
 
 <body>
 
-	<div class="easyui-layout" style="width: 100%; height: 100%;">
-		<div style="width: 25%;" data-options="region:'west',split:true" title="项目">
+	<div class="easyui-layout" id="inventory-application-mobile-layout" style="width: 100%; height: 100%;">
+		<div data-options="region:'west', split:true, title:'项目'" style="width: 100%;">
 
 			<ul id="inventory-application-tree" class="easyui-tree"
 				data-options="
 				url : '/salesman/load-all-project-tree',
 				onSelect: function(node) {
-						
+					if(node.state == 'closed')
+						$('#inventory-application-tree').tree('expand', node.target);
+					else
+						$('#inventory-application-tree').tree('collapse', node.target);
 					if(node['type'] == 'DEPARTMENT') {		
 						var parent = $('#inventory-application-tree').tree('getParent', node.target);
 						seleted_department_node = node;
@@ -24,6 +27,7 @@
 					 	var company = $('#inventory-application-tree').tree('getParent', department.target);
 						$('#inventory-application-frame').attr('src', '/salesman/inventory-application-grid?type=2&projectId=' + node['id'] + '&departmentId=' + department['id'] + '&companyId=' + company['id']);
 						seleted_department_node = company;
+						$('#inventory-application-mobile-layout').layout('collapse', 'west');
 					}
 				}, 
 				
@@ -37,7 +41,7 @@
 			</ul>
 		</div>
 
-		<div style="width: 75%;" data-options="region:'center',split:true">
+		<div style="width: 100%;" data-options="region:'center',split:true">
 			<iframe id="inventory-application-frame" name="inventory-application-frame" style="width: 100%; height: 95%; border: 0; position: absolute"></iframe>
 		</div>
 

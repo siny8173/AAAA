@@ -2,8 +2,11 @@ package com.lihao.crm.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -154,8 +157,12 @@ public class TechnicistController {
 				if (!dest.getParentFile().exists()) {
 					dest.getParentFile().mkdirs();
 				}
-
-				temp.renameTo(dest);
+				
+				OutputStream os = new FileOutputStream(dest);
+				Files.copy(temp.toPath(), os); 
+				
+				boolean flag = temp.delete();
+				logger.info("message delete file " + flag);
 
 				TechnicalApplicationReport report = new TechnicalApplicationReport();
 

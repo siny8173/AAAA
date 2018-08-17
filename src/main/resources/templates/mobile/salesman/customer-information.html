@@ -25,6 +25,10 @@
 				data-options="
 				url : '/salesman/load-all-customer-tree',
 				onSelect: function(node) {
+					if(node.state == 'closed')
+						$('#customer-tree').tree('expand', node.target);
+					else
+						$('#customer-tree').tree('collapse', node.target);
 						
 					if(node['type'] == 'DEPARTMENT') {
 					
@@ -237,6 +241,8 @@
 									msg : '添加成功',
 									showType : 'show'
 								});
+								
+								$('#customer-information-mobile-layout').layout('expand', 'west');
 							} else {
 								$.messager.show({
 									title : '失败',
@@ -268,6 +274,7 @@
 									msg : '删除成功',
 									showType : 'show'
 								});
+								$('#customer-information-mobile-layout').layout('expand', 'west');
 							} else {
 								$.messager.show({
 									title : '失败',

@@ -136,17 +136,17 @@ var inventories = [(${inventories})];
 		</form>
 
 		<div style="margin-left: auto; margin-right: auto; margin-top: 10px">
-			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="add()">确定</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="add_inventory_application_form()">确定</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_inventory_application_form()">重置</a>
 		</div>
 
 		<script>
-			function verify() {
+			function verify_inventory_application_form() {
 				return true;
 			}
 
-			function add() {
-				if (verify() == false) {
+			function add_inventory_application_form() {
+				if (verify_inventory_application_form() == false) {
 					return;
 				}
 
@@ -179,7 +179,7 @@ var inventories = [(${inventories})];
 				});
 			}
 
-			function clearff() {
+			function clear_inventory_application_form() {
 				$('#inventory-application-form').form('clear');
 			}
 		</script>

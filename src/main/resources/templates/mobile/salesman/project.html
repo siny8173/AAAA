@@ -24,6 +24,10 @@
 				data-options="
 				url : '/salesman/load-all-project-tree',
 				onSelect: function(node) {
+					if(node.state == 'closed')
+						$('#project-tree').tree('expand', node.target);
+					else
+						$('#project-tree').tree('collapse', node.target);
 						
 					if(node['type'] == 'DEPARTMENT') {
 					
@@ -232,31 +236,36 @@
 						return;
 					}
 
-					$('#project-form').form('submit', {
-						type : 'POST',
-						url : '/salesman/addProject',
-						onSubmit : function() {
-							return $(this).form('validate');
-						},
-						success : function(result) {
-							if (result == 'success') {
-								refresh();
+					$('#project-form').form(
+							'submit',
+							{
+								type : 'POST',
+								url : '/salesman/addProject',
+								onSubmit : function() {
+									return $(this).form('validate');
+								},
+								success : function(result) {
+									if (result == 'success') {
+										refresh();
 
-								$.messager.show({
-									title : '成功',
-									msg : '添加成功',
-									showType : 'show'
-								});
-							} else {
-								$.messager.show({
-									title : '失败',
-									msg : '添加失败',
-									showType : 'show'
-								});
-							}
+										$.messager.show({
+											title : '成功',
+											msg : '添加成功',
+											showType : 'show'
+										});
 
-						}
-					});
+										$('#project-mobile-layout').layout(
+												'expand', 'west');
+									} else {
+										$.messager.show({
+											title : '失败',
+											msg : '添加失败',
+											showType : 'show'
+										});
+									}
+
+								}
+							});
 				}
 
 				function clear_project_form() {
@@ -265,32 +274,37 @@
 
 				function removeit_project_form() {
 
-					$('#project-form').form('submit', {
-						type : 'POST',
-						url : '/salesman/delProject',
-						onSubmit : function() {
-							return $(this).form('validate');
-						},
-						success : function(result) {
-							if (result == 'success') {
-								refresh();
+					$('#project-form').form(
+							'submit',
+							{
+								type : 'POST',
+								url : '/salesman/delProject',
+								onSubmit : function() {
+									return $(this).form('validate');
+								},
+								success : function(result) {
+									if (result == 'success') {
+										refresh();
 
-								$('#ff').form('clear');
-								$.messager.show({
-									title : '成功',
-									msg : '删除成功',
-									showType : 'show'
-								});
-							} else {
-								$.messager.show({
-									title : '失败',
-									msg : '删除失败',
-									showType : 'show'
-								});
-							}
+										$('#ff').form('clear');
+										$.messager.show({
+											title : '成功',
+											msg : '删除成功',
+											showType : 'show'
+										});
 
-						}
-					});
+										$('#project-mobile-layout').layout(
+												'expand', 'west');
+									} else {
+										$.messager.show({
+											title : '失败',
+											msg : '删除失败',
+											showType : 'show'
+										});
+									}
+
+								}
+							});
 				}
 			</script>
 		</div>

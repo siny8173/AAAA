@@ -95,17 +95,17 @@
 
 
 		<div style="margin-left: auto; margin-right: auto; margin-top: 20px">
-			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="add()">确定</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="add_file_upload_form()">确定</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_file_upload_form()">重置</a>
 		</div>
 
 		<script>
-			function verify() {
+			function verify_file_upload_form() {
 				return true;
 			}
 
-			function add() {
-				if (verify() == false) {
+			function add_file_upload_form() {
+				if (verify_file_upload_form() == false) {
 					return;
 				}
 
@@ -138,7 +138,7 @@
 				});
 			}
 
-			function clearff() {
+			function clear_file_upload_form() {
 				$('#file-upload-form').form('clear');
 			}
 		</script>

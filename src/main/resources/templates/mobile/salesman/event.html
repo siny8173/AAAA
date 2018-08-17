@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="base :: common_header(~{::title},_)">
+<head th:replace="base_mobile :: common_header(~{::title},_)">
 <meta charset="UTF-8">
 <title>event</title>
 </head>
 
 <body>
-	<div class="easyui-layout" style="width: 100%; height: 100%;">
-		<div data-options="region:'west',split:true" style="width: 25%;" title="活动">
-
+	<div class="easyui-layout" id="event-mobile-layout" style="width: 100%; height: 100%;">
+		<div data-options="region:'west', split:true, title:'活动'" style="width: 100%;">
 			<script type="text/javascript">
 				var seleted_department_node = null;
 
@@ -30,6 +29,10 @@
 				data-options="
 				url : '/salesman/load-all-event-tree',
 				onSelect: function(node) {
+					if(node.state == 'closed')
+						$('#event-tree').tree('expand', node.target);
+					else
+						$('#event-tree').tree('collapse', node.target);
 						
 					if(node['type'] == 'DEPARTMENT') {
 					
@@ -59,7 +62,9 @@
 						
 						seleted_department_node = parent;
 						
-						loadCustomer(seleted_department_node['id']);						
+						loadCustomer(seleted_department_node['id']);	
+						
+						$('#event-mobile-layout').layout('collapse', 'west');					
 					}
 				}, 
 				
@@ -73,59 +78,53 @@
 			">
 			</ul>
 		</div>
-		<div data-options="region:'center',split:true" style="width: 75%;">
-			<div class="easyui-panel" title="详细信息" style="width: 90%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
+		<div data-options="region:'center',split:true,title:'详细信息'" style="width: 100%;">
+			<div class="easyui-panel" style="width: 90%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false">
 
 				<form id="event-form" method="post">
-					<div style="width: 600px; padding: 10px 10px 10px 60px">
+					<div style="padding: 10px 0px 0px 20px">
 
 						<input type="hidden" name="id"></input>
 						<input id='event-form—company' type="hidden" name="company"></input>
 						<input id='event-form—department' type="hidden" name="department"></input>
-						<table>
 
-							<tr>
-								<td>主题:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" style="width: 100%;" name="title" data-options="required:true"></input>
-								</td>
-							</tr>
+						<div style="margin-bottom: 10px">
+							<span>主题:</span>
+							<input class="easyui-textbox" style="width: 100%;" name="title" data-options="required:true"></input>
+						</div>
 
-							<tr>
-								<td>公司:</td>
-								<td>
-									<input id='event-form—company-name' class="easyui-textbox" data-options="
+						<div style="margin-bottom: 10px">
+							<span>公司:</span>
+							<input id='event-form—company-name' class="easyui-textbox" style="width: 100%;" data-options="
 										editable: false,
 										required: true									
 									" />
-								</td>
-								<td></td>
-								<td>部门:</td>
-								<td>
-									<input id='event-form—department-name' class="easyui-textbox" data-options="
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>部门:</span>
+							<input id='event-form—department-name' class="easyui-textbox" style="width: 100%;" data-options="
 										editable: false,
 										required: true									
 									" />
-								</td>
-							</tr>
+						</div>
 
-							<tr>
-								<td>联系人:</td>
-								<td>
-									<input id='event-customer-combobox' class="easyui-combobox" name="customer"
-										data-options="
+						<div style="margin-bottom: 10px">
+							<span>联系人:</span>
+							<input id='event-customer-combobox' class="easyui-combobox" name="customer" style="width: 100%;"
+								data-options="
 											required:true,
 											valueField: 'id',
 											textField: 'name',
 											method: 'get'
 											
 									" />
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>类型:</td>
-								<td>
-									<input class="easyui-combobox" name="type"
-										data-options="
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>类型:</span>
+							<input class="easyui-combobox" name="type" style="width: 100%;"
+								data-options="
 											required:true,
 											valueField: 'id',
 											textField: 'name',
@@ -142,14 +141,12 @@
 										    }
 											
 									" />
-								</td>
-							</tr>
+						</div>
 
-							<tr>
-								<td>开始:</td>
-								<td>
-									<input id='start-datetimebox' class="easyui-datetimebox" name="startTime" value="aaa"
-										data-options="
+						<div style="margin-bottom: 10px">
+							<span>开始:</span>
+							<input id='start-datetimebox' class="easyui-datetimebox" name="startTime" value="aaa" style="width: 100%;"
+								data-options="
 											required:true,
 											formatter: function (date) { 
 												var y = date.getFullYear();
@@ -169,12 +166,12 @@
 												}
 											}
 										" />
-								</td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-								<td>结束:</td>
-								<td>
-									<input id='stop-datetimebox' class="easyui-datetimebox" name="stopTime" value="aaa"
-										data-options="
+						</div>
+
+						<div style="margin-bottom: 10px">
+							<span>结束:</span>
+							<input id='stop-datetimebox' class="easyui-datetimebox" name="stopTime" value="aaa" style="width: 100%;"
+								data-options="
 											required:true,
 											formatter: function (date) { 
 												var y = date.getFullYear();
@@ -194,39 +191,35 @@
 												}
 											}
 										" />
-								</td>
-							</tr>
+						</div>
 
-							<tr>
-								<td>内容:</td>
-								<td colspan="4">
-									<input class="easyui-textbox" name="content" style="width: 100%; height: 80px;" data-options="
+						<div style="margin-bottom: 10px">
+							<span>内容:</span>
+							<input class="easyui-textbox" name="content" style="width: 100%; height: 80px;" data-options="
 												required:true,
 												multiline:true
 												" />
-								</td>
-							</tr>
+						</div>
 
-						</table>
 					</div>
 				</form>
 
-				<div style="margin-left: 120px; margin-right: auto; margin-top: 10px">
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit()">删除</a>
+				<div style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify_event_form()">修改</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add_event_form()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_event_form()">重置</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit_event_form()">删除</a>
 				</div>
 			</div>
 
 			<script>
-				function verify() {
+				function verify_event_form() {
 					var start = new Date(Date.parse($('#start-datetimebox')
 							.datetimebox('getValue')));
 					var stop = new Date(Date.parse($('#stop-datetimebox')
 							.datetimebox('getValue')));
 					var now = new Date();
-
+					
 					if (now.getTime() > start.getTime()) {
 						$.messager.alert('校验失败', '开始时间早于当前时间');
 						return false;
@@ -244,8 +237,8 @@
 
 				}
 
-				function modify() {
-					if (verify() == false) {
+				function modify_event_form() {
+					if (verify_event_form() == false) {
 						return;
 					}
 
@@ -276,8 +269,8 @@
 					});
 				}
 
-				function add() {
-					if (verify() == false) {
+				function add_event_form() {
+					if (verify_event_form() == false) {
 						return;
 					}
 
@@ -296,6 +289,8 @@
 									msg : '添加成功',
 									showType : 'show'
 								});
+								
+								$('#event-mobile-layout').layout('expand', 'west');
 							} else {
 								$.messager.show({
 									title : '失败',
@@ -308,11 +303,11 @@
 					});
 				}
 
-				function clearff() {
+				function clear_event_form() {
 					$('#event-form').form('clear');
 				}
 
-				function removeit() {
+				function removeit_event_form() {
 
 					$('#event-form').form('submit', {
 						type : 'POST',
@@ -323,12 +318,13 @@
 						success : function(result) {
 							if (result == 'success') {
 								refresh();
-								$('#ff').form('clear');
 								$.messager.show({
 									title : '成功',
 									msg : '删除成功',
 									showType : 'show'
 								});
+								
+								$('#event-mobile-layout').layout('expand', 'west');
 							} else {
 								$.messager.show({
 									title : '失败',
