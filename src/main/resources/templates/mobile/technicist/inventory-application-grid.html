@@ -4,35 +4,29 @@
 <meta charset="UTF-8">
 <title>inventory application grid</title>
 
-<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/themes/default/easyui.css"
-	th:href="@{/jquery-easyui-1.5.4/themes/default/easyui.css}">
-<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/themes/icon.css"
-	th:href="@{/jquery-easyui-1.5.4/themes/icon.css}">
-<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/demo/demo.css"
-	th:href="@{/jquery-easyui-1.5.4/demo.css}">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/themes/default/easyui.css" th:href="@{/jquery-easyui-1.5.4/themes/default/easyui.css}">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/themes/icon.css" th:href="@{/jquery-easyui-1.5.4/themes/icon.css}">
+<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.5.4/demo/demo.css" th:href="@{/jquery-easyui-1.5.4/demo.css}">
 <script type="text/javascript" src="/jquery-easyui-1.5.4/jquery.min.js" th:src="@{/jquery-easyui-1.5.4/jquery.min.js}"></script>
-<script type="text/javascript" src="/jquery-easyui-1.5.4/jquery.easyui.min.js"
-	th:src="@{/jquery-easyui-1.5.4/jquery.easyui.min.js}"></script>
+<script type="text/javascript" src="/jquery-easyui-1.5.4/jquery.easyui.min.js" th:src="@{/jquery-easyui-1.5.4/jquery.easyui.min.js}"></script>
 <script type="text/javascript" src="/js/main.js" th:src="@{/js/main.js}"></script>
 
 </head>
 
 <body>
-	<table id="inventory-application-table" class="easyui-datagrid" style="width: 650px;">
+	<table id="inventory-application-table" class="easyui-datagrid" style="width: 340px;">
 		<thead>
 			<tr>
-				<th data-options="field:'id',width:40, halign:'center', align:'center'">ID</th>
-				<th data-options="field:'context',width:340, halign:'center', align:'left'">详细信息</th>
-				<th data-options="field:'type',width:80, halign:'center', align:'center'">类型</th>
-				<th data-options="field:'state',width:80, halign:'center', align:'center'">状态</th>
+				<th data-options="field:'context',width:230, halign:'center', align:'left'">详细信息</th>
 				<th data-options="field:'op',width:100, halign:'center', align:'center'">操作</th>
 			</tr>
 		</thead>
 
 
 		<tr th:each="i, stat : ${inventoryRecords}">
-			<td th:text="${i.id}">101</td>
 			<td>
+				<label>ID： </label>
+				<span th:text="${i.id}">101</span> <span th:utext="${i.inventory.name}"></span><br>
 				<label>资&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;产： </label>
 				<span th:utext="${i.inventory.name}"></span><br>
 				<label>数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量： </label>
@@ -46,21 +40,21 @@
 				<span th:utext="${i.approver==null} ? ' ' : ${i.approver.name}"></span><br>
 				<label>批复时间： </label>
 				<span th:utext="${i.timeApproach == null}? '' : ${i.timeApproach}"></span><br>
+				<label>类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型： </label>
+				<span th:utext="${i.type.name}"></span><br>
+				<label>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态： </label>
+				<span th:utext="${i.state.name}"></span><br>
 			</td>
-			<td th:text="${i.type.name}"></td>
-			<td th:text="${i.state.name}"></td>
 			<td>
 				<div th:if="${i.state.id != 1}">
 					<span>已处理</span>
 				</div>
 				<div th:if="${i.state.id == 1}">
 
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
-						th:onclick="'inventory_application_deal(' + ${i.id} + ', true)'">同意</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" th:onclick="'inventory_application_deal(' + ${i.id} + ', true)'">同意</a>
 					<br> <br>
 
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'"
-						th:onclick="'inventory_application_deal(' + ${i.id} + ', false)'">拒绝</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" th:onclick="'inventory_application_deal(' + ${i.id} + ', false)'">拒绝</a>
 				</div>
 			</td>
 		</tr>

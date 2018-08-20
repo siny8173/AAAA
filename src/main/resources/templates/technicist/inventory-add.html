@@ -31,8 +31,7 @@
 			</script>
 		</div>
 		<div data-options="region:'center',split:true" style="width: 75%;">
-			<div class="easyui-panel" title="详细信息" style="width: 70%; height: 100%; margin-left: auto; margin-right: auto;"
-				align="left" data-options="border:false, fit:true">
+			<div class="easyui-panel" title="详细信息" style="width: 70%; height: 100%; margin-left: auto; margin-right: auto;" align="left" data-options="border:false, fit:true">
 
 				<form id="inventory-form" method="post">
 					<div style="width: 400px; padding: 10px 10px 10px 60px">
@@ -90,20 +89,19 @@
 				</form>
 
 				<div style="margin-left: 60px; margin-right: auto; margin-top: 10px">
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify()">修改</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add()">添加</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clearff()">重置</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="removeit()">删除</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="modify_inventory_form()">修改</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="add_inventory_form()">添加</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="clear_inventory_form()">重置</a>
 				</div>
 			</div>
 
 			<script>
-				function verify() {
+				function verify_inventory_form() {
 					return true;
 				}
 
-				function modify() {
-					if (verify() == false) {
+				function modify_inventory_form() {
+					if (verify_inventory_form() == false) {
 						return;
 					}
 
@@ -134,8 +132,8 @@
 					});
 				}
 
-				function add() {
-					if (verify() == false) {
+				function add_inventory_form() {
+					if (verify_inventory_form() == false) {
 						return;
 					}
 
@@ -166,11 +164,11 @@
 					});
 				}
 
-				function clearff() {
+				function clear_inventory_form() {
 					$('#inventory-form').form('clear');
 				}
 
-				function removeit() {
+				function removeit_inventory_form() {
 
 					$('#inventory-form').form('submit', {
 						type : 'POST',
@@ -181,7 +179,6 @@
 						success : function(result) {
 							if (result == 'success') {
 								$('#inventory-table').datagrid('reload');
-								$('#ff').form('clear');
 								$.messager.show({
 									title : '成功',
 									msg : '删除成功',

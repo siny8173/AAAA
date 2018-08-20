@@ -7,7 +7,7 @@
 
 <body>
 	<div class="easyui-layout" id="technical-application-mobile-layout" style="width: 100%; height: 100%;">
-		<div class="easyui-panel" title="详细信息2" style="width: 100%;" data-options="region:'center',iconCls:'icon-ok',tools:'#tb'">
+		<div class="easyui-panel" title="详细信息" style="width: 100%;" data-options="region:'center',iconCls:'icon-ok',tools:'#tb'">
 			<div class="easyui-panel" th:each="t, stat : ${technicalApplications}">
 				<label>ID： </label>
 				<span th:utext="${t.id}">101</span><br>

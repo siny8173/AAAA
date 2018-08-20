@@ -6,18 +6,17 @@
 </head>
 
 <body>
+	<div id="cc" class="easyui-layout" style="width: 100%; height: 100%;">
 
-	<div class="easyui-panel" title="资产">
-		<div class="easyui-panel" style="padding: 5px;">
-			<a target="inventory-frame" href="/technicist/inventory-add" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">添加</a>
-			<a target="inventory-frame" href="/technicist/inventory-application" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">审批</a>
+		<div data-options="region:'north',title:'资产',split:true" style="height: 85px">
+			<div class="easyui-panel" style="padding: 5px;">
+				<a target="inventory-frame" href="/technicist/inventory-add" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">添加</a>
+				<a target="inventory-frame" href="/technicist/inventory-application" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'">审批</a>
+			</div>
 		</div>
-
-		<div>
-			<iframe id="inventory-frame" name="inventory-frame" style="width: 100%; height: 95%; border: 0; position: absolute"></iframe>
+		<div data-options="region:'center'" style="padding: 0px; background: #eee;">
+			<iframe id="inventory-frame" name="inventory-frame" style="width: 100%; height: 100%; border: 0"></iframe>
 		</div>
 	</div>
-
-
 </body>
 </html>
