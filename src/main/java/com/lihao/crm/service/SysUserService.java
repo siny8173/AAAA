@@ -30,12 +30,12 @@ public class SysUserService implements UserDetailsService {
 	}
 
 	public List<SysUser> findAll() {
-		Sort sort = new Sort(Direction.ASC, "id");
+		Sort sort = Sort.by(Direction.ASC, "id");
 		return (List<SysUser>) userRepository.findAll(sort);
 	}
 
 	public List<SysUser> findAllTechnicist() {
-		Sort sort = new Sort(Direction.ASC, "id");
+		Sort sort = Sort.by(Direction.ASC, "id");
 
 		List<SysUser> users = (List<SysUser>) userRepository.findAll(sort);
 
